@@ -1,0 +1,23 @@
+includes:
+	- phpstan-baseline.neon
+
+parameters:
+	level: 8
+	paths:
+		- src
+	excludePaths:
+		- vendor
+	
+	# Strict rules
+	checkMissingIterableValueType: true
+	checkGenericClassInNonGenericObjectType: true
+	checkMissingCallableSignature: true
+	
+	# Report unused
+	checkUninitializedProperties: true
+	checkTooWideReturnTypesInProtectedAndPublicMethods: true
+	checkImplicitMixed: true
+	
+	# Bleeding edge
+	reportUnmatchedIgnoredErrors: true
+	treatPhpDocTypesAsCertain: false

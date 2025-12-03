@@ -8,3 +8,12 @@ composer.lock
 *.DS_Store
 /.php_cs.cache
 /.phpunit.result.cache
+/.kiro/
+
+# Quality Tools Artifacts
+phpstan-baseline.neon
+psalm-baseline.xml
+.phpunit.cache/
+coverage/
+infection.log
+infection-report.html

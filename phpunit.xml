@@ -17,9 +17,24 @@
     </php>
 
     <testsuites>
-        <testsuite name="phpGPX full test suite">
+        <testsuite name="Unit">
+            <directory>tests/UnitTests</directory>
+        </testsuite>
+        <testsuite name="Integration">
             <directory>tests/</directory>
+            <exclude>tests/UnitTests</exclude>
         </testsuite>
     </testsuites>
+
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+        <report>
+            <html outputDirectory="coverage/html"/>
+            <text outputFile="php://stdout" showUncoveredFiles="true"/>
+            <clover outputFile="coverage/clover.xml"/>
+        </report>
+    </coverage>
 
 </phpunit>
