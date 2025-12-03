@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="phpGPX Test Suite" xmlns="http://www.topografix.com/GPX/1/1">
+	<metadata>
+		<name>Invalid GPX</name>
+		<!-- Missing closing tag for metadata -->
+	<trk>
+		<name>Test Track</name>
+		<trkseg>
+			<trkpt lat="54.9328621088893" lon="9.860624216140083">
+				<ele>42.5</ele>
+			</trkpt>
+		</trkseg>
+	</trk>
+</gpx>

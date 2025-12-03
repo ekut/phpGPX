@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="phpGPX Test Suite" 
+	xmlns="http://www.topografix.com/GPX/1/1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+	<metadata>
+		<name>Complete GPX Test File</name>
+		<desc>A comprehensive GPX file with all optional elements for testing</desc>
+		<author>
+			<name>Test Author</name>
+			<email id="test" domain="example.com"/>
+			<link href="https://example.com/author">
+				<text>Author Website</text>
+				<type>text/html</type>
+			</link>
+		</author>
+		<copyright author="Test Copyright Holder">
+			<year>2024</year>
+			<license>https://creativecommons.org/licenses/by/4.0/</license>
+		</copyright>
+		<link href="https://example.com/gpx">
+			<text>GPX File Information</text>
+			<type>text/html</type>
+		</link>
+		<time>2024-01-01T12:00:00Z</time>
+		<keywords>test, complete, gpx, all-elements</keywords>
+		<bounds minlat="54.9" maxlat="55.0" minlon="9.8" maxlon="9.9"/>
+	</metadata>
+	
+	<!-- Waypoints -->
+	<wpt lat="54.9328621088893" lon="9.860624216140083">
+		<ele>42.5</ele>
+		<time>2024-01-01T12:00:00Z</time>
+		<name>Waypoint 1</name>
+		<desc>First test waypoint</desc>
+		<sym>Flag, Blue</sym>
+		<type>waypoint</type>
+	</wpt>
+	<wpt lat="54.9428621088893" lon="9.870624216140083">
+		<ele>45.0</ele>
+		<time>2024-01-01T12:05:00Z</time>
+		<name>Waypoint 2</name>
+		<desc>Second test waypoint</desc>
+		<sym>Flag, Red</sym>
+		<type>waypoint</type>
+	</wpt>
+	
+	<!-- Routes -->
+	<rte>
+		<name>Test Route</name>
+		<desc>A test route with multiple points</desc>
+		<number>1</number>
+		<rtept lat="54.9328621088893" lon="9.860624216140083">
+			<ele>42.5</ele>
+			<name>Route Point 1</name>
+		</rtept>
+		<rtept lat="54.9378621088893" lon="9.865624216140083">
+			<ele>43.0</ele>
+			<name>Route Point 2</name>
+		</rtept>
+		<rtept lat="54.9428621088893" lon="9.870624216140083">
+			<ele>45.0</ele>
+			<name>Route Point 3</name>
+		</rtept>
+	</rte>
+	
+	<!-- Tracks -->
+	<trk>
+		<name>Test Track</name>
+		<desc>A test track with multiple segments</desc>
+		<number>1</number>
+		<type>running</type>
+		<trkseg>
+			<trkpt lat="54.9328621088893" lon="9.860624216140083">
+				<ele>42.5</ele>
+				<time>2024-01-01T12:00:00Z</time>
+			</trkpt>
+			<trkpt lat="54.9338621088893" lon="9.861624216140083">
+				<ele>42.8</ele>
+				<time>2024-01-01T12:00:30Z</time>
+			</trkpt>
+			<trkpt lat="54.9348621088893" lon="9.862624216140083">
+				<ele>43.2</ele>
+				<time>2024-01-01T12:01:00Z</time>
+			</trkpt>
+		</trkseg>
+		<trkseg>
+			<trkpt lat="54.9358621088893" lon="9.863624216140083">
+				<ele>43.5</ele>
+				<time>2024-01-01T12:01:30Z</time>
+			</trkpt>
+			<trkpt lat="54.9368621088893" lon="9.864624216140083">
+				<ele>44.0</ele>
+				<time>2024-01-01T12:02:00Z</time>
+			</trkpt>
+			<trkpt lat="54.9378621088893" lon="9.865624216140083">
+				<ele>44.5</ele>
+				<time>2024-01-01T12:02:30Z</time>
+			</trkpt>
+		</trkseg>
+	</trk>
+</gpx>

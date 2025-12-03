@@ -18,11 +18,11 @@
 
     <testsuites>
         <testsuite name="Unit">
+            <directory>tests/Unit</directory>
             <directory>tests/UnitTests</directory>
         </testsuite>
         <testsuite name="Integration">
-            <directory>tests/</directory>
-            <exclude>tests/UnitTests</exclude>
+            <directory>tests/Integration</directory>
         </testsuite>
     </testsuites>
 
@@ -36,5 +36,9 @@
             <clover outputFile="coverage/clover.xml"/>
         </report>
     </coverage>
+
+    <logging>
+        <junit outputFile="coverage/junit.xml"/>
+    </logging>
 
 </phpunit>

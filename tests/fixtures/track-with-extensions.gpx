@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="phpGPX Test Suite" 
+	xmlns="http://www.topografix.com/GPX/1/1"
+	xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1">
+	<metadata>
+		<name>Track with Extensions</name>
+		<desc>Test track with Garmin extensions</desc>
+		<time>2024-01-01T12:00:00Z</time>
+	</metadata>
+	<trk>
+		<name>Test Track with Extensions</name>
+		<trkseg>
+			<trkpt lat="54.9328621088893" lon="9.860624216140083">
+				<ele>42.5</ele>
+				<time>2024-01-01T12:00:00Z</time>
+				<extensions>
+					<gpxtpx:TrackPointExtension>
+						<gpxtpx:hr>120</gpxtpx:hr>
+						<gpxtpx:cad>85</gpxtpx:cad>
+					</gpxtpx:TrackPointExtension>
+				</extensions>
+			</trkpt>
+			<trkpt lat="54.9428621088893" lon="9.870624216140083">
+				<ele>45.0</ele>
+				<time>2024-01-01T12:01:00Z</time>
+				<extensions>
+					<gpxtpx:TrackPointExtension>
+						<gpxtpx:hr>125</gpxtpx:hr>
+						<gpxtpx:cad>90</gpxtpx:cad>
+					</gpxtpx:TrackPointExtension>
+				</extensions>
+			</trkpt>
+		</trkseg>
+	</trk>
+</gpx>
