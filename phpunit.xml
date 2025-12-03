@@ -19,7 +19,6 @@
     <testsuites>
         <testsuite name="Unit">
             <directory>tests/Unit</directory>
-            <directory>tests/UnitTests</directory>
         </testsuite>
         <testsuite name="Integration">
             <directory>tests/Integration</directory>

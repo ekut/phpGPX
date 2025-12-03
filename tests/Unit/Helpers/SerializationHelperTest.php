@@ -6,6 +6,7 @@
 namespace UnitTests\phpGPX\Helpers;
 
 use phpGPX\Helpers\SerializationHelper;
+use phpGPX\Models\Summarizable;
 use PHPUnit\Framework\TestCase;
 
 class SerializationHelperTest extends TestCase
@@ -89,5 +90,70 @@ class SerializationHelperTest extends TestCase
 				["foo" => null, "bar" => 1, "baz" => null, "caw" => 2, "doo" => null, "ere" => ["foo" => 3, "bar" => null, "baz" => 4], "moo" => 5, "boo" => null],
 			],
 		];
+	}
+
+	public function testSerializeWithSingleSummarizableObject()
+	{
+		// Arrange
+		$mockObject = $this->createMock(Summarizable::class);
+		$mockObject->expects($this->once())
+			->method('toArray')
+			->willReturn(['id' => 1, 'name' => 'Test']);
+
+		// Act
+		$result = SerializationHelper::serialize($mockObject);
+
+		// Assert
+		$this->assertEquals(['id' => 1, 'name' => 'Test'], $result);
+	}
+
+	public function testSerializeWithArrayOfSummarizableObjects()
+	{
+		// Arrange
+		$mockObject1 = $this->createMock(Summarizable::class);
+		$mockObject1->expects($this->once())
+			->method('toArray')
+			->willReturn(['id' => 1, 'name' => 'First']);
+
+		$mockObject2 = $this->createMock(Summarizable::class);
+		$mockObject2->expects($this->once())
+			->method('toArray')
+			->willReturn(['id' => 2, 'name' => 'Second']);
+
+		$mockObject3 = $this->createMock(Summarizable::class);
+		$mockObject3->expects($this->once())
+			->method('toArray')
+			->willReturn(['id' => 3, 'name' => 'Third']);
+
+		$objects = [$mockObject1, $mockObject2, $mockObject3];
+
+		// Act
+		$result = SerializationHelper::serialize($objects);
+
+		// Assert
+		$expected = [
+			['id' => 1, 'name' => 'First'],
+			['id' => 2, 'name' => 'Second'],
+			['id' => 3, 'name' => 'Third'],
+		];
+		$this->assertEquals($expected, $result);
+	}
+
+	public function testSerializeWithNullObject()
+	{
+		// Act
+		$result = SerializationHelper::serialize(null);
+
+		// Assert
+		$this->assertNull($result);
+	}
+
+	public function testSerializeWithEmptyArray()
+	{
+		// Act
+		$result = SerializationHelper::serialize([]);
+
+		// Assert
+		$this->assertEquals([], $result);
 	}
 }
