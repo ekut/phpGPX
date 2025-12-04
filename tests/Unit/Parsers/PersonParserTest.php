@@ -86,4 +86,23 @@ class PersonParserTest extends AbstractParserTest
 
 		$this->assertNotNull($gpx_file->toXML()->saveXML());
 	}
+
+	/**
+	 * Test parsing person with missing optional attributes
+	 */
+	public function test_parse_person_with_missing_optional_attributes(): void
+	{
+		$minimalXml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
+			<author>
+				<name>John Doe</name>
+			</author>
+		');
+
+		$person = PersonParser::parse($minimalXml);
+
+		$this->assertNotEmpty($person);
+		$this->assertEquals('John Doe', $person->name);
+		$this->assertNull($person->email);
+		$this->assertNull($person->links);
+	}
 }

@@ -58,4 +58,20 @@ class EmailParserTest extends AbstractParserTest
 	{
 		return EmailParser::toXML($this->testModelInstance, $document);
 	}
+
+	/**
+	 * Test parsing email with missing optional attributes
+	 */
+	public function test_parse_email_with_missing_optional_attributes(): void
+	{
+		$minimalXml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
+			<email id="user"/>
+		');
+
+		$email = EmailParser::parse($minimalXml);
+
+		$this->assertNotEmpty($email);
+		$this->assertEquals('user', $email->id);
+		$this->assertNull($email->domain);
+	}
 }

@@ -63,4 +63,23 @@ class LinkParserTest extends AbstractParserTest
 	{
 		return LinkParser::toXML($this->testModelInstance, $document);
 	}
+
+	/**
+	 * Test parsing link with missing optional attributes
+	 */
+	public function test_parse_link_with_missing_optional_attributes(): void
+	{
+		$minimalXml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
+			<document>
+				<link href="https://example.com"/>
+			</document>
+		');
+
+		$links = LinkParser::parse($minimalXml->link);
+
+		$this->assertNotEmpty($links);
+		$this->assertEquals('https://example.com', $links[0]->href);
+		$this->assertNull($links[0]->text);
+		$this->assertNull($links[0]->type);
+	}
 }

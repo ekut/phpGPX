@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<metadata>
+		<name>Test Track</name>
+		<desc>A test track for unit testing</desc>
+		<author>
+			<name>Jakub Dubec</name>
+			<email id="jakub.dubec" domain="gmail.com"/>
+			<link href="https://jakubdubec.me">
+				<text>Portfolio</text>
+				<type>text/html</type>
+			</link>
+		</author>
+		<copyright author="Jakub Dubec">
+			<year>2017</year>
+			<license>https://github.com/Sibyx/phpGPX/blob/master/LICENSE</license>
+		</copyright>
+		<link href="https://example.com">
+			<text>Example Link</text>
+			<type>text/html</type>
+		</link>
+		<time>2017-02-16T22:00:00+00:00</time>
+		<keywords>test, gpx, track</keywords>
+		<bounds minlat="54" minlon="9" maxlat="55" maxlon="10"/>
+	</metadata>
+</document>

@@ -1,0 +1,126 @@
+{
+	"name": "Test Route",
+	"cmt": "Test comment",
+	"desc": "Test description",
+	"src": "GPS Device",
+	"link": [],
+	"number": 1,
+	"type": "cycling",
+	"extensions": null,
+	"rtep": [
+		{
+			"ageofdgpsdata": null,
+			"cmt": null,
+			"desc": null,
+			"dgpsid": null,
+			"difference": null,
+			"distance": null,
+			"ele": 2419,
+			"extensions": null,
+			"fix": null,
+			"geoidheight": null,
+			"hdop": null,
+			"lat": 46.571948,
+			"link": [],
+			"lon": 8.414757,
+			"magvar": null,
+			"name": null,
+			"pdop": null,
+			"sat": null,
+			"src": null,
+			"sym": null,
+			"time": "2017-08-13T07:10:41+00:00",
+			"type": null,
+			"vdop": null
+		},
+		{
+			"ageofdgpsdata": null,
+			"cmt": null,
+			"desc": null,
+			"dgpsid": null,
+			"difference": null,
+			"distance": null,
+			"ele": 2418.8833883882,
+			"extensions": null,
+			"fix": null,
+			"geoidheight": null,
+			"hdop": null,
+			"lat": 46.572016,
+			"link": [],
+			"lon": 8.414866,
+			"magvar": null,
+			"name": null,
+			"pdop": null,
+			"sat": null,
+			"src": null,
+			"sym": null,
+			"time": "2017-08-13T07:10:54+00:00",
+			"type": null,
+			"vdop": null
+		},
+		{
+			"ageofdgpsdata": null,
+			"cmt": null,
+			"desc": null,
+			"dgpsid": null,
+			"difference": null,
+			"distance": null,
+			"ele": 2419.8999900064,
+			"extensions": null,
+			"fix": null,
+			"geoidheight": null,
+			"hdop": null,
+			"lat": 46.572088,
+			"link": [],
+			"lon": 8.414911,
+			"magvar": null,
+			"name": null,
+			"pdop": null,
+			"sat": null,
+			"src": null,
+			"sym": null,
+			"time": "2017-08-13T07:11:56+00:00",
+			"type": null,
+			"vdop": null
+		}
+	],
+	"stats": {
+		"avgPace": 7700,
+		"avgSpeed": 0.12987012987012986,
+		"bounds": [
+			{
+				"lat": 46.572088,
+				"lng": 8.414757
+			},
+			{
+				"lat": 46.571948,
+				"lng": 8.414911
+			}
+		],
+		"cumulativeElevationGain": 1.0166016181819141,
+		"cumulativeElevationLoss": 0.11661161180018098,
+		"distance": 10,
+		"duration": 77,
+		"finishedAt": "2017-08-13T07:11:56+00:00",
+		"finishedAtCoords": {
+			"lat": 46.572088,
+			"lng": 8.414911
+		},
+		"maxAltitude": 2419.8999900064,
+		"maxAltitudeCoords": {
+			"lat": 46.572088,
+			"lng": 8.414911
+		},
+		"minAltitude": 2418.8833883882,
+		"minAltitudeCoords": {
+			"lat": 46.572016,
+			"lng": 8.414866
+		},
+		"realDistance": 20.024838248332617,
+		"startedAt": "2017-08-13T07:10:41+00:00",
+		"startedAtCoords": {
+			"lat": 46.571948,
+			"lng": 8.414757
+		}
+	}
+}

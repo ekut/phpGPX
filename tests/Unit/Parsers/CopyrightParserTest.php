@@ -58,4 +58,21 @@ class CopyrightParserTest extends AbstractParserTest
 	{
 		return CopyrightParser::toXML($this->testModelInstance, $document);
 	}
+
+	/**
+	 * Test parsing copyright with missing optional attributes
+	 */
+	public function test_parse_copyright_with_missing_optional_attributes(): void
+	{
+		$minimalXml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
+			<copyright author="John Doe"/>
+		');
+
+		$copyright = CopyrightParser::parse($minimalXml);
+
+		$this->assertNotEmpty($copyright);
+		$this->assertEquals('John Doe', $copyright->author);
+		$this->assertNull($copyright->year);
+		$this->assertNull($copyright->license);
+	}
 }

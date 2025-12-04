@@ -1,0 +1,39 @@
+{
+	"name": "Test Track",
+	"desc": "A test track for unit testing",
+	"author": {
+		"name": "Jakub Dubec",
+		"email": {
+			"id": "jakub.dubec",
+			"domain": "gmail.com"
+		},
+		"links": [
+			{
+				"href": "https://jakubdubec.me",
+				"text": "Portfolio",
+				"type": "text/html"
+			}
+		]
+	},
+	"copyright": {
+		"author": "Jakub Dubec",
+		"year": "2017",
+		"license": "https://github.com/Sibyx/phpGPX/blob/master/LICENSE"
+	},
+	"links": [
+		{
+			"href": "https://example.com",
+			"text": "Example Link",
+			"type": "text/html"
+		}
+	],
+	"time": "2017-02-16T22:00:00+00:00",
+	"keywords": "test, gpx, track",
+	"bounds": {
+		"minlat": 54.0,
+		"minlon": 9.0,
+		"maxlat": 55.0,
+		"maxlon": 10.0
+	},
+	"extensions": null
+}

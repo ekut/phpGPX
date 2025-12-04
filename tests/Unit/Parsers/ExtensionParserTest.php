@@ -86,4 +86,214 @@ class ExtensionParserTest extends AbstractParserTest
 
 		$this->assertXmlStringEqualsXmlString($this->testXmlFile->asXML(), $document->saveXML());
 	}
+
+	/**
+	 * Test parsing Garmin TrackPointExtension with all fields.
+	 * Requirements: 3.3
+	 */
+	public function test_parse_garmin_trackpoint_extension_with_all_fields(): void
+	{
+		$xml = simplexml_load_string('<?xml version="1.0"?>
+			<extensions xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v2">
+				<gpxtpx:TrackPointExtension>
+					<gpxtpx:atemp>22.5</gpxtpx:atemp>
+					<gpxtpx:wtemp>18.0</gpxtpx:wtemp>
+					<gpxtpx:depth>5.5</gpxtpx:depth>
+					<gpxtpx:hr>145</gpxtpx:hr>
+					<gpxtpx:cad>85</gpxtpx:cad>
+					<gpxtpx:speed>3.5</gpxtpx:speed>
+					<gpxtpx:course>180</gpxtpx:course>
+					<gpxtpx:bearing>90</gpxtpx:bearing>
+				</gpxtpx:TrackPointExtension>
+			</extensions>
+		');
+
+		$extensions = ExtensionParser::parse($xml);
+
+		$this->assertInstanceOf(Extensions::class, $extensions);
+		$this->assertNotNull($extensions->trackPointExtension);
+		$this->assertInstanceOf(TrackPointExtension::class, $extensions->trackPointExtension);
+		
+		$tpe = $extensions->trackPointExtension;
+		$this->assertEquals(22.5, $tpe->aTemp);
+		$this->assertEquals(18.0, $tpe->wTemp);
+		$this->assertEquals(5.5, $tpe->depth);
+		$this->assertEquals(145.0, $tpe->hr);
+		$this->assertEquals(85.0, $tpe->cad);
+		$this->assertEquals(3.5, $tpe->speed);
+		$this->assertEquals(180, $tpe->course);
+		$this->assertEquals(90, $tpe->bearing);
+	}
+
+	/**
+	 * Test parsing Garmin TrackPointExtension v1 namespace.
+	 * Requirements: 3.3
+	 */
+	public function test_parse_garmin_trackpoint_extension_v1_namespace(): void
+	{
+		$xml = simplexml_load_string('<?xml version="1.0"?>
+			<extensions xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1">
+				<gpxtpx:TrackPointExtension>
+					<gpxtpx:atemp>20.0</gpxtpx:atemp>
+					<gpxtpx:hr>150</gpxtpx:hr>
+				</gpxtpx:TrackPointExtension>
+			</extensions>
+		');
+
+		$extensions = ExtensionParser::parse($xml);
+
+		$this->assertInstanceOf(Extensions::class, $extensions);
+		$this->assertNotNull($extensions->trackPointExtension);
+		$this->assertEquals(20.0, $extensions->trackPointExtension->aTemp);
+		$this->assertEquals(150.0, $extensions->trackPointExtension->hr);
+	}
+
+	/**
+	 * Test parsing Garmin TrackPointExtension with partial fields.
+	 * Requirements: 3.3
+	 */
+	public function test_parse_garmin_trackpoint_extension_with_partial_fields(): void
+	{
+		$xml = simplexml_load_string('<?xml version="1.0"?>
+			<extensions xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v2">
+				<gpxtpx:TrackPointExtension>
+					<gpxtpx:hr>160</gpxtpx:hr>
+					<gpxtpx:cad>90</gpxtpx:cad>
+				</gpxtpx:TrackPointExtension>
+			</extensions>
+		');
+
+		$extensions = ExtensionParser::parse($xml);
+
+		$this->assertInstanceOf(Extensions::class, $extensions);
+		$this->assertNotNull($extensions->trackPointExtension);
+		
+		$tpe = $extensions->trackPointExtension;
+		$this->assertEquals(160.0, $tpe->hr);
+		$this->assertEquals(90.0, $tpe->cad);
+		$this->assertNull($tpe->aTemp);
+		$this->assertNull($tpe->wTemp);
+		$this->assertNull($tpe->depth);
+		$this->assertNull($tpe->speed);
+		$this->assertNull($tpe->course);
+		$this->assertNull($tpe->bearing);
+	}
+
+	/**
+	 * Test parsing unknown extensions.
+	 * Requirements: 3.3
+	 */
+	public function test_parse_unknown_extensions(): void
+	{
+		$xml = simplexml_load_string('<?xml version="1.0"?>
+			<extensions xmlns:custom="http://example.com/custom">
+				<custom:customField>Custom Value</custom:customField>
+				<custom:anotherField>Another Value</custom:anotherField>
+			</extensions>
+		');
+
+		$extensions = ExtensionParser::parse($xml);
+
+		$this->assertInstanceOf(Extensions::class, $extensions);
+		$this->assertNull($extensions->trackPointExtension);
+		$this->assertNotEmpty($extensions->unsupported);
+		$this->assertArrayHasKey('custom:customField', $extensions->unsupported);
+		$this->assertArrayHasKey('custom:anotherField', $extensions->unsupported);
+		$this->assertEquals('Custom Value', $extensions->unsupported['custom:customField']);
+		$this->assertEquals('Another Value', $extensions->unsupported['custom:anotherField']);
+	}
+
+	/**
+	 * Test parsing mixed known and unknown extensions.
+	 * Requirements: 3.3
+	 */
+	public function test_parse_mixed_known_and_unknown_extensions(): void
+	{
+		$xml = simplexml_load_string('<?xml version="1.0"?>
+			<extensions xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v2" xmlns:custom="http://example.com/custom">
+				<gpxtpx:TrackPointExtension>
+					<gpxtpx:hr>155</gpxtpx:hr>
+				</gpxtpx:TrackPointExtension>
+				<custom:customData>Test Data</custom:customData>
+			</extensions>
+		');
+
+		$extensions = ExtensionParser::parse($xml);
+
+		$this->assertInstanceOf(Extensions::class, $extensions);
+		$this->assertNotNull($extensions->trackPointExtension);
+		$this->assertEquals(155.0, $extensions->trackPointExtension->hr);
+		$this->assertNotEmpty($extensions->unsupported);
+		$this->assertArrayHasKey('custom:customData', $extensions->unsupported);
+		$this->assertEquals('Test Data', $extensions->unsupported['custom:customData']);
+	}
+
+	/**
+	 * Test parsing empty extensions element.
+	 * Requirements: 3.3
+	 */
+	public function test_parse_empty_extensions(): void
+	{
+		$xml = simplexml_load_string('<?xml version="1.0"?>
+			<extensions></extensions>
+		');
+
+		$extensions = ExtensionParser::parse($xml);
+
+		$this->assertInstanceOf(Extensions::class, $extensions);
+		$this->assertNull($extensions->trackPointExtension);
+		$this->assertEmpty($extensions->unsupported);
+	}
+
+	/**
+	 * Test parsing TrackPointExtension with zero values.
+	 * Requirements: 3.3
+	 */
+	public function test_parse_trackpoint_extension_with_zero_values(): void
+	{
+		$xml = simplexml_load_string('<?xml version="1.0"?>
+			<extensions xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v2">
+				<gpxtpx:TrackPointExtension>
+					<gpxtpx:atemp>0</gpxtpx:atemp>
+					<gpxtpx:hr>0</gpxtpx:hr>
+					<gpxtpx:cad>0</gpxtpx:cad>
+					<gpxtpx:speed>0</gpxtpx:speed>
+				</gpxtpx:TrackPointExtension>
+			</extensions>
+		');
+
+		$extensions = ExtensionParser::parse($xml);
+
+		$this->assertInstanceOf(Extensions::class, $extensions);
+		$this->assertNotNull($extensions->trackPointExtension);
+		
+		$tpe = $extensions->trackPointExtension;
+		$this->assertEquals(0.0, $tpe->aTemp);
+		$this->assertEquals(0.0, $tpe->hr);
+		$this->assertEquals(0.0, $tpe->cad);
+		$this->assertEquals(0.0, $tpe->speed);
+	}
+
+	/**
+	 * Test parsing TrackPointExtension with negative temperature.
+	 * Requirements: 3.3
+	 */
+	public function test_parse_trackpoint_extension_with_negative_temperature(): void
+	{
+		$xml = simplexml_load_string('<?xml version="1.0"?>
+			<extensions xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v2">
+				<gpxtpx:TrackPointExtension>
+					<gpxtpx:atemp>-15.5</gpxtpx:atemp>
+					<gpxtpx:wtemp>-2.0</gpxtpx:wtemp>
+				</gpxtpx:TrackPointExtension>
+			</extensions>
+		');
+
+		$extensions = ExtensionParser::parse($xml);
+
+		$this->assertInstanceOf(Extensions::class, $extensions);
+		$this->assertNotNull($extensions->trackPointExtension);
+		$this->assertEquals(-15.5, $extensions->trackPointExtension->aTemp);
+		$this->assertEquals(-2.0, $extensions->trackPointExtension->wTemp);
+	}
 }
