@@ -1,6 +1,6 @@
 <?php
 
-namespace UnitTests\phpGPX\Parsers;
+namespace phpGPX\Tests\Unit\Parsers;
 
 use phpGPX\Models\Extensions;
 use phpGPX\Models\Extensions\TrackPointExtension;

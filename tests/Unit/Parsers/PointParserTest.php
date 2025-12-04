@@ -3,14 +3,13 @@
  * @author miqwit
  */
 
-namespace phpGPX\Tests\UnitTests\phpGPX\Parsers;
+namespace phpGPX\Tests\Unit\Parsers;
 
 use phpGPX\Helpers\DateTimeHelper;
 use phpGPX\Models\Point;
 use phpGPX\Parsers\SegmentParser;
 use phpGPX\Parsers\PointParser;
 use phpGPX\phpGPX;
-use UnitTests\phpGPX\Parsers\AbstractParserTest;
 
 class PointParserTest extends AbstractParserTest
 {

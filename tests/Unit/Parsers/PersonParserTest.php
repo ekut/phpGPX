@@ -3,7 +3,7 @@
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
  */
 
-namespace UnitTests\phpGPX\Parsers;
+namespace phpGPX\Tests\Unit\Parsers;
 
 use phpGPX\Models\GpxFile;
 use phpGPX\Models\Metadata;

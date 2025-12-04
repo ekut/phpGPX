@@ -3,13 +3,12 @@
  * @author miqwit
  */
 
-namespace phpGPX\Tests\UnitTests\phpGPX\Parsers;
+namespace phpGPX\Tests\Unit\Parsers;
 
 use phpGPX\Helpers\DateTimeHelper;
 use phpGPX\Models\Segment;
 use phpGPX\Parsers\SegmentParser;
 use phpGPX\phpGPX;
-use UnitTests\phpGPX\Parsers\AbstractParserTest;
 
 class SegmentParserTest extends AbstractParserTest
 {

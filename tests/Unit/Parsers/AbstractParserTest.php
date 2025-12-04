@@ -1,9 +1,12 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
  */
 
-namespace UnitTests\phpGPX\Parsers;
+namespace phpGPX\Tests\Unit\Parsers;
 
 use phpGPX\Models\Summarizable;
 use PHPUnit\Framework\TestCase;
