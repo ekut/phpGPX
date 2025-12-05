@@ -17,6 +17,8 @@ use phpGPX\phpGPX;
 /**
  * Class GpxFile
  * Representation of GPX file.
+ * GPX documents contain a metadata header, followed by waypoints, routes, and tracks.
+ * @see https://www.topografix.com/GPX/1/1/#type_gpxType
  * @package phpGPX\Models
  */
 class GpxFile implements Summarizable

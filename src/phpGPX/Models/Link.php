@@ -9,10 +9,12 @@ declare(strict_types=1);
 
 namespace phpGPX\Models;
 
+use phpGPX\Helpers\GpxValidator;
+
 /**
  * Class Link according to GPX 1.1 specification.
  * A link to an external resource (Web page, digital photo, video clip, etc) with additional information.
- * @see http://www.topografix.com/GPX/1/1/#type_linkType
+ * @see https://www.topografix.com/GPX/1/1/#type_linkType
  * @package phpGPX\Models
  */
 class Link implements Summarizable
@@ -23,10 +25,11 @@ class Link implements Summarizable
 	 * Mime type of content (image/jpeg)
 	 */
 	public function __construct(
-		public string $href = '',
+		public string $href,
 		public ?string $text = null,
 		public ?string $type = null
 	) {
+		GpxValidator::validateNonEmptyString($href, 'Link href attribute');
 	}
 
 	/**

@@ -14,6 +14,7 @@ use phpGPX\Helpers\SerializationHelper;
 /**
  * Class Person
  * A person or organisation
+ * @see https://www.topografix.com/GPX/1/1/#type_personType
  * @package phpGPX\Models
  */
 class Person implements Summarizable

@@ -20,11 +20,11 @@ class CopyrightParserTest extends AbstractParserTest
 
 	public static function createTestInstance()
 	{
-		$copyright = new Copyright();
-
-		$copyright->author = "Jakub Dubec";
-		$copyright->license = "https://github.com/Sibyx/phpGPX/blob/master/LICENSE";
-		$copyright->year = '2017';
+		$copyright = new Copyright(
+			"Jakub Dubec",
+			'2017',
+			"https://github.com/Sibyx/phpGPX/blob/master/LICENSE"
+		);
 
 		return $copyright;
 	}

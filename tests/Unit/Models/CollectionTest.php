@@ -116,9 +116,7 @@ final class CollectionTest extends TestCase
 	{
 		// Arrange
 		$collection = new Track();
-		$link = new Link();
-		$link->href = 'https://example.com';
-		$link->text = 'Example Link';
+		$link = new Link('https://example.com', 'Example Link');
 		
 		// Act
 		$collection->links[] = $link;
@@ -134,17 +132,11 @@ final class CollectionTest extends TestCase
 	{
 		// Arrange
 		$collection = new Route();
-		$link1 = new Link();
-		$link1->href = 'https://example.com/1';
-		$link1->text = 'Link 1';
+		$link1 = new Link('https://example.com/1', 'Link 1');
 		
-		$link2 = new Link();
-		$link2->href = 'https://example.com/2';
-		$link2->text = 'Link 2';
+		$link2 = new Link('https://example.com/2', 'Link 2');
 		
-		$link3 = new Link();
-		$link3->href = 'https://example.com/3';
-		$link3->text = 'Link 3';
+		$link3 = new Link('https://example.com/3', 'Link 3');
 		
 		// Act
 		$collection->links[] = $link1;
@@ -162,10 +154,8 @@ final class CollectionTest extends TestCase
 	{
 		// Arrange
 		$collection = new Track();
-		$link1 = new Link();
-		$link1->href = 'https://example.com/1';
-		$link2 = new Link();
-		$link2->href = 'https://example.com/2';
+		$link1 = new Link('https://example.com/1');
+		$link2 = new Link('https://example.com/2');
 		
 		$collection->links[] = $link1;
 		$collection->links[] = $link2;
@@ -183,10 +173,8 @@ final class CollectionTest extends TestCase
 	{
 		// Arrange
 		$collection = new Route();
-		$link1 = new Link();
-		$link1->href = 'https://example.com/1';
-		$link2 = new Link();
-		$link2->href = 'https://example.com/2';
+		$link1 = new Link('https://example.com/1');
+		$link2 = new Link('https://example.com/2');
 		
 		$collection->links[] = $link1;
 		$collection->links[] = $link2;
@@ -283,8 +271,7 @@ final class CollectionTest extends TestCase
 		$track->number = 99;
 		$track->type = 'running';
 		
-		$link = new Link();
-		$link->href = 'https://example.com';
+		$link = new Link('https://example.com');
 		$track->links[] = $link;
 		
 		// Act
@@ -378,8 +365,7 @@ final class CollectionTest extends TestCase
 		$collection->number = 123;
 		$collection->type = 'hiking';
 		
-		$link = new Link();
-		$link->href = 'https://example.com';
+		$link = new Link('https://example.com');
 		$collection->links[] = $link;
 		
 		$extensions = new Extensions();
@@ -404,8 +390,8 @@ final class CollectionTest extends TestCase
 	{
 		// Arrange
 		$collection = new Track();
-		$collection->links[] = new Link();
-		$collection->links[] = new Link();
+		$collection->links[] = new Link('https://example.com/1');
+		$collection->links[] = new Link('https://example.com/2');
 		$this->assertCount(2, $collection->links);
 		
 		// Act
@@ -519,8 +505,7 @@ final class CollectionTest extends TestCase
 				// Add initial links
 				$initialLinkCount = mt_rand(0, 5);
 				for ($i = 0; $i < $initialLinkCount; $i++) {
-					$link = new Link();
-					$link->href = "https://example.com/{$i}";
+					$link = new Link("https://example.com/{$i}");
 					$collection->links[] = $link;
 				}
 				
@@ -530,8 +515,7 @@ final class CollectionTest extends TestCase
 				$linksToAdd = mt_rand(1, 3);
 				for ($i = 0; $i < $linksToAdd; $i++) {
 					$expectedCount = $originalLinkCount + $i + 1;
-					$link = new Link();
-					$link->href = "https://example.com/new-{$i}";
+					$link = new Link("https://example.com/new-{$i}");
 					$collection->links[] = $link;
 					
 					$this->assertEquals(

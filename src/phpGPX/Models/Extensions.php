@@ -14,8 +14,10 @@ use phpGPX\Models\Extensions\TrackPointExtension;
 
 /**
  * Class Extensions
- * TODO: http://www.garmin.com/xmlschemas/GpxExtensions/v3
+ * You can add extend GPX by adding your own elements from another schema here.
+ * @see https://www.topografix.com/GPX/1/1/#type_extensionsType
  * @package phpGPX\Models
+ * @todo http://www.garmin.com/xmlschemas/GpxExtensions/v3
  */
 class Extensions implements Summarizable
 {

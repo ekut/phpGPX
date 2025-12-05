@@ -38,18 +38,11 @@ final class PersonTest extends TestCase
 	public function test_person_stores_all_properties_correctly(): void
 	{
 		// Arrange
-		$email = new Email();
-		$email->id = 'john.doe';
-		$email->domain = 'example.com';
+		$email = new Email('john.doe', 'example.com');
 		
-		$link1 = new Link();
-		$link1->href = 'https://example.com';
-		$link1->text = 'Website';
+		$link1 = new Link('https://example.com', 'Website');
 		
-		$link2 = new Link();
-		$link2->href = 'https://example.com/photo.jpg';
-		$link2->text = 'Photo';
-		$link2->type = 'image/jpeg';
+		$link2 = new Link('https://example.com/photo.jpg', 'Photo', 'image/jpeg');
 		
 		// Act
 		$person = new Person();
@@ -107,13 +100,9 @@ final class PersonTest extends TestCase
 	public function test_person_serializes_to_array_correctly(): void
 	{
 		// Arrange
-		$email = new Email();
-		$email->id = 'john.doe';
-		$email->domain = 'example.com';
+		$email = new Email('john.doe', 'example.com');
 		
-		$link = new Link();
-		$link->href = 'https://example.com';
-		$link->text = 'Website';
+		$link = new Link('https://example.com', 'Website');
 		
 		$person = new Person();
 		$person->name = 'John Doe';
@@ -159,13 +148,9 @@ final class PersonTest extends TestCase
 	public function test_person_serializes_to_xml_correctly(): void
 	{
 		// Arrange
-		$email = new Email();
-		$email->id = 'john.doe';
-		$email->domain = 'example.com';
+		$email = new Email('john.doe', 'example.com');
 		
-		$link = new Link();
-		$link->href = 'https://example.com';
-		$link->text = 'Website';
+		$link = new Link('https://example.com', 'Website');
 		
 		$person = new Person();
 		$person->name = 'John Doe';
@@ -220,17 +205,11 @@ final class PersonTest extends TestCase
 	public function test_person_handles_multiple_links(): void
 	{
 		// Arrange
-		$link1 = new Link();
-		$link1->href = 'https://example.com';
-		$link1->text = 'Website';
+		$link1 = new Link('https://example.com', 'Website');
 		
-		$link2 = new Link();
-		$link2->href = 'https://example.com/photo.jpg';
-		$link2->text = 'Photo';
+		$link2 = new Link('https://example.com/photo.jpg', 'Photo');
 		
-		$link3 = new Link();
-		$link3->href = 'https://example.com/video.mp4';
-		$link3->text = 'Video';
+		$link3 = new Link('https://example.com/video.mp4', 'Video');
 		
 		// Act
 		$person = new Person();
@@ -251,11 +230,9 @@ final class PersonTest extends TestCase
 	public function test_person_serializes_multiple_links_to_xml(): void
 	{
 		// Arrange
-		$link1 = new Link();
-		$link1->href = 'https://example.com';
+		$link1 = new Link('https://example.com');
 		
-		$link2 = new Link();
-		$link2->href = 'https://example.com/photo.jpg';
+		$link2 = new Link('https://example.com/photo.jpg');
 		
 		$person = new Person();
 		$person->name = 'John Doe';
@@ -285,9 +262,7 @@ final class PersonTest extends TestCase
 		$person = new Person();
 		$person->name = 'Acme Corporation';
 		
-		$email = new Email();
-		$email->id = 'info';
-		$email->domain = 'acme.com';
+		$email = new Email('info', 'acme.com');
 		$person->email = $email;
 		
 		// Assert

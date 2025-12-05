@@ -9,12 +9,14 @@ declare(strict_types=1);
 
 namespace phpGPX\Models;
 
+use phpGPX\Helpers\GpxValidator;
 use phpGPX\Helpers\SerializationHelper;
 
 /**
  * Class Copyright
  * Information about the copyright holder and any license governing use of this file.
  * By linking to an appropriate license, you may place your data into the public domain or grant additional usage rights.
+ * @see https://www.topografix.com/GPX/1/1/#type_copyrightType
  * @package phpGPX\Models
  */
 class Copyright implements Summarizable
@@ -25,10 +27,11 @@ class Copyright implements Summarizable
 	 * Link to external file containing license text.
 	 */
 	public function __construct(
-		public string $author = '',
+		public string $author,
 		public ?string $year = null,
 		public ?string $license = null
 	) {
+		GpxValidator::validateNonEmptyString($author, 'Copyright author');
 	}
 
 	/**

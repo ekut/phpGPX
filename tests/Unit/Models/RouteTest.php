@@ -73,9 +73,7 @@ final class RouteTest extends TestCase
 	{
 		// Arrange
 		$route = new Route();
-		$link = new Link();
-		$link->href = 'https://example.com/route';
-		$link->text = 'Route Info';
+		$link = new Link('https://example.com/route', 'Route Info');
 		
 		// Act
 		$route->links[] = $link;
@@ -396,9 +394,7 @@ final class RouteTest extends TestCase
 		$route = new Route();
 		$route->name = 'Route with Links';
 		
-		$link = new Link();
-		$link->href = 'https://example.com';
-		$link->text = 'Example';
+		$link = new Link('https://example.com', 'Example');
 		$route->links[] = $link;
 		
 		$document = new \DOMDocument('1.0', 'UTF-8');

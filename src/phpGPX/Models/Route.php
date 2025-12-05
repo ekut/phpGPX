@@ -15,6 +15,8 @@ use phpGPX\phpGPX;
 
 /**
  * Class Route
+ * Represents a route - an ordered list of waypoints representing a series of turn points leading to a destination.
+ * @see https://www.topografix.com/GPX/1/1/#type_rteType
  * @package phpGPX\Models
  */
 class Route extends Collection

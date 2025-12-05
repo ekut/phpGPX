@@ -18,6 +18,7 @@ use phpGPX\phpGPX;
  * A Track Segment holds a list of Track Points which are logically connected in order.
  * To represent a single GPS track where GPS reception was lost, or the GPS receiver was turned off,
  * start a new Track Segment for each continuous span of track data.
+ * @see https://www.topografix.com/GPX/1/1/#type_trksegType
  * @package phpGPX\Models
  */
 class Segment implements Summarizable, StatsCalculator

@@ -13,6 +13,8 @@ use phpGPX\phpGPX;
 
 /**
  * Class Track
+ * Represents a track - an ordered list of points describing a path.
+ * @see https://www.topografix.com/GPX/1/1/#type_trkType
  * @package phpGPX\Models
  */
 class Track extends Collection

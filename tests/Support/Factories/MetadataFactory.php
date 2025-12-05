@@ -61,9 +61,7 @@ class MetadataFactory
 	{
 		$links = [];
 		foreach ($linkUrls as $url) {
-			$link = new Link();
-			$link->href = $url;
-			$links[] = $link;
+			$links[] = new Link($url);
 		}
 		
 		return self::create(['links' => $links]);

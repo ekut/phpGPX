@@ -378,9 +378,7 @@ final class SerializationRoundTripTest extends TestCase
 				
 				// Add links
 				for ($i = 0; $i < $numLinks; $i++) {
-					$link = new Link();
-					$link->href = "https://example.com/link{$i}";
-					$link->text = "Link {$i}";
+					$link = new Link("https://example.com/link{$i}", "Link {$i}");
 					$originalPoint->links[] = $link;
 				}
 				

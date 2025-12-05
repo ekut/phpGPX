@@ -40,9 +40,7 @@ $sample_data = [
 ];
 
 // Creating sample link object for metadata
-$link 							= new Link();
-$link->href 					= "https://sibyx.github.io/phpgpx";
-$link->text 					= 'phpGPX Docs';
+$link = new Link("https://sibyx.github.io/phpgpx", 'phpGPX Docs');
 
 // GpxFile contains data and handles serialization of objects
 $gpx_file 						= new GpxFile();

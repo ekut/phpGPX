@@ -79,9 +79,7 @@ final class TrackTest extends TestCase
 	{
 		// Arrange
 		$track = new Track();
-		$link = new Link();
-		$link->href = 'https://example.com';
-		$link->text = 'Example Link';
+		$link = new Link('https://example.com', 'Example Link');
 		
 		// Act
 		$track->links[] = $link;

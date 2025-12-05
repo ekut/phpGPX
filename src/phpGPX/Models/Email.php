@@ -9,9 +9,12 @@ declare(strict_types=1);
 
 namespace phpGPX\Models;
 
+use phpGPX\Helpers\GpxValidator;
+
 /**
  * Class Email
  * An email address. Broken into two parts (id and domain) to help prevent email harvesting.
+ * @see https://www.topografix.com/GPX/1/1/#type_emailType
  * @package phpGPX\Models
  */
 class Email implements Summarizable
@@ -21,9 +24,11 @@ class Email implements Summarizable
 	 * Domain half of email address (gmail.com)
 	 */
 	public function __construct(
-		public string $id = '',
-		public string $domain = ''
+		public string $id,
+		public string $domain
 	) {
+		GpxValidator::validateNonEmptyString($id, 'Email id attribute');
+		GpxValidator::validateNonEmptyString($domain, 'Email domain attribute');
 	}
 
 	/**

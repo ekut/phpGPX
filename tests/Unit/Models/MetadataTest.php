@@ -86,10 +86,7 @@ final class MetadataTest extends TestCase
 	{
 		// Arrange
 		$metadata = new Metadata();
-		$copyright = new Copyright();
-		$copyright->author = 'John Doe';
-		$copyright->year = '2024';
-		$copyright->license = 'https://creativecommons.org/licenses/by/4.0/';
+		$copyright = new Copyright('John Doe', '2024', 'https://creativecommons.org/licenses/by/4.0/');
 		
 		// Act
 		$metadata->copyright = $copyright;
@@ -109,9 +106,7 @@ final class MetadataTest extends TestCase
 	{
 		// Arrange
 		$metadata = new Metadata();
-		$link = new Link();
-		$link->href = 'https://example.com';
-		$link->text = 'Example Website';
+		$link = new Link('https://example.com', 'Example Website');
 		$link->type = 'text/html';
 		
 		// Act
@@ -134,13 +129,9 @@ final class MetadataTest extends TestCase
 		// Arrange
 		$metadata = new Metadata();
 		
-		$link1 = new Link();
-		$link1->href = 'https://example.com';
-		$link1->text = 'Example Website';
+		$link1 = new Link('https://example.com', 'Example Website');
 		
-		$link2 = new Link();
-		$link2->href = 'https://photos.example.com/track.jpg';
-		$link2->text = 'Track Photo';
+		$link2 = new Link('https://photos.example.com/track.jpg', 'Track Photo');
 		$link2->type = 'image/jpeg';
 		
 		// Act
@@ -236,12 +227,9 @@ final class MetadataTest extends TestCase
 		$author = new Person();
 		$author->name = 'Jane Smith';
 		
-		$copyright = new Copyright();
-		$copyright->author = 'Jane Smith';
-		$copyright->year = '2024';
+		$copyright = new Copyright('Jane Smith', '2024');
 		
-		$link = new Link();
-		$link->href = 'https://example.com';
+		$link = new Link('https://example.com');
 		
 		$bounds = new Bounds(50.0, 10.0, 55.0, 15.0);
 		$extensions = new Extensions();
@@ -351,10 +339,7 @@ final class MetadataTest extends TestCase
 	{
 		// Arrange
 		$metadata = new Metadata();
-		$copyright = new Copyright();
-		$copyright->author = 'Jane Smith';
-		$copyright->year = '2024';
-		$copyright->license = 'https://example.com/license';
+		$copyright = new Copyright('Jane Smith', '2024', 'https://example.com/license');
 		$metadata->copyright = $copyright;
 		
 		// Act
@@ -376,13 +361,9 @@ final class MetadataTest extends TestCase
 		// Arrange
 		$metadata = new Metadata();
 		
-		$link1 = new Link();
-		$link1->href = 'https://example.com';
-		$link1->text = 'Example';
+		$link1 = new Link('https://example.com', 'Example');
 		
-		$link2 = new Link();
-		$link2->href = 'https://test.com';
-		$link2->text = 'Test';
+		$link2 = new Link('https://test.com', 'Test');
 		
 		$metadata->links = [$link1, $link2];
 		
@@ -487,12 +468,9 @@ final class MetadataTest extends TestCase
 		$author = new Person();
 		$author->name = 'Complete Author';
 		
-		$copyright = new Copyright();
-		$copyright->author = 'Complete Author';
-		$copyright->year = '2024';
+		$copyright = new Copyright('Complete Author', '2024');
 		
-		$link = new Link();
-		$link->href = 'https://complete.example.com';
+		$link = new Link('https://complete.example.com');
 		
 		$bounds = new Bounds(50.0, 10.0, 55.0, 15.0);
 		$extensions = new Extensions();

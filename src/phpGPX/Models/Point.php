@@ -18,7 +18,7 @@ use phpGPX\phpGPX;
 /**
  * Class Point
  * GPX point representation according to GPX 1.1 specification.
- * @see http://www.topografix.com/GPX/1/1/#type_wptType
+ * @see https://www.topografix.com/GPX/1/1/#type_wptType
  * @package phpGPX\Models
  */
 class Point implements Summarizable
@@ -114,7 +114,7 @@ class Point implements Summarizable
 	 * Type of GPS fix. none means GPS had no fix. To signify "the fix info is unknown, leave out fixType entirely. pps = military signal used
 	 * Possible values: {'none'|'2d'|'3d'|'dgps'|'pps'}
 	 * Original GPX 1.1 attribute.
-	 * @see http://www.topografix.com/GPX/1/1/#type_fixType
+	 * @see https://www.topografix.com/GPX/1/1/#type_fixType
 	 */
 	public ?string $fix = null;
 
@@ -151,7 +151,7 @@ class Point implements Summarizable
 	/**
 	 * ID of DGPS station used in differential correction.
 	 * Original GPX 1.1 attribute.
-	 * @see http://www.topografix.com/GPX/1/1/#type_dgpsStationType
+	 * @see https://www.topografix.com/GPX/1/1/#type_dgpsStationType
 	 */
 	public ?int $dgpsid = null;
 

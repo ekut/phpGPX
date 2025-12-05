@@ -105,12 +105,12 @@ class BoundsParserTest extends AbstractParserTest
 
 	/**
 	 * Test parsing bounds with extreme valid coordinates.
-	 * Requirements: 3.2
+	 * Requirements: 3.2, 2.4, 2.5
 	 */
 	public function test_parse_bounds_with_extreme_coordinates(): void
 	{
 		$xml = simplexml_load_string('<?xml version="1.0"?>
-			<bounds minlat="-90.0" minlon="-180.0" maxlat="90.0" maxlon="180.0"/>
+			<bounds minlat="-90.0" minlon="-180.0" maxlat="90.0" maxlon="179.999999"/>
 		');
 
 		$bounds = BoundsParser::parse($xml);
@@ -119,12 +119,13 @@ class BoundsParserTest extends AbstractParserTest
 		$this->assertEquals(-90.0, $bounds->minLatitude);
 		$this->assertEquals(-180.0, $bounds->minLongitude);
 		$this->assertEquals(90.0, $bounds->maxLatitude);
-		$this->assertEquals(180.0, $bounds->maxLongitude);
+		$this->assertEquals(179.999999, $bounds->maxLongitude);
 	}
 
 	/**
-	 * Test parsing bounds with missing minlat attribute.
-	 * Requirements: 3.5
+	 * Test parsing bounds with missing minlat attribute returns null.
+	 * Per GPX 1.1 schema, all four attributes are required.
+	 * Requirements: 2.1, 2.2
 	 */
 	public function test_parse_bounds_with_missing_minlat(): void
 	{
@@ -134,16 +135,13 @@ class BoundsParserTest extends AbstractParserTest
 
 		$bounds = BoundsParser::parse($xml);
 
-		$this->assertInstanceOf(Bounds::class, $bounds);
-		$this->assertNull($bounds->minLatitude);
-		$this->assertEquals(9.0, $bounds->minLongitude);
-		$this->assertEquals(55.0, $bounds->maxLatitude);
-		$this->assertEquals(10.0, $bounds->maxLongitude);
+		$this->assertNull($bounds);
 	}
 
 	/**
-	 * Test parsing bounds with missing minlon attribute.
-	 * Requirements: 3.5
+	 * Test parsing bounds with missing minlon attribute returns null.
+	 * Per GPX 1.1 schema, all four attributes are required.
+	 * Requirements: 2.1, 2.2
 	 */
 	public function test_parse_bounds_with_missing_minlon(): void
 	{
@@ -153,16 +151,13 @@ class BoundsParserTest extends AbstractParserTest
 
 		$bounds = BoundsParser::parse($xml);
 
-		$this->assertInstanceOf(Bounds::class, $bounds);
-		$this->assertEquals(54.0, $bounds->minLatitude);
-		$this->assertNull($bounds->minLongitude);
-		$this->assertEquals(55.0, $bounds->maxLatitude);
-		$this->assertEquals(10.0, $bounds->maxLongitude);
+		$this->assertNull($bounds);
 	}
 
 	/**
-	 * Test parsing bounds with missing maxlat attribute.
-	 * Requirements: 3.5
+	 * Test parsing bounds with missing maxlat attribute returns null.
+	 * Per GPX 1.1 schema, all four attributes are required.
+	 * Requirements: 2.1, 2.2
 	 */
 	public function test_parse_bounds_with_missing_maxlat(): void
 	{
@@ -172,16 +167,13 @@ class BoundsParserTest extends AbstractParserTest
 
 		$bounds = BoundsParser::parse($xml);
 
-		$this->assertInstanceOf(Bounds::class, $bounds);
-		$this->assertEquals(54.0, $bounds->minLatitude);
-		$this->assertEquals(9.0, $bounds->minLongitude);
-		$this->assertNull($bounds->maxLatitude);
-		$this->assertEquals(10.0, $bounds->maxLongitude);
+		$this->assertNull($bounds);
 	}
 
 	/**
-	 * Test parsing bounds with missing maxlon attribute.
-	 * Requirements: 3.5
+	 * Test parsing bounds with missing maxlon attribute returns null.
+	 * Per GPX 1.1 schema, all four attributes are required.
+	 * Requirements: 2.1, 2.2
 	 */
 	public function test_parse_bounds_with_missing_maxlon(): void
 	{
@@ -191,16 +183,13 @@ class BoundsParserTest extends AbstractParserTest
 
 		$bounds = BoundsParser::parse($xml);
 
-		$this->assertInstanceOf(Bounds::class, $bounds);
-		$this->assertEquals(54.0, $bounds->minLatitude);
-		$this->assertEquals(9.0, $bounds->minLongitude);
-		$this->assertEquals(55.0, $bounds->maxLatitude);
-		$this->assertNull($bounds->maxLongitude);
+		$this->assertNull($bounds);
 	}
 
 	/**
-	 * Test parsing bounds with all attributes missing.
-	 * Requirements: 3.5
+	 * Test parsing bounds with all attributes missing returns null.
+	 * Per GPX 1.1 schema, all four attributes are required.
+	 * Requirements: 2.1, 2.2
 	 */
 	public function test_parse_bounds_with_all_attributes_missing(): void
 	{
@@ -210,11 +199,7 @@ class BoundsParserTest extends AbstractParserTest
 
 		$bounds = BoundsParser::parse($xml);
 
-		$this->assertInstanceOf(Bounds::class, $bounds);
-		$this->assertNull($bounds->minLatitude);
-		$this->assertNull($bounds->minLongitude);
-		$this->assertNull($bounds->maxLatitude);
-		$this->assertNull($bounds->maxLongitude);
+		$this->assertNull($bounds);
 	}
 
 	/**

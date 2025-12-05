@@ -17,46 +17,49 @@ abstract class BoundsParser
 	private static $tagName = 'bounds';
 
 	/**
-  * Parse data from XML.
-  * @return Bounds|null
-  */
- public static function parse(\SimpleXMLElement $node)
+	 * Parse data from XML.
+	 * 
+	 * All four coordinate attributes are required per GPX 1.1 schema.
+	 * Returns null if any required attribute is missing.
+	 * 
+	 * @return Bounds|null
+	 */
+	public static function parse(\SimpleXMLElement $node)
 	{
 		if ($node->getName() != self::$tagName) {
 			return null;
 		}
 
+		// All four attributes are required per GPX 1.1 schema
+		if (!isset($node['minlat']) || !isset($node['minlon']) || 
+			!isset($node['maxlat']) || !isset($node['maxlon'])) {
+			return null;
+		}
+
 		return new Bounds(
-			isset($node['minlat']) ? (float) $node['minlat'] : null,
-			isset($node['minlon']) ? (float) $node['minlon'] : null,
-			isset($node['maxlat']) ? (float) $node['maxlat'] : null,
-			isset($node['maxlon']) ? (float) $node['maxlon'] : null
+			(float) $node['minlat'],
+			(float) $node['minlon'],
+			(float) $node['maxlat'],
+			(float) $node['maxlon']
 		);
 	}
 
 	/**
-  * Create XML representation.
-  * @return \DOMElement
-  */
- public static function toXML(Bounds $bounds, \DOMDocument &$document)
+	 * Create XML representation.
+	 * 
+	 * All four coordinate attributes are always present per GPX 1.1 schema.
+	 * 
+	 * @return \DOMElement
+	 */
+	public static function toXML(Bounds $bounds, \DOMDocument &$document)
 	{
-		$node =  $document->createElement(self::$tagName);
+		$node = $document->createElement(self::$tagName);
 
-		if (!is_null($bounds->minLatitude)) {
-			$node->setAttribute('minlat', $bounds->minLatitude);
-		}
-
-		if (!is_null($bounds->minLongitude)) {
-			$node->setAttribute('minlon', $bounds->minLongitude);
-		}
-
-		if (!is_null($bounds->maxLatitude)) {
-			$node->setAttribute('maxlat', $bounds->maxLatitude);
-		}
-
-		if (!is_null($bounds->maxLongitude)) {
-			$node->setAttribute('maxlon', $bounds->maxLongitude);
-		}
+		// All four attributes are required per GPX 1.1 schema
+		$node->setAttribute('minlat', $bounds->minLatitude);
+		$node->setAttribute('minlon', $bounds->minLongitude);
+		$node->setAttribute('maxlat', $bounds->maxLatitude);
+		$node->setAttribute('maxlon', $bounds->maxLongitude);
 
 		return $node;
 	}

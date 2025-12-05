@@ -20,12 +20,7 @@ class EmailParserTest extends AbstractParserTest
 
 	public static function createTestInstance()
 	{
-		$email = new Email();
-
-		$email->id = "jakub.dubec";
-		$email->domain = "gmail.com";
-
-		return $email;
+		return new Email("jakub.dubec", "gmail.com");
 	}
 
 	protected function setUp(): void
@@ -60,19 +55,34 @@ class EmailParserTest extends AbstractParserTest
 	}
 
 	/**
-	 * Test parsing email with missing optional attributes
+	 * Test parsing email with missing domain attribute throws exception
+	 * Requirements: 5.2
 	 */
-	public function test_parse_email_with_missing_optional_attributes(): void
+	public function test_parse_email_with_missing_domain_throws_exception(): void
 	{
 		$minimalXml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
 			<email id="user"/>
 		');
 
-		$email = EmailParser::parse($minimalXml);
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Email domain attribute');
 
-		$this->assertNotEmpty($email);
-		$this->assertEquals('user', $email->id);
-		// With constructor defaults, missing domain becomes empty string
-		$this->assertSame('', $email->domain);
+		EmailParser::parse($minimalXml);
+	}
+
+	/**
+	 * Test parsing email with missing id attribute throws exception
+	 * Requirements: 5.2
+	 */
+	public function test_parse_email_with_missing_id_throws_exception(): void
+	{
+		$minimalXml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
+			<email domain="example.com"/>
+		');
+
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Email id attribute');
+
+		EmailParser::parse($minimalXml);
 	}
 }
