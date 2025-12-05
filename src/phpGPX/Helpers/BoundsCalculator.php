@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace phpGPX\Helpers;
 
 use phpGPX\Models\Point;
-use phpGPX\phpGPX;
 
 /**
  * This helper will return the boundaries of a group of points,
@@ -43,15 +42,23 @@ class BoundsCalculator
 			$lat = $curPoint->latitude;
 
 			// Update northWest and southEast points if needed
-			if ($lat > $north) {$north = $lat;}
-			if ($lng > $east) {$east = $lng;}
-			if ($lat < $south) {$south = $lat;}
-			if ($lng < $west) {$west = $lng;}
+			if ($lat > $north) {
+				$north = $lat;
+			}
+			if ($lng > $east) {
+				$east = $lng;
+			}
+			if ($lat < $south) {
+				$south = $lat;
+			}
+			if ($lng < $west) {
+				$west = $lng;
+			}
 		}
 
 		return [
 			["lat" => $north, "lng" => $west],
-			["lat" => $south, "lng" => $east]
+			["lat" => $south, "lng" => $east],
 		];
 	}
 }

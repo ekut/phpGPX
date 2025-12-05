@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created            16/02/2017 22:45
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
@@ -6,7 +8,10 @@
 
 namespace phpGPX\Parsers;
 
+use DOMDocument;
+use DOMElement;
 use phpGPX\Models\Copyright;
+use SimpleXMLElement;
 
 /**
  * Class CopyrightParser
@@ -19,19 +24,19 @@ abstract class CopyrightParser
 	/**
 	 * @return Copyright|null
 	 */
-	public static function parse(\SimpleXMLElement $node)
+	public static function parse(SimpleXMLElement $node)
 	{
-		if ($node->getName() != self::$tagName) {
+		if ($node->getName() !== self::$tagName) {
 			return null;
 		}
 
 		$author = isset($node['author']) ? (string) $node['author'] : '';
-		
+
 		// Author is required by GPX 1.1 spec
 		if (trim($author) === '') {
 			return null;
 		}
-		
+
 		$year = property_exists($node, 'year') && $node->year !== null ? (string) $node->year : null;
 		$license = property_exists($node, 'license') && $node->license !== null ? (string) $node->license : null;
 
@@ -39,9 +44,9 @@ abstract class CopyrightParser
 	}
 
 	/**
-  * @return \DOMElement
+  * @return DOMElement
   */
- public static function toXML(Copyright $copyright, \DOMDocument &$document)
+	public static function toXML(Copyright $copyright, DOMDocument &$document)
 	{
 		$node = $document->createElement(self::$tagName);
 

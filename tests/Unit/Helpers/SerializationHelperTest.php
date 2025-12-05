@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
  */
@@ -11,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class SerializationHelperTest extends TestCase
 {
-	public function testIntegerOrNull()
+	public function testIntegerOrNull(): void
 	{
 		$this->assertNull(SerializationHelper::integerOrNull(""));
 		$this->assertNull(SerializationHelper::integerOrNull(null));
@@ -20,7 +22,7 @@ class SerializationHelperTest extends TestCase
 		$this->assertIsInt(SerializationHelper::integerOrNull("5"));
 	}
 
-	public function testFloatOrNull()
+	public function testFloatOrNull(): void
 	{
 		$this->assertNull(SerializationHelper::floatOrNull(""));
 		$this->assertNull(SerializationHelper::floatOrNull(null));
@@ -31,7 +33,7 @@ class SerializationHelperTest extends TestCase
 		$this->assertIsFloat(SerializationHelper::floatOrNull("5"));
 	}
 
-	public function testStringOrNull()
+	public function testStringOrNull(): void
 	{
 		$this->assertNull(SerializationHelper::stringOrNull(null));
 		$this->assertIsString(SerializationHelper::stringOrNull(""));
@@ -41,7 +43,7 @@ class SerializationHelperTest extends TestCase
 	/**
 	 * @dataProvider dataProviderFilterNotNull
 	 */
-	public function testFilterNotNull($expected, $actual)
+	public function testFilterNotNull($expected, $actual): void
 	{
 		$this->assertEquals($expected, SerializationHelper::filterNotNull($actual));
 	}
@@ -92,7 +94,7 @@ class SerializationHelperTest extends TestCase
 		];
 	}
 
-	public function testSerializeWithSingleSummarizableObject()
+	public function testSerializeWithSingleSummarizableObject(): void
 	{
 		// Arrange
 		$mockObject = $this->createMock(Summarizable::class);
@@ -107,7 +109,7 @@ class SerializationHelperTest extends TestCase
 		$this->assertEquals(['id' => 1, 'name' => 'Test'], $result);
 	}
 
-	public function testSerializeWithArrayOfSummarizableObjects()
+	public function testSerializeWithArrayOfSummarizableObjects(): void
 	{
 		// Arrange
 		$mockObject1 = $this->createMock(Summarizable::class);
@@ -139,7 +141,7 @@ class SerializationHelperTest extends TestCase
 		$this->assertEquals($expected, $result);
 	}
 
-	public function testSerializeWithNullObject()
+	public function testSerializeWithNullObject(): void
 	{
 		// Act
 		$result = SerializationHelper::serialize(null);
@@ -148,7 +150,7 @@ class SerializationHelperTest extends TestCase
 		$this->assertNull($result);
 	}
 
-	public function testSerializeWithEmptyArray()
+	public function testSerializeWithEmptyArray(): void
 	{
 		// Act
 		$result = SerializationHelper::serialize([]);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace UnitTests\phpGPX\Helpers;
 
+use InvalidArgumentException;
 use phpGPX\Helpers\GpxValidator;
 use PHPUnit\Framework\TestCase;
 
@@ -21,14 +22,14 @@ class GpxValidatorTest extends TestCase
 		GpxValidator::validateLatitude(-45.5);
 		GpxValidator::validateLatitude(90.0);  // max boundary
 		GpxValidator::validateLatitude(-90.0); // min boundary
-		
+
 		$this->assertTrue(true); // If we get here, validation passed
 	}
 
 	public function test_validate_latitude_rejects_value_above_maximum(): void
 	{
 		// Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('-90.0');
 		$this->expectExceptionMessage('90.0');
 		$this->expectExceptionMessage('90.1');
@@ -40,7 +41,7 @@ class GpxValidatorTest extends TestCase
 	public function test_validate_latitude_rejects_value_below_minimum(): void
 	{
 		// Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('-90.0');
 		$this->expectExceptionMessage('90.0');
 		$this->expectExceptionMessage('-90.1');
@@ -58,7 +59,7 @@ class GpxValidatorTest extends TestCase
 			// Act
 			GpxValidator::validateLatitude($invalidValue);
 			$this->fail('Expected InvalidArgumentException was not thrown');
-		} catch (\InvalidArgumentException $e) {
+		} catch (InvalidArgumentException $e) {
 			// Assert
 			$message = $e->getMessage();
 			$this->assertStringContainsString('-90.0', $message);
@@ -80,14 +81,14 @@ class GpxValidatorTest extends TestCase
 		GpxValidator::validateLongitude(-90.5);
 		GpxValidator::validateLongitude(-180.0); // min boundary (inclusive)
 		GpxValidator::validateLongitude(179.999); // just below max boundary
-		
+
 		$this->assertTrue(true); // If we get here, validation passed
 	}
 
 	public function test_validate_longitude_rejects_value_at_maximum(): void
 	{
 		// Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('-180.0');
 		$this->expectExceptionMessage('180.0');
 		$this->expectExceptionMessage('exclusive');
@@ -99,7 +100,7 @@ class GpxValidatorTest extends TestCase
 	public function test_validate_longitude_rejects_value_above_maximum(): void
 	{
 		// Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('-180.0');
 		$this->expectExceptionMessage('180.0');
 		$this->expectExceptionMessage('180.1');
@@ -111,7 +112,7 @@ class GpxValidatorTest extends TestCase
 	public function test_validate_longitude_rejects_value_below_minimum(): void
 	{
 		// Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('-180.0');
 		$this->expectExceptionMessage('180.0');
 		$this->expectExceptionMessage('-180.1');
@@ -129,7 +130,7 @@ class GpxValidatorTest extends TestCase
 			// Act
 			GpxValidator::validateLongitude($invalidValue);
 			$this->fail('Expected InvalidArgumentException was not thrown');
-		} catch (\InvalidArgumentException $e) {
+		} catch (InvalidArgumentException $e) {
 			// Assert
 			$message = $e->getMessage();
 			$this->assertStringContainsString('-180.0', $message);
@@ -153,14 +154,14 @@ class GpxValidatorTest extends TestCase
 		GpxValidator::validateDegrees(180.0);
 		GpxValidator::validateDegrees(270.5);
 		GpxValidator::validateDegrees(359.999); // just below max boundary
-		
+
 		$this->assertTrue(true); // If we get here, validation passed
 	}
 
 	public function test_validate_degrees_rejects_value_at_maximum(): void
 	{
 		// Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('0.0');
 		$this->expectExceptionMessage('360.0');
 		$this->expectExceptionMessage('exclusive');
@@ -172,7 +173,7 @@ class GpxValidatorTest extends TestCase
 	public function test_validate_degrees_rejects_value_above_maximum(): void
 	{
 		// Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('0.0');
 		$this->expectExceptionMessage('360.0');
 		$this->expectExceptionMessage('360.1');
@@ -184,7 +185,7 @@ class GpxValidatorTest extends TestCase
 	public function test_validate_degrees_rejects_negative_value(): void
 	{
 		// Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('0.0');
 		$this->expectExceptionMessage('360.0');
 		$this->expectExceptionMessage('-0.1');
@@ -202,7 +203,7 @@ class GpxValidatorTest extends TestCase
 			// Act
 			GpxValidator::validateDegrees($invalidValue);
 			$this->fail('Expected InvalidArgumentException was not thrown');
-		} catch (\InvalidArgumentException $e) {
+		} catch (InvalidArgumentException $e) {
 			// Assert
 			$message = $e->getMessage();
 			$this->assertStringContainsString('0.0', $message);
@@ -223,14 +224,14 @@ class GpxValidatorTest extends TestCase
 		GpxValidator::validateDgpsStation(0);    // min boundary
 		GpxValidator::validateDgpsStation(512);
 		GpxValidator::validateDgpsStation(1023); // max boundary
-		
+
 		$this->assertTrue(true); // If we get here, validation passed
 	}
 
 	public function test_validate_dgps_station_rejects_negative_value(): void
 	{
 		// Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('0');
 		$this->expectExceptionMessage('1023');
 		$this->expectExceptionMessage('-1');
@@ -242,7 +243,7 @@ class GpxValidatorTest extends TestCase
 	public function test_validate_dgps_station_rejects_value_above_maximum(): void
 	{
 		// Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('0');
 		$this->expectExceptionMessage('1023');
 		$this->expectExceptionMessage('1024');
@@ -260,7 +261,7 @@ class GpxValidatorTest extends TestCase
 			// Act
 			GpxValidator::validateDgpsStation($invalidValue);
 			$this->fail('Expected InvalidArgumentException was not thrown');
-		} catch (\InvalidArgumentException $e) {
+		} catch (InvalidArgumentException $e) {
 			// Assert
 			$message = $e->getMessage();
 			$this->assertStringContainsString('0', $message);
@@ -281,14 +282,14 @@ class GpxValidatorTest extends TestCase
 		GpxValidator::validateNonNegativeInteger(1, 'Test field');
 		GpxValidator::validateNonNegativeInteger(100, 'Test field');
 		GpxValidator::validateNonNegativeInteger(999999, 'Test field');
-		
+
 		$this->assertTrue(true); // If we get here, validation passed
 	}
 
 	public function test_validate_non_negative_integer_rejects_negative_value(): void
 	{
 		// Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Satellite count');
 		$this->expectExceptionMessage('non-negative');
 		$this->expectExceptionMessage('-1');
@@ -307,7 +308,7 @@ class GpxValidatorTest extends TestCase
 			// Act
 			GpxValidator::validateNonNegativeInteger($invalidValue, $fieldName);
 			$this->fail('Expected InvalidArgumentException was not thrown');
-		} catch (\InvalidArgumentException $e) {
+		} catch (InvalidArgumentException $e) {
 			// Assert
 			$message = $e->getMessage();
 			$this->assertStringContainsString($fieldName, $message);
@@ -327,14 +328,14 @@ class GpxValidatorTest extends TestCase
 		GpxValidator::validateNonEmptyString('a', 'Test field');
 		GpxValidator::validateNonEmptyString('  text with spaces  ', 'Test field');
 		GpxValidator::validateNonEmptyString('123', 'Test field');
-		
+
 		$this->assertTrue(true); // If we get here, validation passed
 	}
 
 	public function test_validate_non_empty_string_rejects_empty_string(): void
 	{
 		// Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Link href');
 		$this->expectExceptionMessage('required');
 		$this->expectExceptionMessage('cannot be empty');
@@ -347,7 +348,7 @@ class GpxValidatorTest extends TestCase
 	public function test_validate_non_empty_string_rejects_whitespace_only_string(): void
 	{
 		// Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Copyright author');
 		$this->expectExceptionMessage('required');
 		$this->expectExceptionMessage('cannot be empty');
@@ -359,7 +360,7 @@ class GpxValidatorTest extends TestCase
 	public function test_validate_non_empty_string_rejects_tab_only_string(): void
 	{
 		// Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Email id');
 
 		// Act
@@ -369,7 +370,7 @@ class GpxValidatorTest extends TestCase
 	public function test_validate_non_empty_string_rejects_newline_only_string(): void
 	{
 		// Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Creator');
 
 		// Act
@@ -385,7 +386,7 @@ class GpxValidatorTest extends TestCase
 			// Act
 			GpxValidator::validateNonEmptyString('', $fieldName);
 			$this->fail('Expected InvalidArgumentException was not thrown');
-		} catch (\InvalidArgumentException $e) {
+		} catch (InvalidArgumentException $e) {
 			// Assert
 			$message = $e->getMessage();
 			$this->assertStringContainsString($fieldName, $message);

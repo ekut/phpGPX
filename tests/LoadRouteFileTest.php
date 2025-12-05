@@ -1,8 +1,9 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
  */
-
 
 namespace phpGPX\Tests;
 
@@ -11,20 +12,20 @@ use PHPUnit\Framework\TestCase;
 
 class LoadRouteFileTest extends TestCase
 {
-	public function testRouteFile()
+	public function testRouteFile(): void
 	{
 		$file = __DIR__ . '/fixtures/route.gpx';
 
 		$gpx = new phpGpx();
 		$gpxFile = $gpx->load($file);
 
-		$this->assertEqualsWithDelta($this->createExpectedArray(), $gpxFile->toArray(),0.1);
+		$this->assertEqualsWithDelta($this->createExpectedArray(), $gpxFile->toArray(), 0.1);
 
 		// Check XML generation
 		$gpxFile->toXML()->saveXML();
 	}
 
-	public function testRouteFileWithSmoothedStats()
+	public function testRouteFileWithSmoothedStats(): void
 	{
 		$file = __DIR__ . '/fixtures/gps-track.gpx';
 
@@ -34,7 +35,6 @@ class LoadRouteFileTest extends TestCase
 		$gpxFile = $gpx->load($file);
 
 		$this->assertEquals(6, $gpxFile->tracks[0]->stats->cumulativeElevationGain);
-
 
 		// this should give a higher number for the elevation
 		$gpx::$APPLY_ELEVATION_SMOOTHING = false;
@@ -92,27 +92,27 @@ class LoadRouteFileTest extends TestCase
 						'avgSpeed' => 0.0,
 						'avgPace' => 0.0,
 						'minAltitude' => 0.0,
-                        'minAltitudeCoords' => [
-                            'lat' => 54.9328621088893,
-                            'lng' => 9.860624216140083
-                        ],
+						'minAltitudeCoords' => [
+							'lat' => 54.9328621088893,
+							'lng' => 9.860624216140083,
+						],
 						'maxAltitude' => 3.0,
-                        'maxAltitudeCoords' => [
-                            'lat' => 54.93342326167919,
-                            'lng' => 9.862439849679859
-                        ],
+						'maxAltitudeCoords' => [
+							'lat' => 54.93342326167919,
+							'lng' => 9.862439849679859,
+						],
 						'cumulativeElevationGain' => 3.0,
 						'cumulativeElevationLoss' => 0.0,
 						'duration' => 0.0,
-                        'startedAtCoords' => [
-                            'lat' => 54.9328621088893,
-                            'lng' => 9.860624216140083
-                        ],
-                        'finishedAtCoords' => [
-                            'lat' => 54.93342326167919,
-                            'lng' => 9.862439849679859
-                        ]
-					]
+						'startedAtCoords' => [
+							'lat' => 54.9328621088893,
+							'lng' => 9.860624216140083,
+						],
+						'finishedAtCoords' => [
+							'lat' => 54.93342326167919,
+							'lng' => 9.862439849679859,
+						],
+					],
 				],
 				[
 					'name' => "Sibyx's Route",
@@ -154,28 +154,28 @@ class LoadRouteFileTest extends TestCase
 						'avgSpeed' => 0.0,
 						'avgPace' => 0.0,
 						'minAltitude' => 0.0,
-                        'minAltitudeCoords' => [
-                            'lat' => 54.9328621088893,
-                            'lng' => 9.860624216140083
-                        ],
+						'minAltitudeCoords' => [
+							'lat' => 54.9328621088893,
+							'lng' => 9.860624216140083,
+						],
 						'maxAltitude' => 3.0,
-                        'maxAltitudeCoords' => [
-                            'lat' => 54.93342326167919,
-                            'lng' => 9.862439849679859
-                        ],
+						'maxAltitudeCoords' => [
+							'lat' => 54.93342326167919,
+							'lng' => 9.862439849679859,
+						],
 						'cumulativeElevationGain' => 3.0,
 						'cumulativeElevationLoss' => 0.0,
 						'duration' => 0.0,
-                        'startedAtCoords' => [
-                            'lat' => 54.9328621088893,
-                            'lng' => 9.860624216140083
-                        ],
-                        'finishedAtCoords' => [
-                            'lat' => 54.93342326167919,
-                            'lng' => 9.862439849679859
-                        ]
-					]
-				]
+						'startedAtCoords' => [
+							'lat' => 54.9328621088893,
+							'lng' => 9.860624216140083,
+						],
+						'finishedAtCoords' => [
+							'lat' => 54.93342326167919,
+							'lng' => 9.862439849679859,
+						],
+					],
+				],
 			],
 		];
 	}

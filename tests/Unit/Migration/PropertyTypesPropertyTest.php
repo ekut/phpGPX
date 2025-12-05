@@ -6,7 +6,6 @@ namespace phpGPX\Tests\Unit\Migration;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use ReflectionProperty;
 
 /**
  * Property-based tests for property type completeness in PHP 8.4 migration.
@@ -17,7 +16,7 @@ final class PropertyTypesPropertyTest extends TestCase
 	/**
 	 * **Feature: php-8-4-migration, Property 3: Property type completeness**
 	 * **Validates: Requirements 2.1, 2.4**
-	 * 
+	 *
 	 * For any class property in the codebase, the property SHALL have an explicit type declaration.
 	 */
 	public function test_property_all_simple_model_properties_have_explicit_types(): void
@@ -52,14 +51,14 @@ final class PropertyTypesPropertyTest extends TestCase
 			}
 
 			$hasType = $property->hasType();
-			
+
 			$this->assertTrue(
 				$hasType,
 				sprintf(
 					"Property %s::\$%s does not have an explicit type declaration",
 					$className,
-					$property->getName()
-				)
+					$property->getName(),
+				),
 			);
 		}
 	}

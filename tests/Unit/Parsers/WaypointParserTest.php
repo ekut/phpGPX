@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace phpGPX\Tests\Unit\Parsers;
 
+use DateTime;
 use phpGPX\Enums\PointType;
 use phpGPX\Models\Point;
 use phpGPX\Parsers\WaypointParser;
@@ -96,11 +97,11 @@ class WaypointParserTest extends TestCase
 
 		$this->assertCount(1, $waypoints);
 		$waypoint = $waypoints[0];
-		
+
 		$this->assertEquals(50.0, $waypoint->latitude);
 		$this->assertEquals(10.0, $waypoint->longitude);
 		$this->assertEquals(100.5, $waypoint->elevation);
-		$this->assertInstanceOf(\DateTime::class, $waypoint->time);
+		$this->assertInstanceOf(DateTime::class, $waypoint->time);
 		$this->assertEquals('Summit Point', $waypoint->name);
 		$this->assertEquals('Great view from here', $waypoint->comment);
 		$this->assertEquals('Mountain summit with panoramic views', $waypoint->description);
@@ -131,7 +132,7 @@ class WaypointParserTest extends TestCase
 
 		$this->assertCount(1, $waypoints);
 		$waypoint = $waypoints[0];
-		
+
 		$this->assertEquals('Berlin', $waypoint->name);
 		$this->assertIsArray($waypoint->links);
 		$this->assertCount(1, $waypoint->links);
@@ -166,7 +167,7 @@ class WaypointParserTest extends TestCase
 
 		$this->assertCount(1, $waypoints);
 		$waypoint = $waypoints[0];
-		
+
 		$this->assertIsArray($waypoint->links);
 		$this->assertCount(2, $waypoint->links);
 		$this->assertEquals('https://example.com/paris', $waypoint->links[0]->href);
@@ -194,7 +195,7 @@ class WaypointParserTest extends TestCase
 
 		$this->assertCount(1, $waypoints);
 		$waypoint = $waypoints[0];
-		
+
 		$this->assertIsArray($waypoint->links);
 		$this->assertCount(1, $waypoint->links);
 		$this->assertEquals('https://example.com/nyc', $waypoint->links[0]->href);
@@ -226,7 +227,7 @@ class WaypointParserTest extends TestCase
 
 		$this->assertCount(1, $waypoints);
 		$waypoint = $waypoints[0];
-		
+
 		$this->assertEquals('Test Point', $waypoint->name);
 		$this->assertNotNull($waypoint->extensions);
 		$this->assertNotNull($waypoint->extensions->trackPointExtension);
@@ -256,7 +257,7 @@ class WaypointParserTest extends TestCase
 
 		$this->assertCount(1, $waypoints);
 		$waypoint = $waypoints[0];
-		
+
 		$this->assertEquals('London', $waypoint->name);
 		$this->assertNotNull($waypoint->extensions);
 		$this->assertIsArray($waypoint->extensions->unsupported);
@@ -293,16 +294,16 @@ class WaypointParserTest extends TestCase
 
 		$this->assertCount(1, $waypoints);
 		$waypoint = $waypoints[0];
-		
+
 		$this->assertEquals('Tokyo', $waypoint->name);
 		$this->assertEquals('Capital of Japan', $waypoint->description);
-		
+
 		// Check links
 		$this->assertIsArray($waypoint->links);
 		$this->assertCount(1, $waypoint->links);
 		$this->assertEquals('https://example.com/tokyo', $waypoint->links[0]->href);
 		$this->assertEquals('Tokyo Guide', $waypoint->links[0]->text);
-		
+
 		// Check extensions
 		$this->assertNotNull($waypoint->extensions);
 		$this->assertNotNull($waypoint->extensions->trackPointExtension);
@@ -321,7 +322,7 @@ class WaypointParserTest extends TestCase
 
 		// Create an empty SimpleXMLElement array by selecting non-existent elements
 		$emptyWaypoints = $xml->xpath('//wpt');
-		
+
 		// xpath returns false when no matches, so we need to handle that
 		if ($emptyWaypoints === false) {
 			$emptyWaypoints = [];
@@ -352,7 +353,7 @@ class WaypointParserTest extends TestCase
 
 		$this->assertCount(1, $waypoints);
 		$waypoint = $waypoints[0];
-		
+
 		$this->assertEquals(0.0, $waypoint->latitude);
 		$this->assertEquals(0.0, $waypoint->longitude);
 		$this->assertNull($waypoint->name);
@@ -386,7 +387,7 @@ class WaypointParserTest extends TestCase
 
 		$this->assertCount(1, $waypoints);
 		$waypoint = $waypoints[0];
-		
+
 		$this->assertEquals('GPS Test Point', $waypoint->name);
 		$this->assertEquals('3d', $waypoint->fix);
 		$this->assertEquals(10, $waypoint->satellitesNumber);
@@ -413,7 +414,7 @@ class WaypointParserTest extends TestCase
 
 		$this->assertCount(1, $waypoints);
 		$waypoint = $waypoints[0];
-		
+
 		$this->assertEquals(-33.8688, $waypoint->latitude);
 		$this->assertEquals(-151.2093, $waypoint->longitude);
 		$this->assertEquals('Sydney', $waypoint->name);
@@ -427,7 +428,7 @@ class WaypointParserTest extends TestCase
 	{
 		$xml = simplexml_load_string('<?xml version="1.0"?>
 			<gpx>
-				<wpt lat="90.0" lon="180.0">
+				<wpt lat="90.0" lon="179.9">
 					<name>North Pole</name>
 				</wpt>
 				<wpt lat="-90.0" lon="-180.0">
@@ -440,7 +441,7 @@ class WaypointParserTest extends TestCase
 
 		$this->assertCount(2, $waypoints);
 		$this->assertEquals(90.0, $waypoints[0]->latitude);
-		$this->assertEquals(180.0, $waypoints[0]->longitude);
+		$this->assertEquals(179.9, $waypoints[0]->longitude);
 		$this->assertEquals(-90.0, $waypoints[1]->latitude);
 		$this->assertEquals(-180.0, $waypoints[1]->longitude);
 	}

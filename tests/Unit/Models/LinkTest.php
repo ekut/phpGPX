@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace phpGPX\Tests\Unit\Models;
 
+use DOMDocument;
 use Eris\Generators;
 use Eris\TestTrait;
+use InvalidArgumentException;
 use phpGPX\Models\Link;
 use phpGPX\Parsers\LinkParser;
 use phpGPX\Tests\Support\TestCase;
+use TypeError;
 
 /**
  * Unit tests for Link model.
@@ -17,6 +20,7 @@ use phpGPX\Tests\Support\TestCase;
 final class LinkTest extends TestCase
 {
 	use TestTrait;
+
 	/**
 	 * Test Link creation with required href.
 	 * Requirements: 3.1
@@ -25,7 +29,7 @@ final class LinkTest extends TestCase
 	{
 		// Arrange & Act
 		$link = new Link('https://example.com');
-		
+
 		// Assert
 		$this->assertInstanceOf(Link::class, $link);
 		$this->assertEquals('https://example.com', $link->href);
@@ -38,8 +42,8 @@ final class LinkTest extends TestCase
 	public function test_link_construction_without_href_throws_type_error(): void
 	{
 		// Assert
-		$this->expectException(\TypeError::class);
-		
+		$this->expectException(TypeError::class);
+
 		// Act
 		new Link();
 	}
@@ -51,11 +55,11 @@ final class LinkTest extends TestCase
 	public function test_link_construction_with_empty_href_throws_exception(): void
 	{
 		// Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Link href attribute');
 		$this->expectExceptionMessage('required');
 		$this->expectExceptionMessage('cannot be empty');
-		
+
 		// Act
 		new Link('');
 	}
@@ -67,11 +71,11 @@ final class LinkTest extends TestCase
 	public function test_link_construction_with_whitespace_only_href_throws_exception(): void
 	{
 		// Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Link href attribute');
 		$this->expectExceptionMessage('required');
 		$this->expectExceptionMessage('cannot be empty');
-		
+
 		// Act
 		new Link('   ');
 	}
@@ -83,9 +87,9 @@ final class LinkTest extends TestCase
 	public function test_link_error_message_contains_schema_reference(): void
 	{
 		// Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('GPX 1.1 schema');
-		
+
 		// Act
 		new Link('');
 	}
@@ -100,9 +104,9 @@ final class LinkTest extends TestCase
 		$link = new Link(
 			'https://example.com/photo.jpg',
 			'Example Photo',
-			'image/jpeg'
+			'image/jpeg',
 		);
-		
+
 		// Assert
 		$this->assertEquals('https://example.com/photo.jpg', $link->href);
 		$this->assertEquals('Example Photo', $link->text);
@@ -117,7 +121,7 @@ final class LinkTest extends TestCase
 	{
 		// Arrange & Act
 		$link = new Link('https://example.com');
-		
+
 		// Assert
 		$this->assertNull($link->text);
 		$this->assertNull($link->type);
@@ -133,12 +137,12 @@ final class LinkTest extends TestCase
 		$link = new Link(
 			'https://example.com',
 			'Example Link',
-			'text/html'
+			'text/html',
 		);
-		
+
 		// Act
 		$array = $link->toArray();
-		
+
 		// Assert
 		$this->assertIsArray($array);
 		$this->assertEquals('https://example.com', $array['href']);
@@ -154,10 +158,10 @@ final class LinkTest extends TestCase
 	{
 		// Arrange
 		$link = new Link('https://example.com');
-		
+
 		// Act
 		$array = $link->toArray();
-		
+
 		// Assert
 		$this->assertNull($array['text']);
 		$this->assertNull($array['type']);
@@ -173,16 +177,16 @@ final class LinkTest extends TestCase
 		$link = new Link(
 			'https://example.com/photo.jpg',
 			'Example Photo',
-			'image/jpeg'
+			'image/jpeg',
 		);
-		
-		$document = new \DOMDocument('1.0', 'UTF-8');
-		
+
+		$document = new DOMDocument('1.0', 'UTF-8');
+
 		// Act
 		$xmlElement = LinkParser::toXML($link, $document);
 		$document->appendChild($xmlElement);
 		$xml = $document->saveXML();
-		
+
 		// Assert
 		$this->assertStringContainsString('<link', $xml);
 		$this->assertStringContainsString('href="https://example.com/photo.jpg"', $xml);
@@ -198,14 +202,14 @@ final class LinkTest extends TestCase
 	{
 		// Arrange
 		$link = new Link('https://example.com');
-		
-		$document = new \DOMDocument('1.0', 'UTF-8');
-		
+
+		$document = new DOMDocument('1.0', 'UTF-8');
+
 		// Act
 		$xmlElement = LinkParser::toXML($link, $document);
 		$document->appendChild($xmlElement);
 		$xml = $document->saveXML();
-		
+
 		// Assert
 		$this->assertStringContainsString('<link', $xml);
 		$this->assertStringContainsString('href="https://example.com"', $xml);
@@ -223,29 +227,29 @@ final class LinkTest extends TestCase
 		$imageLink = new Link(
 			'https://example.com/photo.jpg',
 			null,
-			'image/jpeg'
+			'image/jpeg',
 		);
-		
+
 		// Assert
 		$this->assertEquals('image/jpeg', $imageLink->type);
-		
+
 		// Arrange & Act - Video
 		$videoLink = new Link(
 			'https://example.com/video.mp4',
 			null,
-			'video/mp4'
+			'video/mp4',
 		);
-		
+
 		// Assert
 		$this->assertEquals('video/mp4', $videoLink->type);
-		
+
 		// Arrange & Act - HTML
 		$htmlLink = new Link(
 			'https://example.com/page.html',
 			null,
-			'text/html'
+			'text/html',
 		);
-		
+
 		// Assert
 		$this->assertEquals('text/html', $htmlLink->type);
 	}
@@ -259,11 +263,11 @@ final class LinkTest extends TestCase
 		// Arrange & Act - HTTPS
 		$httpsLink = new Link('https://example.com');
 		$this->assertEquals('https://example.com', $httpsLink->href);
-		
+
 		// Arrange & Act - HTTP
 		$httpLink = new Link('http://example.com');
 		$this->assertEquals('http://example.com', $httpLink->href);
-		
+
 		// Arrange & Act - FTP
 		$ftpLink = new Link('ftp://example.com/file.gpx');
 		$this->assertEquals('ftp://example.com/file.gpx', $ftpLink->href);
@@ -278,16 +282,16 @@ final class LinkTest extends TestCase
 		// Arrange & Act
 		$link = new Link(
 			'https://example.com',
-			'Photo & Video <Collection>'
+			'Photo & Video <Collection>',
 		);
-		
+
 		// Assert
 		$this->assertEquals('Photo & Video <Collection>', $link->text);
 	}
 
 	/**
 	 * Property test: Link requires href.
-	 * 
+	 *
 	 * **Feature: gpx-schema-compliance, Property 9: Link requires href**
 	 * **Validates: Requirements 3.1**
 	 */
@@ -295,12 +299,12 @@ final class LinkTest extends TestCase
 	{
 		// Test that TypeError is thrown when href parameter is missing
 		// This is enforced by PHP's type system, so we test it directly
-		
+
 		try {
 			// @phpstan-ignore-next-line - Intentionally calling with wrong number of arguments
 			new Link();
 			$this->fail('Expected TypeError when creating Link without href');
-		} catch (\TypeError $e) {
+		} catch (TypeError $e) {
 			// Expected - href is required
 			$this->assertStringContainsString('Link::__construct()', $e->getMessage());
 		}
@@ -308,7 +312,7 @@ final class LinkTest extends TestCase
 
 	/**
 	 * Property test: Link href validation.
-	 * 
+	 *
 	 * **Feature: gpx-schema-compliance, Property 10: Link href validation**
 	 * **Validates: Requirements 3.2**
 	 */
@@ -317,15 +321,15 @@ final class LinkTest extends TestCase
 		$this
 			->withRand('mt_rand')
 			->forAll(
-				Generators::elements(['', '   ', "\t", "\n", "  \t\n  "])
+				Generators::elements(['', '   ', "\t", "\n", "  \t\n  "]),
 			)
 			->withMaxSize(100)
-			->then(function ($emptyHref) {
+			->then(function ($emptyHref): void {
 				// Test that empty or whitespace-only href throws InvalidArgumentException
 				try {
 					new Link($emptyHref);
 					$this->fail('Expected InvalidArgumentException for empty/whitespace href: ' . json_encode($emptyHref));
-				} catch (\InvalidArgumentException $e) {
+				} catch (InvalidArgumentException $e) {
 					// Verify error message contains required information
 					$this->assertStringContainsString('Link href attribute', $e->getMessage());
 					$this->assertStringContainsString('required', $e->getMessage());
@@ -337,7 +341,7 @@ final class LinkTest extends TestCase
 
 	/**
 	 * Property test: Valid href values are accepted.
-	 * 
+	 *
 	 * **Feature: gpx-schema-compliance, Property 10: Link href validation**
 	 * **Validates: Requirements 3.2**
 	 */
@@ -356,10 +360,10 @@ final class LinkTest extends TestCase
 					'file:///path/to/local/file.gpx',
 					'a',  // Single character is valid
 					'https://example.com/path with spaces',  // Spaces are technically valid in URLs
-				])
+				]),
 			)
 			->withMaxSize(100)
-			->then(function ($validHref) {
+			->then(function ($validHref): void {
 				// Test that valid href values are accepted
 				$link = new Link($validHref);
 				$this->assertEquals($validHref, $link->href);

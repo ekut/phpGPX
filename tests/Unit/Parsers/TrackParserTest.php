@@ -8,7 +8,8 @@ declare(strict_types=1);
 
 namespace phpGPX\Tests\Unit\Parsers;
 
-use phpGPX\Helpers\DateTimeHelper;
+use DOMDocument;
+use DOMElement;
 use phpGPX\Models\Track;
 use phpGPX\Parsers\TrackParser;
 use phpGPX\phpGPX;
@@ -16,6 +17,7 @@ use phpGPX\phpGPX;
 class TrackParserTest extends AbstractParserTest
 {
 	protected $testModelClass = Track::class;
+
 	protected $testParserClass = TrackParser::class;
 
 	/**
@@ -32,13 +34,13 @@ class TrackParserTest extends AbstractParserTest
 		$track->source = 'GPS Device';
 		$track->number = 1;
 		$track->type = 'hiking';
-		
+
 		// Add two segments
 		$track->segments = [
 			SegmentParserTest::createTestInstance(),
-			SegmentParserTest::createTestInstance()
+			SegmentParserTest::createTestInstance(),
 		];
-		
+
 		$track->recalculateStats();
 
 		return $track;
@@ -50,14 +52,14 @@ class TrackParserTest extends AbstractParserTest
 		$this->testModelInstance = self::createTestInstance();
 	}
 
-	public function testParse()
+	public function testParse(): void
 	{
 		$tracks = TrackParser::parse($this->testXmlFile->trk);
 
 		$this->assertNotEmpty($tracks);
 		$this->assertIsArray($tracks);
 		$this->assertCount(1, $tracks);
-		
+
 		$track = $tracks[0];
 		$this->assertInstanceOf(Track::class, $track);
 		$this->assertEquals($this->testModelInstance->name, $track->name);
@@ -66,7 +68,7 @@ class TrackParserTest extends AbstractParserTest
 		$this->assertEquals($this->testModelInstance->source, $track->source);
 		$this->assertEquals($this->testModelInstance->number, $track->number);
 		$this->assertEquals($this->testModelInstance->type, $track->type);
-		
+
 		// Check segments
 		$this->assertNotEmpty($track->segments);
 		$this->assertCount(2, $track->segments);
@@ -116,12 +118,12 @@ class TrackParserTest extends AbstractParserTest
 
 		$this->assertIsArray($tracks);
 		$this->assertCount(1, $tracks);
-		
+
 		$track = $tracks[0];
 		$this->assertInstanceOf(Track::class, $track);
 		$this->assertEquals('Multi-segment Track', $track->name);
 		$this->assertCount(3, $track->segments);
-		
+
 		// Check first segment has 2 points
 		$this->assertCount(2, $track->segments[0]->points);
 		// Check second segment has 2 points
@@ -158,7 +160,7 @@ class TrackParserTest extends AbstractParserTest
 
 		$this->assertCount(1, $tracks);
 		$track = $tracks[0];
-		
+
 		$this->assertEquals('Mountain Hike', $track->name);
 		$this->assertEquals('Great weather', $track->comment);
 		$this->assertEquals('A beautiful mountain hike', $track->description);
@@ -194,7 +196,7 @@ class TrackParserTest extends AbstractParserTest
 
 		$this->assertCount(1, $tracks);
 		$track = $tracks[0];
-		
+
 		$this->assertNotEmpty($track->links);
 		$this->assertCount(2, $track->links);
 		$this->assertEquals('https://example.com/track1', $track->links[0]->href);
@@ -229,7 +231,7 @@ class TrackParserTest extends AbstractParserTest
 
 		$this->assertCount(1, $tracks);
 		$track = $tracks[0];
-		
+
 		$this->assertNotNull($track->extensions);
 	}
 
@@ -251,7 +253,7 @@ class TrackParserTest extends AbstractParserTest
 
 		$this->assertCount(1, $tracks);
 		$track = $tracks[0];
-		
+
 		$this->assertEquals('Empty Track', $track->name);
 		$this->assertEmpty($track->segments);
 	}
@@ -276,7 +278,7 @@ class TrackParserTest extends AbstractParserTest
 
 		$this->assertCount(1, $tracks);
 		$track = $tracks[0];
-		
+
 		$this->assertNull($track->name);
 		$this->assertNull($track->comment);
 		$this->assertNull($track->description);
@@ -356,7 +358,7 @@ class TrackParserTest extends AbstractParserTest
 
 		$this->assertCount(1, $tracks);
 		$track = $tracks[0];
-		
+
 		$this->assertNotNull($track->stats);
 		$this->assertGreaterThan(0, $track->stats->distance);
 
@@ -387,7 +389,7 @@ class TrackParserTest extends AbstractParserTest
 
 		$this->assertCount(1, $tracks);
 		$track = $tracks[0];
-		
+
 		$this->assertCount(1, $track->segments);
 		$this->assertCount(3, $track->segments[0]->points);
 	}
@@ -395,10 +397,10 @@ class TrackParserTest extends AbstractParserTest
 	/**
 	 * Returns output of ::toXML method of tested parser.
 	 * @depends testParse
-	 * @param \DOMDocument $document
-	 * @return \DOMElement
+	 * @param DOMDocument $document
+	 * @return DOMElement
 	 */
-	protected function convertToXML(\DOMDocument $document)
+	protected function convertToXML(DOMDocument $document)
 	{
 		return TrackParser::toXML($this->testModelInstance, $document);
 	}

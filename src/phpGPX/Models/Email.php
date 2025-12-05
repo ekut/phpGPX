@@ -25,7 +25,7 @@ class Email implements Summarizable
 	 */
 	public function __construct(
 		public string $id,
-		public string $domain
+		public string $domain,
 	) {
 		GpxValidator::validateNonEmptyString($id, 'Email id attribute');
 		GpxValidator::validateNonEmptyString($domain, 'Email domain attribute');
@@ -38,7 +38,7 @@ class Email implements Summarizable
 	{
 		return [
 			'id' => $this->id,
-			'domain' => $this->domain
+			'domain' => $this->domain,
 		];
 	}
 }

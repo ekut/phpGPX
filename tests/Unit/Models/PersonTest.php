@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace phpGPX\Tests\Unit\Models;
 
+use DOMDocument;
 use phpGPX\Models\Email;
 use phpGPX\Models\Link;
 use phpGPX\Models\Person;
@@ -25,7 +26,7 @@ final class PersonTest extends TestCase
 		// Arrange & Act
 		$person = new Person();
 		$person->name = 'John Doe';
-		
+
 		// Assert
 		$this->assertInstanceOf(Person::class, $person);
 		$this->assertEquals('John Doe', $person->name);
@@ -39,17 +40,17 @@ final class PersonTest extends TestCase
 	{
 		// Arrange
 		$email = new Email('john.doe', 'example.com');
-		
+
 		$link1 = new Link('https://example.com', 'Website');
-		
+
 		$link2 = new Link('https://example.com/photo.jpg', 'Photo', 'image/jpeg');
-		
+
 		// Act
 		$person = new Person();
 		$person->name = 'John Doe';
 		$person->email = $email;
 		$person->links = [$link1, $link2];
-		
+
 		// Assert
 		$this->assertEquals('John Doe', $person->name);
 		$this->assertInstanceOf(Email::class, $person->email);
@@ -70,7 +71,7 @@ final class PersonTest extends TestCase
 		// Arrange & Act
 		$person = new Person();
 		$person->name = 'Jane Smith';
-		
+
 		// Assert
 		$this->assertNull($person->email);
 		// With constructor promotion, links has empty array default
@@ -85,7 +86,7 @@ final class PersonTest extends TestCase
 	{
 		// Arrange & Act
 		$person = new Person();
-		
+
 		// Assert
 		$this->assertNull($person->name);
 		$this->assertNull($person->email);
@@ -101,17 +102,17 @@ final class PersonTest extends TestCase
 	{
 		// Arrange
 		$email = new Email('john.doe', 'example.com');
-		
+
 		$link = new Link('https://example.com', 'Website');
-		
+
 		$person = new Person();
 		$person->name = 'John Doe';
 		$person->email = $email;
 		$person->links = [$link];
-		
+
 		// Act
 		$array = $person->toArray();
-		
+
 		// Assert
 		$this->assertIsArray($array);
 		$this->assertEquals('John Doe', $array['name']);
@@ -131,10 +132,10 @@ final class PersonTest extends TestCase
 		// Arrange
 		$person = new Person();
 		$person->name = 'John Doe';
-		
+
 		// Act
 		$array = $person->toArray();
-		
+
 		// Assert
 		$this->assertNull($array['email']);
 		// With constructor promotion, links has empty array default which serializes to empty array
@@ -149,21 +150,21 @@ final class PersonTest extends TestCase
 	{
 		// Arrange
 		$email = new Email('john.doe', 'example.com');
-		
+
 		$link = new Link('https://example.com', 'Website');
-		
+
 		$person = new Person();
 		$person->name = 'John Doe';
 		$person->email = $email;
 		$person->links = [$link];
-		
-		$document = new \DOMDocument('1.0', 'UTF-8');
-		
+
+		$document = new DOMDocument('1.0', 'UTF-8');
+
 		// Act
 		$xmlElement = PersonParser::toXML($person, $document);
 		$document->appendChild($xmlElement);
 		$xml = $document->saveXML();
-		
+
 		// Assert
 		$this->assertStringContainsString('<author>', $xml);
 		$this->assertStringContainsString('<name>John Doe</name>', $xml);
@@ -183,14 +184,14 @@ final class PersonTest extends TestCase
 		// Arrange
 		$person = new Person();
 		$person->name = 'John Doe';
-		
-		$document = new \DOMDocument('1.0', 'UTF-8');
-		
+
+		$document = new DOMDocument('1.0', 'UTF-8');
+
 		// Act
 		$xmlElement = PersonParser::toXML($person, $document);
 		$document->appendChild($xmlElement);
 		$xml = $document->saveXML();
-		
+
 		// Assert
 		$this->assertStringContainsString('<author>', $xml);
 		$this->assertStringContainsString('<name>John Doe</name>', $xml);
@@ -206,16 +207,16 @@ final class PersonTest extends TestCase
 	{
 		// Arrange
 		$link1 = new Link('https://example.com', 'Website');
-		
+
 		$link2 = new Link('https://example.com/photo.jpg', 'Photo');
-		
+
 		$link3 = new Link('https://example.com/video.mp4', 'Video');
-		
+
 		// Act
 		$person = new Person();
 		$person->name = 'John Doe';
 		$person->links = [$link1, $link2, $link3];
-		
+
 		// Assert
 		$this->assertCount(3, $person->links);
 		$this->assertEquals('https://example.com', $person->links[0]->href);
@@ -231,20 +232,20 @@ final class PersonTest extends TestCase
 	{
 		// Arrange
 		$link1 = new Link('https://example.com');
-		
+
 		$link2 = new Link('https://example.com/photo.jpg');
-		
+
 		$person = new Person();
 		$person->name = 'John Doe';
 		$person->links = [$link1, $link2];
-		
-		$document = new \DOMDocument('1.0', 'UTF-8');
-		
+
+		$document = new DOMDocument('1.0', 'UTF-8');
+
 		// Act
 		$xmlElement = PersonParser::toXML($person, $document);
 		$document->appendChild($xmlElement);
 		$xml = $document->saveXML();
-		
+
 		// Assert
 		$this->assertStringContainsString('href="https://example.com"', $xml);
 		$this->assertStringContainsString('href="https://example.com/photo.jpg"', $xml);
@@ -261,10 +262,10 @@ final class PersonTest extends TestCase
 		// Arrange & Act
 		$person = new Person();
 		$person->name = 'Acme Corporation';
-		
+
 		$email = new Email('info', 'acme.com');
 		$person->email = $email;
-		
+
 		// Assert
 		$this->assertEquals('Acme Corporation', $person->name);
 		$this->assertEquals('info', $person->email->id);
@@ -280,7 +281,7 @@ final class PersonTest extends TestCase
 		// Arrange & Act
 		$person = new Person();
 		$person->name = 'José García-López';
-		
+
 		// Assert
 		$this->assertEquals('José García-López', $person->name);
 	}
@@ -295,7 +296,7 @@ final class PersonTest extends TestCase
 		$person = new Person();
 		$person->name = 'John Doe';
 		$person->links = [];
-		
+
 		// Assert
 		$this->assertIsArray($person->links);
 		$this->assertEmpty($person->links);

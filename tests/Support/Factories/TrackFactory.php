@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace phpGPX\Tests\Support\Factories;
 
-use phpGPX\Models\Track;
 use phpGPX\Models\Segment;
+use phpGPX\Models\Track;
 
 /**
  * Factory for creating Track instances for testing.
@@ -24,7 +24,7 @@ class TrackFactory
 		$track->name = $overrides['name'] ?? 'Test Track';
 		$track->description = $overrides['description'] ?? null;
 		$track->segments = $overrides['segments'] ?? [];
-		
+
 		return $track;
 	}
 
@@ -39,7 +39,7 @@ class TrackFactory
 		$track = self::create();
 		$segment = SegmentFactory::createWithPoints($pointCount);
 		$track->segments[] = $segment;
-		
+
 		return $track;
 	}
 
@@ -53,11 +53,11 @@ class TrackFactory
 	public static function createWithSegments(int $segmentCount, int $pointsPerSegment = 5): Track
 	{
 		$track = self::create();
-		
+
 		for ($i = 0; $i < $segmentCount; $i++) {
 			$track->segments[] = SegmentFactory::createWithPoints($pointsPerSegment);
 		}
-		
+
 		return $track;
 	}
 }

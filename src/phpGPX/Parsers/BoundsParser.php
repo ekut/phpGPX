@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created            16/02/2017 22:09
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
@@ -6,7 +8,10 @@
 
 namespace phpGPX\Parsers;
 
+use DOMDocument;
+use DOMElement;
 use phpGPX\Models\Bounds;
+use SimpleXMLElement;
 
 /**
  * Class BoundsParser
@@ -18,20 +23,20 @@ abstract class BoundsParser
 
 	/**
 	 * Parse data from XML.
-	 * 
+	 *
 	 * All four coordinate attributes are required per GPX 1.1 schema.
 	 * Returns null if any required attribute is missing.
-	 * 
+	 *
 	 * @return Bounds|null
 	 */
-	public static function parse(\SimpleXMLElement $node)
+	public static function parse(SimpleXMLElement $node)
 	{
-		if ($node->getName() != self::$tagName) {
+		if ($node->getName() !== self::$tagName) {
 			return null;
 		}
 
 		// All four attributes are required per GPX 1.1 schema
-		if (!isset($node['minlat']) || !isset($node['minlon']) || 
+		if (!isset($node['minlat']) || !isset($node['minlon']) ||
 			!isset($node['maxlat']) || !isset($node['maxlon'])) {
 			return null;
 		}
@@ -40,26 +45,26 @@ abstract class BoundsParser
 			(float) $node['minlat'],
 			(float) $node['minlon'],
 			(float) $node['maxlat'],
-			(float) $node['maxlon']
+			(float) $node['maxlon'],
 		);
 	}
 
 	/**
 	 * Create XML representation.
-	 * 
+	 *
 	 * All four coordinate attributes are always present per GPX 1.1 schema.
-	 * 
-	 * @return \DOMElement
+	 *
+	 * @return DOMElement
 	 */
-	public static function toXML(Bounds $bounds, \DOMDocument &$document)
+	public static function toXML(Bounds $bounds, DOMDocument &$document)
 	{
 		$node = $document->createElement(self::$tagName);
 
 		// All four attributes are required per GPX 1.1 schema
-		$node->setAttribute('minlat', $bounds->minLatitude);
-		$node->setAttribute('minlon', $bounds->minLongitude);
-		$node->setAttribute('maxlat', $bounds->maxLatitude);
-		$node->setAttribute('maxlon', $bounds->maxLongitude);
+		$node->setAttribute('minlat', (string) $bounds->minLatitude);
+		$node->setAttribute('minlon', (string) $bounds->minLongitude);
+		$node->setAttribute('maxlat', (string) $bounds->maxLatitude);
+		$node->setAttribute('maxlon', (string) $bounds->maxLongitude);
 
 		return $node;
 	}

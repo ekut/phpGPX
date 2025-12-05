@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace phpGPX\Tests\Unit\Models;
 
+use DateTime;
+use DateTimeZone;
 use phpGPX\Models\Stats;
 use phpGPX\Tests\Support\TestCase;
 
@@ -21,7 +23,7 @@ final class StatsTest extends TestCase
 	{
 		// Arrange & Act
 		$stats = new Stats();
-		
+
 		// Assert
 		$this->assertInstanceOf(Stats::class, $stats);
 		$this->assertEquals(0, $stats->distance);
@@ -50,11 +52,11 @@ final class StatsTest extends TestCase
 	{
 		// Arrange
 		$stats = new Stats();
-		
+
 		// Act
 		$stats->distance = 5000.0;
 		$stats->realDistance = 5250.5;
-		
+
 		// Assert
 		$this->assertEquals(5000.0, $stats->distance);
 		$this->assertEquals(5250.5, $stats->realDistance);
@@ -68,11 +70,11 @@ final class StatsTest extends TestCase
 	{
 		// Arrange
 		$stats = new Stats();
-		
+
 		// Act
 		$stats->averageSpeed = 2.5;
 		$stats->averagePace = 400.0;
-		
+
 		// Assert
 		$this->assertEquals(2.5, $stats->averageSpeed);
 		$this->assertEquals(400.0, $stats->averagePace);
@@ -86,13 +88,13 @@ final class StatsTest extends TestCase
 	{
 		// Arrange
 		$stats = new Stats();
-		
+
 		// Act
 		$stats->minAltitude = 100;
 		$stats->maxAltitude = 500;
 		$stats->minAltitudeCoords = [54.0, 9.0];
 		$stats->maxAltitudeCoords = [54.5, 9.5];
-		
+
 		// Assert
 		$this->assertEquals(100, $stats->minAltitude);
 		$this->assertEquals(500, $stats->maxAltitude);
@@ -108,11 +110,11 @@ final class StatsTest extends TestCase
 	{
 		// Arrange
 		$stats = new Stats();
-		
+
 		// Act
 		$stats->cumulativeElevationGain = 250;
 		$stats->cumulativeElevationLoss = 180;
-		
+
 		// Assert
 		$this->assertEquals(250, $stats->cumulativeElevationGain);
 		$this->assertEquals(180, $stats->cumulativeElevationLoss);
@@ -126,17 +128,17 @@ final class StatsTest extends TestCase
 	{
 		// Arrange
 		$stats = new Stats();
-		$startTime = new \DateTime('2024-01-15 10:00:00', new \DateTimeZone('UTC'));
-		$endTime = new \DateTime('2024-01-15 12:30:00', new \DateTimeZone('UTC'));
-		
+		$startTime = new DateTime('2024-01-15 10:00:00', new DateTimeZone('UTC'));
+		$endTime = new DateTime('2024-01-15 12:30:00', new DateTimeZone('UTC'));
+
 		// Act
 		$stats->startedAt = $startTime;
 		$stats->finishedAt = $endTime;
 		$stats->duration = 9000; // 2.5 hours in seconds
-		
+
 		// Assert
-		$this->assertInstanceOf(\DateTime::class, $stats->startedAt);
-		$this->assertInstanceOf(\DateTime::class, $stats->finishedAt);
+		$this->assertInstanceOf(DateTime::class, $stats->startedAt);
+		$this->assertInstanceOf(DateTime::class, $stats->finishedAt);
 		$this->assertEquals($startTime->getTimestamp(), $stats->startedAt->getTimestamp());
 		$this->assertEquals($endTime->getTimestamp(), $stats->finishedAt->getTimestamp());
 		$this->assertEquals(9000, $stats->duration);
@@ -150,11 +152,11 @@ final class StatsTest extends TestCase
 	{
 		// Arrange
 		$stats = new Stats();
-		
+
 		// Act
 		$stats->startedAtCoords = [54.0, 9.0];
 		$stats->finishedAtCoords = [54.5, 9.5];
-		
+
 		// Assert
 		$this->assertEquals([54.0, 9.0], $stats->startedAtCoords);
 		$this->assertEquals([54.5, 9.5], $stats->finishedAtCoords);
@@ -172,12 +174,12 @@ final class StatsTest extends TestCase
 			'minLatitude' => 50.0,
 			'minLongitude' => 10.0,
 			'maxLatitude' => 55.0,
-			'maxLongitude' => 15.0
+			'maxLongitude' => 15.0,
 		];
-		
+
 		// Act
 		$stats->bounds = $bounds;
-		
+
 		// Assert
 		$this->assertEquals($bounds, $stats->bounds);
 		$this->assertEquals(50.0, $stats->bounds['minLatitude']);
@@ -194,9 +196,9 @@ final class StatsTest extends TestCase
 	{
 		// Arrange
 		$stats = new Stats();
-		$startTime = new \DateTime('2024-01-15 10:00:00', new \DateTimeZone('UTC'));
-		$endTime = new \DateTime('2024-01-15 12:30:00', new \DateTimeZone('UTC'));
-		
+		$startTime = new DateTime('2024-01-15 10:00:00', new DateTimeZone('UTC'));
+		$endTime = new DateTime('2024-01-15 12:30:00', new DateTimeZone('UTC'));
+
 		// Act
 		$stats->distance = 10000.0;
 		$stats->realDistance = 10500.0;
@@ -214,7 +216,7 @@ final class StatsTest extends TestCase
 		$stats->finishedAtCoords = [54.8, 9.8];
 		$stats->duration = 9000;
 		$stats->bounds = ['minLatitude' => 54.0, 'minLongitude' => 9.0, 'maxLatitude' => 54.8, 'maxLongitude' => 9.8];
-		
+
 		// Assert
 		$this->assertEquals(10000.0, $stats->distance);
 		$this->assertEquals(10500.0, $stats->realDistance);
@@ -226,8 +228,8 @@ final class StatsTest extends TestCase
 		$this->assertEquals([54.8, 9.8], $stats->maxAltitudeCoords);
 		$this->assertEquals(500, $stats->cumulativeElevationGain);
 		$this->assertEquals(350, $stats->cumulativeElevationLoss);
-		$this->assertInstanceOf(\DateTime::class, $stats->startedAt);
-		$this->assertInstanceOf(\DateTime::class, $stats->finishedAt);
+		$this->assertInstanceOf(DateTime::class, $stats->startedAt);
+		$this->assertInstanceOf(DateTime::class, $stats->finishedAt);
 		$this->assertEquals([54.0, 9.0], $stats->startedAtCoords);
 		$this->assertEquals([54.8, 9.8], $stats->finishedAtCoords);
 		$this->assertEquals(9000, $stats->duration);
@@ -250,14 +252,14 @@ final class StatsTest extends TestCase
 		$stats->maxAltitude = 500;
 		$stats->cumulativeElevationGain = 250;
 		$stats->cumulativeElevationLoss = 180;
-		$stats->startedAt = new \DateTime();
-		$stats->finishedAt = new \DateTime();
+		$stats->startedAt = new DateTime();
+		$stats->finishedAt = new DateTime();
 		$stats->duration = 3600;
 		$stats->bounds = ['test' => 'value'];
-		
+
 		// Act
 		$stats->reset();
-		
+
 		// Assert - distance and realDistance are non-nullable floats, reset to 0
 		$this->assertEquals(0.0, $stats->distance);
 		$this->assertEquals(0.0, $stats->realDistance);
@@ -285,10 +287,10 @@ final class StatsTest extends TestCase
 	{
 		// Arrange
 		$stats = new Stats();
-		
+
 		// Act
 		$array = $stats->toArray();
-		
+
 		// Assert
 		$this->assertIsArray($array);
 		$this->assertArrayHasKey('distance', $array);
@@ -307,7 +309,7 @@ final class StatsTest extends TestCase
 		$this->assertArrayHasKey('finishedAtCoords', $array);
 		$this->assertArrayHasKey('duration', $array);
 		$this->assertArrayHasKey('bounds', $array);
-		
+
 		// Check default values are cast to float
 		$this->assertEquals(0.0, $array['distance']);
 		$this->assertEquals(0.0, $array['realDistance']);
@@ -325,10 +327,10 @@ final class StatsTest extends TestCase
 		$stats = new Stats();
 		$stats->distance = 5000.0;
 		$stats->realDistance = 5250.5;
-		
+
 		// Act
 		$array = $stats->toArray();
-		
+
 		// Assert
 		$this->assertEquals(5000.0, $array['distance']);
 		$this->assertEquals(5250.5, $array['realDistance']);
@@ -344,10 +346,10 @@ final class StatsTest extends TestCase
 		$stats = new Stats();
 		$stats->averageSpeed = 2.5;
 		$stats->averagePace = 400.0;
-		
+
 		// Act
 		$array = $stats->toArray();
-		
+
 		// Assert
 		$this->assertEquals(2.5, $array['avgSpeed']);
 		$this->assertEquals(400.0, $array['avgPace']);
@@ -365,10 +367,10 @@ final class StatsTest extends TestCase
 		$stats->maxAltitude = 500;
 		$stats->minAltitudeCoords = [54.0, 9.0];
 		$stats->maxAltitudeCoords = [54.5, 9.5];
-		
+
 		// Act
 		$array = $stats->toArray();
-		
+
 		// Assert
 		$this->assertEquals(100.0, $array['minAltitude']);
 		$this->assertEquals(500.0, $array['maxAltitude']);
@@ -386,10 +388,10 @@ final class StatsTest extends TestCase
 		$stats = new Stats();
 		$stats->cumulativeElevationGain = 250;
 		$stats->cumulativeElevationLoss = 180;
-		
+
 		// Act
 		$array = $stats->toArray();
-		
+
 		// Assert
 		$this->assertEquals(250.0, $array['cumulativeElevationGain']);
 		$this->assertEquals(180.0, $array['cumulativeElevationLoss']);
@@ -403,24 +405,24 @@ final class StatsTest extends TestCase
 	{
 		// Arrange
 		$stats = new Stats();
-		$startTime = new \DateTime('2024-01-15T10:00:00Z');
-		$endTime = new \DateTime('2024-01-15T12:30:00Z');
+		$startTime = new DateTime('2024-01-15T10:00:00Z');
+		$endTime = new DateTime('2024-01-15T12:30:00Z');
 		$stats->startedAt = $startTime;
 		$stats->finishedAt = $endTime;
 		$stats->duration = 9000;
-		
+
 		// Act
 		$array = $stats->toArray();
-		
+
 		// Assert
 		$this->assertNotNull($array['startedAt']);
 		$this->assertIsString($array['startedAt']);
 		$this->assertStringContainsString('2024-01-15', $array['startedAt']);
-		
+
 		$this->assertNotNull($array['finishedAt']);
 		$this->assertIsString($array['finishedAt']);
 		$this->assertStringContainsString('2024-01-15', $array['finishedAt']);
-		
+
 		$this->assertEquals(9000.0, $array['duration']);
 	}
 
@@ -434,10 +436,10 @@ final class StatsTest extends TestCase
 		$stats = new Stats();
 		$stats->startedAtCoords = [54.0, 9.0];
 		$stats->finishedAtCoords = [54.5, 9.5];
-		
+
 		// Act
 		$array = $stats->toArray();
-		
+
 		// Assert
 		$this->assertEquals([54.0, 9.0], $array['startedAtCoords']);
 		$this->assertEquals([54.5, 9.5], $array['finishedAtCoords']);
@@ -455,13 +457,13 @@ final class StatsTest extends TestCase
 			'minLatitude' => 50.0,
 			'minLongitude' => 10.0,
 			'maxLatitude' => 55.0,
-			'maxLongitude' => 15.0
+			'maxLongitude' => 15.0,
 		];
 		$stats->bounds = $bounds;
-		
+
 		// Act
 		$array = $stats->toArray();
-		
+
 		// Assert
 		$this->assertEquals($bounds, $array['bounds']);
 	}
@@ -474,9 +476,9 @@ final class StatsTest extends TestCase
 	{
 		// Arrange
 		$stats = new Stats();
-		$startTime = new \DateTime('2024-01-15T10:00:00Z');
-		$endTime = new \DateTime('2024-01-15T12:30:00Z');
-		
+		$startTime = new DateTime('2024-01-15T10:00:00Z');
+		$endTime = new DateTime('2024-01-15T12:30:00Z');
+
 		$stats->distance = 10000.0;
 		$stats->realDistance = 10500.0;
 		$stats->averageSpeed = 3.0;
@@ -493,10 +495,10 @@ final class StatsTest extends TestCase
 		$stats->finishedAtCoords = [54.8, 9.8];
 		$stats->duration = 9000;
 		$stats->bounds = ['minLatitude' => 54.0, 'minLongitude' => 9.0, 'maxLatitude' => 54.8, 'maxLongitude' => 9.8];
-		
+
 		// Act
 		$array = $stats->toArray();
-		
+
 		// Assert
 		$this->assertEquals(10000.0, $array['distance']);
 		$this->assertEquals(10500.0, $array['realDistance']);
@@ -524,11 +526,11 @@ final class StatsTest extends TestCase
 	{
 		// Arrange
 		$stats = new Stats();
-		
+
 		// Act
 		$stats->distance = 0.0;
 		$stats->realDistance = 0.0;
-		
+
 		// Assert
 		$this->assertEquals(0.0, $stats->distance);
 		$this->assertEquals(0.0, $stats->realDistance);
@@ -542,10 +544,10 @@ final class StatsTest extends TestCase
 	{
 		// Arrange
 		$stats = new Stats();
-		
+
 		// Act
 		$stats->duration = 0;
-		
+
 		// Assert
 		$this->assertEquals(0, $stats->duration);
 	}
@@ -558,11 +560,11 @@ final class StatsTest extends TestCase
 	{
 		// Arrange
 		$stats = new Stats();
-		
+
 		// Act
 		$stats->minAltitude = -50;
 		$stats->maxAltitude = 100;
-		
+
 		// Assert
 		$this->assertEquals(-50, $stats->minAltitude);
 		$this->assertEquals(100, $stats->maxAltitude);
@@ -576,11 +578,11 @@ final class StatsTest extends TestCase
 	{
 		// Arrange
 		$stats = new Stats();
-		
+
 		// Act
 		$stats->distance = 1000000.0; // 1000 km
 		$stats->realDistance = 1050000.0;
-		
+
 		// Assert
 		$this->assertEquals(1000000.0, $stats->distance);
 		$this->assertEquals(1050000.0, $stats->realDistance);
@@ -594,11 +596,11 @@ final class StatsTest extends TestCase
 	{
 		// Arrange
 		$stats = new Stats();
-		
+
 		// Act
 		$stats->averageSpeed = 0.5; // Very slow walking
 		$stats->averagePace = 2000.0; // 2000 seconds per km
-		
+
 		// Assert
 		$this->assertEquals(0.5, $stats->averageSpeed);
 		$this->assertEquals(2000.0, $stats->averagePace);
@@ -612,13 +614,13 @@ final class StatsTest extends TestCase
 	{
 		// Arrange
 		$stats = new Stats();
-		$time = new \DateTime('2024-01-15T10:00:00Z');
-		
+		$time = new DateTime('2024-01-15T10:00:00Z');
+
 		// Act
 		$stats->startedAt = $time;
 		$stats->finishedAt = clone $time;
 		$stats->duration = 0;
-		
+
 		// Assert
 		$this->assertEquals($time->getTimestamp(), $stats->startedAt->getTimestamp());
 		$this->assertEquals($time->getTimestamp(), $stats->finishedAt->getTimestamp());
@@ -633,11 +635,11 @@ final class StatsTest extends TestCase
 	{
 		// Arrange
 		$stats = new Stats();
-		
+
 		// Act
 		$stats->minAltitude = 200;
 		$stats->maxAltitude = 200;
-		
+
 		// Assert
 		$this->assertEquals(200, $stats->minAltitude);
 		$this->assertEquals(200, $stats->maxAltitude);
@@ -651,11 +653,11 @@ final class StatsTest extends TestCase
 	{
 		// Arrange
 		$stats = new Stats();
-		
+
 		// Act
 		$stats->cumulativeElevationGain = 0;
 		$stats->cumulativeElevationLoss = 0;
-		
+
 		// Assert
 		$this->assertEquals(0, $stats->cumulativeElevationGain);
 		$this->assertEquals(0, $stats->cumulativeElevationLoss);
@@ -671,10 +673,10 @@ final class StatsTest extends TestCase
 		$stats = new Stats();
 		$stats->startedAt = null;
 		$stats->finishedAt = null;
-		
+
 		// Act
 		$array = $stats->toArray();
-		
+
 		// Assert
 		$this->assertNull($array['startedAt']);
 		$this->assertNull($array['finishedAt']);
@@ -688,10 +690,10 @@ final class StatsTest extends TestCase
 	{
 		// Arrange
 		$stats = new Stats();
-		
+
 		// Act
 		$array = $stats->toArray();
-		
+
 		// Assert
 		$this->assertNull($stats->bounds);
 		$this->assertNull($array['bounds']);
@@ -705,10 +707,10 @@ final class StatsTest extends TestCase
 	{
 		// Arrange
 		$stats = new Stats();
-		
+
 		// Act
 		$stats->duration = 3661; // 1 hour, 1 minute, 1 second
-		
+
 		// Assert
 		$this->assertEquals(3661, $stats->duration);
 	}
@@ -721,19 +723,18 @@ final class StatsTest extends TestCase
 	{
 		// Arrange
 		$stats = new Stats();
-		$timeUTC = new \DateTime('2024-01-15 10:00:00', new \DateTimeZone('UTC'));
-		$timeEST = new \DateTime('2024-01-15 10:00:00', new \DateTimeZone('America/New_York'));
-		
+		$timeUTC = new DateTime('2024-01-15 10:00:00', new DateTimeZone('UTC'));
+		$timeEST = new DateTime('2024-01-15 10:00:00', new DateTimeZone('America/New_York'));
+
 		// Act
 		$stats->startedAt = $timeUTC;
 		$utcTimestamp = $stats->startedAt->getTimestamp();
-		
+
 		$stats->startedAt = $timeEST;
 		$estTimestamp = $stats->startedAt->getTimestamp();
-		
+
 		// Assert
 		$this->assertNotEquals($utcTimestamp, $estTimestamp);
-		$this->assertInstanceOf(\DateTime::class, $stats->startedAt);
+		$this->assertInstanceOf(DateTime::class, $stats->startedAt);
 	}
 }
-

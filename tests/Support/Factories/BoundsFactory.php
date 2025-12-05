@@ -23,7 +23,7 @@ class BoundsFactory
 		$minLongitude = $overrides['minLongitude'] ?? 9.0;
 		$maxLatitude = $overrides['maxLatitude'] ?? 55.0;
 		$maxLongitude = $overrides['maxLongitude'] ?? 10.0;
-		
+
 		return new Bounds($minLatitude, $minLongitude, $maxLatitude, $maxLongitude);
 	}
 
@@ -38,13 +38,13 @@ class BoundsFactory
 		$lat2 = PointFactory::randomLatitude();
 		$lon1 = PointFactory::randomLongitude();
 		$lon2 = PointFactory::randomLongitude();
-		
+
 		// Ensure min <= max
 		$minLatitude = min($lat1, $lat2);
 		$maxLatitude = max($lat1, $lat2);
 		$minLongitude = min($lon1, $lon2);
 		$maxLongitude = max($lon1, $lon2);
-		
+
 		return new Bounds($minLatitude, $minLongitude, $maxLatitude, $maxLongitude);
 	}
 }

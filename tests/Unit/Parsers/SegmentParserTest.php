@@ -1,11 +1,14 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @author miqwit
  */
 
 namespace phpGPX\Tests\Unit\Parsers;
 
-use phpGPX\Helpers\DateTimeHelper;
+use DOMDocument;
+use DOMElement;
 use phpGPX\Models\Segment;
 use phpGPX\Parsers\SegmentParser;
 use phpGPX\phpGPX;
@@ -13,6 +16,7 @@ use phpGPX\phpGPX;
 class SegmentParserTest extends AbstractParserTest
 {
 	protected $testModelClass = Segment::class;
+
 	protected $testParserClass = SegmentParser::class;
 
 	/**
@@ -28,7 +32,7 @@ class SegmentParserTest extends AbstractParserTest
 			PointParserTest::createTestInstanceWithValues(46.572016, 8.414866, 2418.8833883882, "2017-08-13T07:10:54.000Z"),
 			PointParserTest::createTestInstanceWithValues(46.572088, 8.414911, 2419.8999900064, "2017-08-13T07:11:56.000Z"),
 			PointParserTest::createTestInstanceWithValues(46.572069, 8.414912, 2422, "2017-08-13T07:12:15.000Z"),
-			PointParserTest::createTestInstanceWithValues(46.572054, 8.414888, 2425, "2017-08-13T07:12:18.000Z")
+			PointParserTest::createTestInstanceWithValues(46.572054, 8.414888, 2425, "2017-08-13T07:12:18.000Z"),
 		];
 		$segment->recalculateStats();
 
@@ -36,13 +40,13 @@ class SegmentParserTest extends AbstractParserTest
 	}
 
 	protected function setUp(): void
-    {
+	{
 		parent::setUp();
 
 		$this->testModelInstance = self::createTestInstance();
 	}
 
-	public function testParse()
+	public function testParse(): void
 	{
 		$segment = SegmentParser::parse($this->testXmlFile->trkseg);
 
@@ -104,16 +108,16 @@ class SegmentParserTest extends AbstractParserTest
 
 		$this->assertIsArray($segments);
 		$this->assertCount(1, $segments);
-		
+
 		$segment = $segments[0];
 		$this->assertInstanceOf(\phpGPX\Models\Segment::class, $segment);
 		$this->assertCount(5, $segment->points);
-		
+
 		// Verify first point
 		$this->assertEquals(46.571948, $segment->points[0]->latitude);
 		$this->assertEquals(8.414757, $segment->points[0]->longitude);
 		$this->assertEquals(2419, $segment->points[0]->elevation);
-		
+
 		// Verify last point
 		$this->assertEquals(46.572054, $segment->points[4]->latitude);
 		$this->assertEquals(8.414888, $segment->points[4]->longitude);
@@ -140,7 +144,7 @@ class SegmentParserTest extends AbstractParserTest
 
 		$this->assertCount(1, $segments);
 		$segment = $segments[0];
-		
+
 		$this->assertCount(1, $segment->points);
 		$this->assertEquals(50.0, $segment->points[0]->latitude);
 		$this->assertEquals(10.0, $segment->points[0]->longitude);
@@ -184,7 +188,7 @@ class SegmentParserTest extends AbstractParserTest
 
 		$this->assertCount(1, $segments);
 		$segment = $segments[0];
-		
+
 		$this->assertCount(3, $segment->points);
 		$this->assertNull($segment->points[0]->elevation);
 		$this->assertNull($segment->points[1]->elevation);
@@ -214,7 +218,7 @@ class SegmentParserTest extends AbstractParserTest
 
 		$this->assertCount(1, $segments);
 		$segment = $segments[0];
-		
+
 		$this->assertCount(2, $segment->points);
 		$this->assertNull($segment->points[0]->time);
 		$this->assertNull($segment->points[1]->time);
@@ -243,7 +247,7 @@ class SegmentParserTest extends AbstractParserTest
 
 		$this->assertCount(1, $segments);
 		$segment = $segments[0];
-		
+
 		$this->assertNotNull($segment->extensions);
 	}
 
@@ -306,7 +310,7 @@ class SegmentParserTest extends AbstractParserTest
 
 		$this->assertCount(1, $segments);
 		$segment = $segments[0];
-		
+
 		$this->assertNotNull($segment->stats);
 		$this->assertGreaterThan(0, $segment->stats->distance);
 
@@ -333,7 +337,7 @@ class SegmentParserTest extends AbstractParserTest
 
 		$this->assertCount(1, $segments);
 		$segment = $segments[0];
-		
+
 		$this->assertCount(2, $segment->points);
 		$this->assertEquals(50.0, $segment->points[0]->latitude);
 		$this->assertEquals(10.0, $segment->points[0]->longitude);
@@ -344,10 +348,10 @@ class SegmentParserTest extends AbstractParserTest
 	/**
 	 * Returns output of ::toXML method of tested parser.
 	 * @depends testParse
-	 * @param \DOMDocument $document
-	 * @return \DOMElement
+	 * @param DOMDocument $document
+	 * @return DOMElement
 	 */
-	protected function convertToXML(\DOMDocument $document)
+	protected function convertToXML(DOMDocument $document)
 	{
 		return SegmentParser::toXML($this->testModelInstance, $document);
 	}

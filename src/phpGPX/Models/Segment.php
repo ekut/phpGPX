@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created            26/08/16 15:26
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
@@ -6,10 +8,10 @@
 
 namespace phpGPX\Models;
 
+use DateTime;
 use phpGPX\Helpers\BoundsCalculator;
 use phpGPX\Helpers\DistanceCalculator;
 use phpGPX\Helpers\ElevationGainLossCalculator;
-use phpGPX\Helpers\GeoHelper;
 use phpGPX\Helpers\SerializationHelper;
 use phpGPX\phpGPX;
 
@@ -40,16 +42,15 @@ class Segment implements Summarizable, StatsCalculator
 	 */
 	public $stats;
 
-
 	/**
   * Serialize object to array
   */
- public function toArray(): array
+	public function toArray(): array
 	{
 		return [
 			'points' => SerializationHelper::serialize($this->points),
 			'extensions' => SerializationHelper::serialize($this->extensions),
-			'stats' => SerializationHelper::serialize($this->stats)
+			'stats' => SerializationHelper::serialize($this->stats),
 		];
 	}
 
@@ -64,7 +65,7 @@ class Segment implements Summarizable, StatsCalculator
 	/**
   * Recalculate stats objects.
   */
- public function recalculateStats(): void
+	public function recalculateStats(): void
 	{
 		if (empty($this->stats)) {
 			$this->stats = new Stats();
@@ -106,15 +107,18 @@ class Segment implements Summarizable, StatsCalculator
 			}
 		}
 
-		if ($firstPoint->time !== null && $lastPoint->time !== null && $firstPoint->time instanceof \DateTime && $lastPoint->time instanceof \DateTime) {
+		if ($firstPoint->time !== null && $lastPoint->time !== null && $firstPoint->time instanceof DateTime && $lastPoint->time instanceof DateTime) {
 			$this->stats->duration = $lastPoint->time->getTimestamp() - $firstPoint->time->getTimestamp();
 
-			if ($this->stats->duration != 0) {
+			if ($this->stats->duration !== 0 && $this->stats->distance > 0) {
 				$this->stats->averageSpeed = $this->stats->distance / $this->stats->duration;
 			}
 
-			if ($this->stats->distance != 0) {
-				$this->stats->averagePace = $this->stats->duration / ($this->stats->distance / 1000);
+			if ($this->stats->distance > 0 && $this->stats->duration !== 0) {
+				$distanceInKm = $this->stats->distance / 1000;
+				if ($distanceInKm > 0) {
+					$this->stats->averagePace = $this->stats->duration / $distanceInKm;
+				}
 			}
 		}
 

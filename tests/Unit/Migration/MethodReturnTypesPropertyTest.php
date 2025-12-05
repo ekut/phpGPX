@@ -17,7 +17,7 @@ final class MethodReturnTypesPropertyTest extends TestCase
 	/**
 	 * **Feature: php-8-4-migration, Property 6: Method return type completeness**
 	 * **Validates: Requirements 5.1, 5.2, 5.3, 5.4**
-	 * 
+	 *
 	 * For any method in the codebase, the method SHALL have an explicit return type declaration.
 	 */
 	public function test_property_all_helper_methods_have_return_types(): void
@@ -61,8 +61,8 @@ final class MethodReturnTypesPropertyTest extends TestCase
 				sprintf(
 					"Method %s::%s() does not have an explicit return type",
 					$className,
-					$method->getName()
-				)
+					$method->getName(),
+				),
 			);
 		}
 	}

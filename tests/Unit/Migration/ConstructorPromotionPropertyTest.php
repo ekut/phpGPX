@@ -6,7 +6,6 @@ namespace phpGPX\Tests\Unit\Migration;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use ReflectionProperty;
 
 /**
  * Property-based tests for constructor promotion correctness in PHP 8.4 migration.
@@ -17,7 +16,7 @@ final class ConstructorPromotionPropertyTest extends TestCase
 	/**
 	 * **Feature: php-8-4-migration, Property 4: Constructor promotion correctness**
 	 * **Validates: Requirements 3.3**
-	 * 
+	 *
 	 * For any constructor using property promotion, there SHALL NOT exist a separate property declaration.
 	 */
 	public function test_property_no_redundant_property_declarations_with_constructor_promotion(): void
@@ -68,25 +67,25 @@ final class ConstructorPromotionPropertyTest extends TestCase
 			// So we check that there's no explicit declaration in the class body
 			// by reading the source code
 			$source = file_get_contents($reflection->getFileName());
-			
+
 			// Remove the constructor to avoid false positives
 			$constructorStart = strpos($source, 'public function __construct');
 			$constructorEnd = strpos($source, '}', $constructorStart);
 			$beforeConstructor = substr($source, 0, $constructorStart);
 			$afterConstructor = substr($source, $constructorEnd + 1);
 			$sourceWithoutConstructor = $beforeConstructor . $afterConstructor;
-			
+
 			// Look for property declarations like "public $propertyName" or "public Type $propertyName"
 			$pattern = '/^\s*(public|protected|private)\s+(\??\w+\s+)?\$' . preg_quote($promotedProp, '/') . '\s*[;=]/m';
-			
+
 			$this->assertDoesNotMatchRegularExpression(
 				$pattern,
 				$sourceWithoutConstructor,
 				sprintf(
 					"Class %s has redundant property declaration for promoted property \$%s",
 					$className,
-					$promotedProp
-				)
+					$promotedProp,
+				),
 			);
 		}
 	}

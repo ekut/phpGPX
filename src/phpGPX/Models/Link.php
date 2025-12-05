@@ -27,7 +27,7 @@ class Link implements Summarizable
 	public function __construct(
 		public string $href,
 		public ?string $text = null,
-		public ?string $type = null
+		public ?string $type = null,
 	) {
 		GpxValidator::validateNonEmptyString($href, 'Link href attribute');
 	}
@@ -40,7 +40,7 @@ class Link implements Summarizable
 		return [
 			'href' => $this->href,
 			'text' => $this->text,
-			'type' => $this->type
+			'type' => $this->type,
 		];
 	}
 }

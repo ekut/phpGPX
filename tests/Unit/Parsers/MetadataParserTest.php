@@ -1,10 +1,15 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
  */
 
 namespace phpGPX\Tests\Unit\Parsers;
 
+use DateTime;
+use DOMDocument;
+use DOMElement;
 use phpGPX\Models\Bounds;
 use phpGPX\Models\Link;
 use phpGPX\Models\Metadata;
@@ -13,6 +18,7 @@ use phpGPX\Parsers\MetadataParser;
 class MetadataParserTest extends AbstractParserTest
 {
 	protected $testModelClass = Metadata::class;
+
 	protected $testParserClass = MetadataParser::class;
 
 	/**
@@ -27,16 +33,15 @@ class MetadataParserTest extends AbstractParserTest
 		$metadata->description = "A test track for unit testing";
 		$metadata->author = PersonParserTest::createTestInstance();
 		$metadata->copyright = CopyrightParserTest::createTestInstance();
-		
-		$link = new Link();
-		$link->href = "https://example.com";
+
+		$link = new Link("https://example.com");
 		$link->text = "Example Link";
 		$link->type = "text/html";
 		$metadata->links[] = $link;
-		
-		$metadata->time = new \DateTime('2017-02-16T22:00:00Z');
+
+		$metadata->time = new DateTime('2017-02-16T22:00:00Z');
 		$metadata->keywords = "test, gpx, track";
-		
+
 		$metadata->bounds = new Bounds(54.0, 9.0, 55.0, 10.0);
 
 		return $metadata;
@@ -49,7 +54,7 @@ class MetadataParserTest extends AbstractParserTest
 		$this->testModelInstance = self::createTestInstance();
 	}
 
-	public function testParse()
+	public function testParse(): void
 	{
 		$metadata = MetadataParser::parse($this->testXmlFile->metadata);
 
@@ -121,10 +126,10 @@ class MetadataParserTest extends AbstractParserTest
 	/**
 	 * Returns output of ::toXML method of tested parser.
 	 * @depends testParse
-	 * @param \DOMDocument $document
-	 * @return \DOMElement
+	 * @param DOMDocument $document
+	 * @return DOMElement
 	 */
-	protected function convertToXML(\DOMDocument $document)
+	protected function convertToXML(DOMDocument $document)
 	{
 		return MetadataParser::toXML($this->testModelInstance, $document);
 	}

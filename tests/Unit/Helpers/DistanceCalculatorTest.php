@@ -22,10 +22,10 @@ final class DistanceCalculatorTest extends TestCase
 		// Arrange - Create a sequence of points along a path
 		$points = PointFactory::createSequence(5, 54.0, 9.0, 0.01);
 		$calculator = new DistanceCalculator($points);
-		
+
 		// Act
 		$distance = $calculator->getRawDistance();
-		
+
 		// Assert - Distance should be positive and reasonable
 		$this->assertGreaterThan(0, $distance);
 		// Each step is ~0.01 degrees, roughly 1.1km per step, 4 steps total
@@ -54,13 +54,13 @@ final class DistanceCalculatorTest extends TestCase
 			'longitude' => 9.02,
 			'elevation' => 200.0,
 		]);
-		
+
 		$calculator = new DistanceCalculator([$point1, $point2, $point3]);
-		
+
 		// Act
 		$realDistance = $calculator->getRealDistance();
 		$rawDistance = $calculator->getRawDistance();
-		
+
 		// Assert - Real distance should be greater than raw distance due to elevation
 		$this->assertGreaterThan($rawDistance, $realDistance);
 		$this->assertGreaterThan(0, $realDistance);
@@ -73,10 +73,10 @@ final class DistanceCalculatorTest extends TestCase
 	{
 		// Arrange
 		$calculator = new DistanceCalculator([]);
-		
+
 		// Act
 		$distance = $calculator->getRawDistance();
-		
+
 		// Assert - Empty sequence should return 0 distance
 		$this->assertEquals(0, $distance);
 	}
@@ -89,10 +89,10 @@ final class DistanceCalculatorTest extends TestCase
 		// Arrange
 		$point = PointFactory::create();
 		$calculator = new DistanceCalculator([$point]);
-		
+
 		// Act
 		$distance = $calculator->getRawDistance();
-		
+
 		// Assert - Single point should return 0 distance
 		$this->assertEquals(0, $distance);
 	}
@@ -106,10 +106,10 @@ final class DistanceCalculatorTest extends TestCase
 		$point1 = PointFactory::createAtCoordinates(54.0, 9.0);
 		$point2 = PointFactory::createAtCoordinates(54.01, 9.01);
 		$calculator = new DistanceCalculator([$point1, $point2]);
-		
+
 		// Act
 		$distance = $calculator->getRawDistance();
-		
+
 		// Assert - Distance should be positive
 		$this->assertGreaterThan(0, $distance);
 		// Roughly 1.1-1.5km for 0.01 degree difference
@@ -126,41 +126,29 @@ final class DistanceCalculatorTest extends TestCase
 		$point1 = PointFactory::createAtCoordinates(54.0, 9.0);
 		$point2 = PointFactory::createAtCoordinates(54.01, 9.0);
 		$point3 = PointFactory::createAtCoordinates(54.02, 9.0);
-		
+
 		$calculator = new DistanceCalculator([$point1, $point2, $point3]);
-		
+
 		// Act
 		$totalDistance = $calculator->getRawDistance();
-		
+
 		// Assert - Total distance should be roughly 2x the distance between adjacent points
 		// Calculate expected distance between point1 and point2
 		$calculatorTwoPoints = new DistanceCalculator([$point1, $point2]);
 		$singleSegmentDistance = $calculatorTwoPoints->getRawDistance();
-		
+
 		// Total should be approximately 2x single segment (with small tolerance)
 		$this->assertEqualsWithDelta($singleSegmentDistance * 2, $totalDistance, 10);
 	}
 
 	/**
-	 * Test handling of points with null coordinates.
-	 * With PHP 8.4 strict types, passing null to deg2rad() throws a TypeError.
-	 * This test verifies that the type system correctly enforces non-null coordinates.
+	 * Test handling of points with null coordinates is no longer possible.
+	 * With GPX 1.1 schema compliance, Points require latitude and longitude in constructor.
+	 * This test has been removed as it validated invalid behavior.
+	 *
+	 * Requirements: 10.1, 10.6
 	 */
-	public function test_calculate_distance_with_null_coordinates(): void
-	{
-		// Arrange - Create a point with null latitude (invalid)
-		$point1 = new Point(Point::TRACKPOINT);
-		$point1->latitude = null;
-		$point1->longitude = null;
-		
-		$point2 = PointFactory::createAtCoordinates(54.0, 9.0);
-		
-		// Act & Assert - Expect TypeError when calculating distance with null coordinates
-		$this->expectException(\TypeError::class);
-		
-		$calculator = new DistanceCalculator([$point1, $point2]);
-		$calculator->getRawDistance();
-	}
+	// Test removed - Points now require coordinates in constructor
 
 	/**
 	 * Test that point objects are updated with distance information.
@@ -171,21 +159,21 @@ final class DistanceCalculatorTest extends TestCase
 		$point1 = PointFactory::createAtCoordinates(54.0, 9.0);
 		$point2 = PointFactory::createAtCoordinates(54.01, 9.0);
 		$point3 = PointFactory::createAtCoordinates(54.02, 9.0);
-		
+
 		$calculator = new DistanceCalculator([$point1, $point2, $point3]);
-		
+
 		// Act
 		$calculator->getRawDistance();
-		
+
 		// Assert - Points should have distance and difference properties set
 		$this->assertNull($point1->distance); // First point has no distance
 		$this->assertNull($point1->difference); // First point has no difference
-		
+
 		$this->assertNotNull($point2->distance);
 		$this->assertNotNull($point2->difference);
 		$this->assertGreaterThan(0, $point2->distance);
 		$this->assertGreaterThan(0, $point2->difference);
-		
+
 		$this->assertNotNull($point3->distance);
 		$this->assertNotNull($point3->difference);
 		$this->assertGreaterThan($point2->distance, $point3->distance);

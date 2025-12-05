@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created            16/02/2017 23:02
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
@@ -6,7 +8,10 @@
 
 namespace phpGPX\Parsers;
 
+use DOMDocument;
+use DOMElement;
 use phpGPX\Models\Email;
+use SimpleXMLElement;
 
 /**
  * Class EmailParser
@@ -19,7 +24,7 @@ abstract class EmailParser
 	/**
 	 * @return Email
 	 */
-	public static function parse(\SimpleXMLElement $node)
+	public static function parse(SimpleXMLElement $node)
 	{
 		$id = isset($node['id']) ? (string) $node['id'] : '';
 		$domain = isset($node['domain']) ? (string) $node['domain'] : '';
@@ -32,11 +37,10 @@ abstract class EmailParser
 		return new Email($id, $domain);
 	}
 
-
 	/**
-  * @return \DOMElement
+  * @return DOMElement
   */
- public static function toXML(Email $email, \DOMDocument &$document)
+	public static function toXML(Email $email, DOMDocument &$document)
 	{
 		$node =  $document->createElement(self::$tagName);
 

@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace phpGPX\Tests\Unit\Models;
 
+use DateTime;
+use DOMDocument;
+use DOMElement;
+use Eris\Generators;
+use Eris\TestTrait;
 use phpGPX\Models\Link;
 use phpGPX\Models\Point;
 use phpGPX\Models\Segment;
@@ -14,8 +19,6 @@ use phpGPX\Tests\Support\Factories\PointFactory;
 use phpGPX\Tests\Support\Factories\SegmentFactory;
 use phpGPX\Tests\Support\Factories\TrackFactory;
 use phpGPX\Tests\Support\TestCase;
-use Eris\Generators;
-use Eris\TestTrait;
 
 /**
  * Unit tests for Track model.
@@ -23,11 +26,12 @@ use Eris\TestTrait;
 final class TrackTest extends TestCase
 {
 	use TestTrait;
+
 	public function test_track_can_be_created(): void
 	{
 		// Arrange & Act
 		$track = new Track();
-		
+
 		// Assert
 		$this->assertInstanceOf(Track::class, $track);
 		$this->assertIsArray($track->segments);
@@ -40,7 +44,7 @@ final class TrackTest extends TestCase
 	{
 		// Arrange
 		$track = new Track();
-		
+
 		// Act
 		$track->name = 'Morning Run';
 		$track->comment = 'Great weather';
@@ -48,7 +52,7 @@ final class TrackTest extends TestCase
 		$track->source = 'Garmin eTrex';
 		$track->number = 42;
 		$track->type = 'running';
-		
+
 		// Assert
 		$this->assertEquals('Morning Run', $track->name);
 		$this->assertEquals('Great weather', $track->comment);
@@ -64,11 +68,11 @@ final class TrackTest extends TestCase
 		$track = new Track();
 		$segment1 = SegmentFactory::create();
 		$segment2 = SegmentFactory::create();
-		
+
 		// Act
 		$track->segments[] = $segment1;
 		$track->segments[] = $segment2;
-		
+
 		// Assert
 		$this->assertCount(2, $track->segments);
 		$this->assertSame($segment1, $track->segments[0]);
@@ -80,10 +84,10 @@ final class TrackTest extends TestCase
 		// Arrange
 		$track = new Track();
 		$link = new Link('https://example.com', 'Example Link');
-		
+
 		// Act
 		$track->links[] = $link;
-		
+
 		// Assert
 		$this->assertCount(1, $track->links);
 		$this->assertEquals('https://example.com', $track->links[0]->href);
@@ -94,10 +98,10 @@ final class TrackTest extends TestCase
 	{
 		// Arrange
 		$track = TrackFactory::createWithSegments(3, 5);
-		
+
 		// Act
 		$points = $track->getPoints();
-		
+
 		// Assert
 		$this->assertCount(15, $points); // 3 segments * 5 points each
 		$this->assertContainsOnlyInstancesOf(Point::class, $points);
@@ -107,10 +111,10 @@ final class TrackTest extends TestCase
 	{
 		// Arrange
 		$track = new Track();
-		
+
 		// Act
 		$points = $track->getPoints();
-		
+
 		// Assert
 		$this->assertIsArray($points);
 		$this->assertEmpty($points);
@@ -122,10 +126,10 @@ final class TrackTest extends TestCase
 		$track = new Track();
 		$track->segments[] = new Segment();
 		$track->segments[] = new Segment();
-		
+
 		// Act
 		$points = $track->getPoints();
-		
+
 		// Assert
 		$this->assertIsArray($points);
 		$this->assertEmpty($points);
@@ -135,10 +139,10 @@ final class TrackTest extends TestCase
 	{
 		// Arrange
 		$track = TrackFactory::createWithPoints(10);
-		
+
 		// Act
 		$track->recalculateStats();
-		
+
 		// Assert
 		$this->assertInstanceOf(Stats::class, $track->stats);
 	}
@@ -147,10 +151,10 @@ final class TrackTest extends TestCase
 	{
 		// Arrange
 		$track = TrackFactory::createWithPoints(10);
-		
+
 		// Act
 		$track->recalculateStats();
-		
+
 		// Assert
 		$this->assertIsFloat($track->stats->distance);
 		$this->assertGreaterThan(0, $track->stats->distance);
@@ -160,10 +164,10 @@ final class TrackTest extends TestCase
 	{
 		// Arrange
 		$track = new Track();
-		
+
 		// Act
 		$track->recalculateStats();
-		
+
 		// Assert
 		$this->assertInstanceOf(Stats::class, $track->stats);
 		$this->assertEquals(0.0, $track->stats->distance);
@@ -174,10 +178,10 @@ final class TrackTest extends TestCase
 		// Arrange
 		$track = new Track();
 		$track->segments[] = new Segment();
-		
+
 		// Act
 		$track->recalculateStats();
-		
+
 		// Assert
 		$this->assertInstanceOf(Stats::class, $track->stats);
 		$this->assertEquals(0.0, $track->stats->distance);
@@ -187,20 +191,20 @@ final class TrackTest extends TestCase
 	{
 		// Arrange
 		$track = TrackFactory::createWithSegments(3, 5);
-		
+
 		// Act
 		$track->recalculateStats();
-		
+
 		// Assert
 		$this->assertInstanceOf(Stats::class, $track->stats);
 		$this->assertGreaterThan(0, $track->stats->distance);
-		
+
 		// Calculate expected distance by summing segment distances
 		$expectedDistance = 0;
 		foreach ($track->segments as $segment) {
 			$expectedDistance += $segment->stats->distance;
 		}
-		
+
 		$this->assertEqualsWithDelta($expectedDistance, $track->stats->distance, 0.01);
 	}
 
@@ -209,7 +213,7 @@ final class TrackTest extends TestCase
 		// Arrange
 		$track = new Track();
 		$segment = new Segment();
-		
+
 		for ($i = 0; $i < 10; $i++) {
 			$point = PointFactory::create([
 				'latitude' => 54.0 + ($i * 0.01),
@@ -218,12 +222,12 @@ final class TrackTest extends TestCase
 			]);
 			$segment->points[] = $point;
 		}
-		
+
 		$track->segments[] = $segment;
-		
+
 		// Act
 		$track->recalculateStats();
-		
+
 		// Assert
 		$this->assertNotNull($track->stats->cumulativeElevationGain);
 		$this->assertGreaterThan(0, $track->stats->cumulativeElevationGain);
@@ -237,8 +241,8 @@ final class TrackTest extends TestCase
 		// Arrange
 		$track = new Track();
 		$segment = new Segment();
-		$baseTime = new \DateTime('2024-01-01 10:00:00');
-		
+		$baseTime = new DateTime('2024-01-01 10:00:00');
+
 		for ($i = 0; $i < 10; $i++) {
 			$point = PointFactory::create([
 				'latitude' => 54.0 + ($i * 0.01),
@@ -247,15 +251,15 @@ final class TrackTest extends TestCase
 			]);
 			$segment->points[] = $point;
 		}
-		
+
 		$track->segments[] = $segment;
-		
+
 		// Act
 		$track->recalculateStats();
-		
+
 		// Assert
-		$this->assertInstanceOf(\DateTime::class, $track->stats->startedAt);
-		$this->assertInstanceOf(\DateTime::class, $track->stats->finishedAt);
+		$this->assertInstanceOf(DateTime::class, $track->stats->startedAt);
+		$this->assertInstanceOf(DateTime::class, $track->stats->finishedAt);
 		$this->assertNotNull($track->stats->duration);
 		$this->assertEquals(540, $track->stats->duration); // 9 minutes = 540 seconds
 		$this->assertNotNull($track->stats->averageSpeed);
@@ -271,10 +275,10 @@ final class TrackTest extends TestCase
 		]);
 		$track->number = 1;
 		$track->type = 'hiking';
-		
+
 		// Act
 		$array = $track->toArray();
-		
+
 		// Assert
 		$this->assertIsArray($array);
 		$this->assertArrayHasKey('name', $array);
@@ -293,10 +297,10 @@ final class TrackTest extends TestCase
 	{
 		// Arrange
 		$track = TrackFactory::createWithSegments(2, 3);
-		
+
 		// Act
 		$array = $track->toArray();
-		
+
 		// Assert
 		$this->assertArrayHasKey('trkseg', $array);
 		$this->assertIsArray($array['trkseg']);
@@ -308,10 +312,10 @@ final class TrackTest extends TestCase
 		// Arrange
 		$track = TrackFactory::createWithPoints(5);
 		$track->recalculateStats();
-		
+
 		// Act
 		$array = $track->toArray();
-		
+
 		// Assert
 		$this->assertArrayHasKey('stats', $array);
 		$this->assertIsArray($array['stats']);
@@ -325,21 +329,21 @@ final class TrackTest extends TestCase
 			'name' => 'XML Test Track',
 		]);
 		$track->segments[] = SegmentFactory::createWithPoints(3);
-		
-		$document = new \DOMDocument('1.0', 'UTF-8');
-		
+
+		$document = new DOMDocument('1.0', 'UTF-8');
+
 		// Act
 		$xmlNode = TrackParser::toXML($track, $document);
-		
+
 		// Assert
-		$this->assertInstanceOf(\DOMElement::class, $xmlNode);
+		$this->assertInstanceOf(DOMElement::class, $xmlNode);
 		$this->assertEquals('trk', $xmlNode->nodeName);
-		
+
 		// Check for name element
 		$nameNodes = $xmlNode->getElementsByTagName('name');
 		$this->assertGreaterThan(0, $nameNodes->length);
 		$this->assertEquals('XML Test Track', $nameNodes->item(0)->nodeValue);
-		
+
 		// Check for segment elements
 		$segmentNodes = $xmlNode->getElementsByTagName('trkseg');
 		$this->assertEquals(1, $segmentNodes->length);
@@ -349,11 +353,11 @@ final class TrackTest extends TestCase
 	{
 		// Arrange
 		$track = TrackFactory::createWithSegments(3, 2);
-		$document = new \DOMDocument('1.0', 'UTF-8');
-		
+		$document = new DOMDocument('1.0', 'UTF-8');
+
 		// Act
 		$xmlNode = TrackParser::toXML($track, $document);
-		
+
 		// Assert
 		$segmentNodes = $xmlNode->getElementsByTagName('trkseg');
 		$this->assertEquals(3, $segmentNodes->length);
@@ -370,12 +374,12 @@ final class TrackTest extends TestCase
 		$track->source = 'Test source';
 		$track->number = 99;
 		$track->type = 'cycling';
-		
-		$document = new \DOMDocument('1.0', 'UTF-8');
-		
+
+		$document = new DOMDocument('1.0', 'UTF-8');
+
 		// Act
 		$xmlNode = TrackParser::toXML($track, $document);
-		
+
 		// Assert
 		$this->assertEquals('Complete Track', $xmlNode->getElementsByTagName('name')->item(0)->nodeValue);
 		$this->assertEquals('Full description', $xmlNode->getElementsByTagName('desc')->item(0)->nodeValue);
@@ -389,10 +393,10 @@ final class TrackTest extends TestCase
 	{
 		// Arrange
 		$track = TrackFactory::createWithPoints(10);
-		
+
 		// Act
 		$track->recalculateStats();
-		
+
 		// Assert
 		$this->assertNotNull($track->stats->bounds);
 		$this->assertIsArray($track->stats->bounds);
@@ -406,10 +410,10 @@ final class TrackTest extends TestCase
 		$segment = new Segment();
 		$segment->points[] = PointFactory::create();
 		$track->segments[] = $segment;
-		
+
 		// Act
 		$track->recalculateStats();
-		
+
 		// Assert
 		$this->assertInstanceOf(Stats::class, $track->stats);
 		$this->assertNotNull($track->stats->startedAtCoords);
@@ -422,29 +426,29 @@ final class TrackTest extends TestCase
 		// Arrange
 		$originalSortSetting = \phpGPX\phpGPX::$SORT_BY_TIMESTAMP;
 		\phpGPX\phpGPX::$SORT_BY_TIMESTAMP = true;
-		
+
 		$track = new Track();
 		$segment = new Segment();
-		
+
 		// Add points with timestamps in reverse order
-		$time3 = new \DateTime('2024-01-01 12:00:00');
-		$time2 = new \DateTime('2024-01-01 11:00:00');
-		$time1 = new \DateTime('2024-01-01 10:00:00');
-		
+		$time3 = new DateTime('2024-01-01 12:00:00');
+		$time2 = new DateTime('2024-01-01 11:00:00');
+		$time1 = new DateTime('2024-01-01 10:00:00');
+
 		$segment->points[] = PointFactory::create(['time' => $time3, 'latitude' => 54.3]);
 		$segment->points[] = PointFactory::create(['time' => $time2, 'latitude' => 54.2]);
 		$segment->points[] = PointFactory::create(['time' => $time1, 'latitude' => 54.1]);
-		
+
 		$track->segments[] = $segment;
-		
+
 		// Act
 		$points = $track->getPoints();
-		
+
 		// Assert
 		$this->assertEquals($time1, $points[0]->time);
 		$this->assertEquals($time2, $points[1]->time);
 		$this->assertEquals($time3, $points[2]->time);
-		
+
 		// Restore original setting
 		\phpGPX\phpGPX::$SORT_BY_TIMESTAMP = $originalSortSetting;
 	}
@@ -454,42 +458,42 @@ final class TrackTest extends TestCase
 		// Arrange
 		$originalSortSetting = \phpGPX\phpGPX::$SORT_BY_TIMESTAMP;
 		\phpGPX\phpGPX::$SORT_BY_TIMESTAMP = false;
-		
+
 		$track = new Track();
 		$segment = new Segment();
-		
+
 		// Add points with timestamps in reverse order
-		$time3 = new \DateTime('2024-01-01 12:00:00');
-		$time2 = new \DateTime('2024-01-01 11:00:00');
-		$time1 = new \DateTime('2024-01-01 10:00:00');
-		
+		$time3 = new DateTime('2024-01-01 12:00:00');
+		$time2 = new DateTime('2024-01-01 11:00:00');
+		$time1 = new DateTime('2024-01-01 10:00:00');
+
 		$segment->points[] = PointFactory::create(['time' => $time3, 'latitude' => 54.3]);
 		$segment->points[] = PointFactory::create(['time' => $time2, 'latitude' => 54.2]);
 		$segment->points[] = PointFactory::create(['time' => $time1, 'latitude' => 54.1]);
-		
+
 		$track->segments[] = $segment;
-		
+
 		// Act
 		$points = $track->getPoints();
-		
+
 		// Assert - should remain in original order
 		$this->assertEquals($time3, $points[0]->time);
 		$this->assertEquals($time2, $points[1]->time);
 		$this->assertEquals($time1, $points[2]->time);
-		
+
 		// Restore original setting
 		\phpGPX\phpGPX::$SORT_BY_TIMESTAMP = $originalSortSetting;
 	}
 
 	/**
 	 * Property test: Statistics are non-negative.
-	 * 
+	 *
 	 * **Feature: test-coverage, Property 6: Statistics are non-negative**
-	 * 
+	 *
 	 * For any track with valid points, calculated statistics (distance, duration)
-	 * should always be non-negative values. This is a fundamental invariant - 
+	 * should always be non-negative values. This is a fundamental invariant -
 	 * distances, durations, and elevation metrics cannot be negative by definition.
-	 * 
+	 *
 	 * **Validates: Requirements 2.4**
 	 */
 	public function test_property_statistics_are_non_negative(): void
@@ -499,49 +503,49 @@ final class TrackTest extends TestCase
 			->forAll(
 				// Generate parameters for creating random tracks
 				Generators::choose(1, 5),    // Number of segments
-				Generators::choose(2, 10)    // Number of points per segment
+				Generators::choose(2, 10),    // Number of points per segment
 			)
 			->withMaxSize(100) // Run 100 iterations as specified in design
-			->then(function ($numSegments, $numPoints) {
+			->then(function ($numSegments, $numPoints): void {
 				// Create a track with random segments and points
 				$track = new Track();
-				
-				$baseTime = new \DateTime('2024-01-01 10:00:00');
+
+				$baseTime = new DateTime('2024-01-01 10:00:00');
 				$baseLatitude = 54.0;
 				$baseLongitude = 9.0;
 				$baseElevation = 100.0;
-				
+
 				for ($s = 0; $s < $numSegments; $s++) {
 					$segment = new Segment();
-					
+
 					for ($p = 0; $p < $numPoints; $p++) {
 						// Generate random but valid coordinates
 						$latOffset = (mt_rand(-1000, 1000) / 10000.0); // ±0.1 degrees
 						$lonOffset = (mt_rand(-1000, 1000) / 10000.0); // ±0.1 degrees
 						$elevOffset = (mt_rand(-50, 50) / 1.0); // ±50 meters
 						$timeOffset = $p * 60; // 1 minute between points
-						
+
 						$point = PointFactory::create([
 							'latitude' => $baseLatitude + $latOffset,
 							'longitude' => $baseLongitude + $lonOffset,
 							'elevation' => $baseElevation + $elevOffset,
 							'time' => (clone $baseTime)->modify("+{$timeOffset} seconds"),
 						]);
-						
+
 						$segment->points[] = $point;
 					}
-					
+
 					$track->segments[] = $segment;
-					
+
 					// Update base values for next segment
 					$baseLatitude += 0.01;
 					$baseLongitude += 0.01;
 					$baseTime = (clone $baseTime)->modify("+{$numPoints} minutes");
 				}
-				
+
 				// Calculate statistics
 				$track->recalculateStats();
-				
+
 				// Property: All statistics must be non-negative
 				$this->assertGreaterThanOrEqual(
 					0.0,
@@ -551,10 +555,10 @@ final class TrackTest extends TestCase
 						"Track has %d segments with %d points each",
 						$track->stats->distance,
 						$numSegments,
-						$numPoints
-					)
+						$numPoints,
+					),
 				);
-				
+
 				$this->assertGreaterThanOrEqual(
 					0.0,
 					$track->stats->realDistance,
@@ -563,10 +567,10 @@ final class TrackTest extends TestCase
 						"Track has %d segments with %d points each",
 						$track->stats->realDistance,
 						$numSegments,
-						$numPoints
-					)
+						$numPoints,
+					),
 				);
-				
+
 				// Duration should be non-negative if it's set
 				if ($track->stats->duration !== null) {
 					$this->assertGreaterThanOrEqual(
@@ -577,11 +581,11 @@ final class TrackTest extends TestCase
 							"Track has %d segments with %d points each",
 							$track->stats->duration,
 							$numSegments,
-							$numPoints
-						)
+							$numPoints,
+						),
 					);
 				}
-				
+
 				// Average speed should be non-negative if it's set
 				if ($track->stats->averageSpeed !== null) {
 					$this->assertGreaterThanOrEqual(
@@ -592,11 +596,11 @@ final class TrackTest extends TestCase
 							"Track has %d segments with %d points each",
 							$track->stats->averageSpeed,
 							$numSegments,
-							$numPoints
-						)
+							$numPoints,
+						),
 					);
 				}
-				
+
 				// Average pace should be non-negative if it's set
 				if ($track->stats->averagePace !== null) {
 					$this->assertGreaterThanOrEqual(
@@ -607,11 +611,11 @@ final class TrackTest extends TestCase
 							"Track has %d segments with %d points each",
 							$track->stats->averagePace,
 							$numSegments,
-							$numPoints
-						)
+							$numPoints,
+						),
 					);
 				}
-				
+
 				// Elevation gain should be non-negative if it's set
 				if ($track->stats->cumulativeElevationGain !== null) {
 					$this->assertGreaterThanOrEqual(
@@ -622,11 +626,11 @@ final class TrackTest extends TestCase
 							"Track has %d segments with %d points each",
 							$track->stats->cumulativeElevationGain,
 							$numSegments,
-							$numPoints
-						)
+							$numPoints,
+						),
 					);
 				}
-				
+
 				// Elevation loss should be non-negative if it's set
 				if ($track->stats->cumulativeElevationLoss !== null) {
 					$this->assertGreaterThanOrEqual(
@@ -637,8 +641,8 @@ final class TrackTest extends TestCase
 							"Track has %d segments with %d points each",
 							$track->stats->cumulativeElevationLoss,
 							$numSegments,
-							$numPoints
-						)
+							$numPoints,
+						),
 					);
 				}
 			});

@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace phpGPX\Models;
 
+use DateTime;
 use phpGPX\Helpers\DateTimeHelper;
 use phpGPX\phpGPX;
 
@@ -18,7 +19,6 @@ use phpGPX\phpGPX;
  */
 class Stats implements Summarizable
 {
-
 	/**
 	 * Distance in meters (m)
 	 */
@@ -74,7 +74,7 @@ class Stats implements Summarizable
 	/**
 	 * Started time
 	 */
-	public ?\DateTime $startedAt = null;
+	public ?DateTime $startedAt = null;
 
 	/**
 	 * startedAt coordinate
@@ -85,7 +85,7 @@ class Stats implements Summarizable
 	/**
 	 * Ending time
 	 */
-	public ?\DateTime $finishedAt = null;
+	public ?DateTime $finishedAt = null;
 
 	/**
 	 * finishedAt coordinate
@@ -150,7 +150,7 @@ class Stats implements Summarizable
 			'finishedAt' => DateTimeHelper::formatDateTime($this->finishedAt, phpGPX::$DATETIME_FORMAT, phpGPX::$DATETIME_TIMEZONE_OUTPUT),
 			'finishedAtCoords' => $this->finishedAtCoords,
 			'duration' => (float)$this->duration,
-			'bounds' => $this->bounds
+			'bounds' => $this->bounds,
 		];
 	}
 }

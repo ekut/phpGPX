@@ -1,16 +1,21 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
  */
 
 namespace phpGPX\Tests\Unit\Parsers;
 
+use DOMDocument;
+use DOMElement;
 use phpGPX\Models\Email;
 use phpGPX\Parsers\EmailParser;
 
 class EmailParserTest extends AbstractParserTest
 {
 	protected $testModelClass = Email::class;
+
 	protected $testParserClass = EmailParser::class;
 
 	/**
@@ -24,14 +29,13 @@ class EmailParserTest extends AbstractParserTest
 	}
 
 	protected function setUp(): void
-    {
+	{
 		parent::setUp();
 
 		$this->testModelInstance = self::createTestInstance();
 	}
 
-
-	public function testParse()
+	public function testParse(): void
 	{
 		$email = EmailParser::parse($this->testXmlFile->email);
 
@@ -46,10 +50,10 @@ class EmailParserTest extends AbstractParserTest
 	/**
 	 * Returns output of ::toXML method of tested parser.
 	 * @depends testParse
-	 * @param \DOMDocument $document
-	 * @return \DOMElement
+	 * @param DOMDocument $document
+	 * @return DOMElement
 	 */
-	protected function convertToXML(\DOMDocument $document)
+	protected function convertToXML(DOMDocument $document)
 	{
 		return EmailParser::toXML($this->testModelInstance, $document);
 	}
@@ -65,7 +69,7 @@ class EmailParserTest extends AbstractParserTest
 		');
 
 		$result = EmailParser::parse($minimalXml);
-		
+
 		$this->assertNull($result, 'Parser should return null for email with missing domain');
 	}
 
@@ -80,7 +84,7 @@ class EmailParserTest extends AbstractParserTest
 		');
 
 		$result = EmailParser::parse($minimalXml);
-		
+
 		$this->assertNull($result, 'Parser should return null for email with missing id');
 	}
 }

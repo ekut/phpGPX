@@ -21,7 +21,7 @@ class EmailFactory
 	{
 		$id = $overrides['id'] ?? 'test';
 		$domain = $overrides['domain'] ?? 'example.com';
-		
+
 		return new Email($id, $domain);
 	}
 

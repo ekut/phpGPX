@@ -111,7 +111,7 @@ class TrackPointExtension extends AbstractExtension
 			'cad' => SerializationHelper::floatOrNull($this->cad),
 			'speed' => SerializationHelper::floatOrNull($this->speed),
 			'course' => SerializationHelper::integerOrNull($this->course),
-			'bearing' => SerializationHelper::integerOrNull($this->bearing)
+			'bearing' => SerializationHelper::integerOrNull($this->bearing),
 		];
 	}
 }

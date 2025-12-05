@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace phpGPX\Tests\Unit\Models\Extensions;
 
+use DOMDocument;
 use phpGPX\Models\Extensions\TrackPointExtension;
 use phpGPX\Parsers\Extensions\TrackPointExtensionParser;
 use phpGPX\Tests\Support\TestCase;
@@ -22,7 +23,7 @@ final class TrackPointExtensionTest extends TestCase
 	{
 		// Arrange & Act
 		$extension = new TrackPointExtension();
-		
+
 		// Assert
 		$this->assertInstanceOf(TrackPointExtension::class, $extension);
 		$this->assertEquals(TrackPointExtension::EXTENSION_NAMESPACE, $extension->namespace);
@@ -39,7 +40,7 @@ final class TrackPointExtensionTest extends TestCase
 		$extension = new TrackPointExtension();
 		$extension->aTemp = 25.5;
 		$extension->wTemp = 18.3;
-		
+
 		// Assert
 		$this->assertEquals(25.5, $extension->aTemp);
 		$this->assertEquals(18.3, $extension->wTemp);
@@ -54,7 +55,7 @@ final class TrackPointExtensionTest extends TestCase
 		// Arrange & Act
 		$extension = new TrackPointExtension();
 		$extension->depth = 10.5;
-		
+
 		// Assert
 		$this->assertEquals(10.5, $extension->depth);
 	}
@@ -68,7 +69,7 @@ final class TrackPointExtensionTest extends TestCase
 		// Arrange & Act
 		$extension = new TrackPointExtension();
 		$extension->hr = 145.0;
-		
+
 		// Assert
 		$this->assertEquals(145.0, $extension->hr);
 	}
@@ -82,7 +83,7 @@ final class TrackPointExtensionTest extends TestCase
 		// Arrange & Act
 		$extension = new TrackPointExtension();
 		$extension->cad = 85.0;
-		
+
 		// Assert
 		$this->assertEquals(85.0, $extension->cad);
 	}
@@ -96,7 +97,7 @@ final class TrackPointExtensionTest extends TestCase
 		// Arrange & Act
 		$extension = new TrackPointExtension();
 		$extension->speed = 5.5;
-		
+
 		// Assert
 		$this->assertEquals(5.5, $extension->speed);
 	}
@@ -110,7 +111,7 @@ final class TrackPointExtensionTest extends TestCase
 		// Arrange & Act
 		$extension = new TrackPointExtension();
 		$extension->course = 180;
-		
+
 		// Assert
 		$this->assertEquals(180, $extension->course);
 	}
@@ -124,7 +125,7 @@ final class TrackPointExtensionTest extends TestCase
 		// Arrange & Act
 		$extension = new TrackPointExtension();
 		$extension->bearing = 90;
-		
+
 		// Assert
 		$this->assertEquals(90, $extension->bearing);
 	}
@@ -145,7 +146,7 @@ final class TrackPointExtensionTest extends TestCase
 		$extension->speed = 5.5;
 		$extension->course = 180;
 		$extension->bearing = 90;
-		
+
 		// Assert
 		$this->assertEquals(25.5, $extension->aTemp);
 		$this->assertEquals(18.3, $extension->wTemp);
@@ -165,7 +166,7 @@ final class TrackPointExtensionTest extends TestCase
 	{
 		// Arrange & Act
 		$extension = new TrackPointExtension();
-		
+
 		// Assert
 		$this->assertNull($extension->aTemp);
 		$this->assertNull($extension->wTemp);
@@ -189,10 +190,10 @@ final class TrackPointExtensionTest extends TestCase
 		$extension->hr = 145.0;
 		$extension->cad = 85.0;
 		$extension->speed = 5.5;
-		
+
 		// Act
 		$array = $extension->toArray();
-		
+
 		// Assert
 		$this->assertIsArray($array);
 		$this->assertEquals(25.5, $array['aTemp']);
@@ -209,10 +210,10 @@ final class TrackPointExtensionTest extends TestCase
 	{
 		// Arrange
 		$extension = new TrackPointExtension();
-		
+
 		// Act
 		$array = $extension->toArray();
-		
+
 		// Assert
 		$this->assertIsArray($array);
 		$this->assertNull($array['aTemp']);
@@ -237,14 +238,14 @@ final class TrackPointExtensionTest extends TestCase
 		$extension->hr = 145.0;
 		$extension->cad = 85.0;
 		$extension->speed = 5.5;
-		
-		$document = new \DOMDocument('1.0', 'UTF-8');
-		
+
+		$document = new DOMDocument('1.0', 'UTF-8');
+
 		// Act
 		$xmlElement = TrackPointExtensionParser::toXML($extension, $document);
 		$document->appendChild($xmlElement);
 		$xml = $document->saveXML();
-		
+
 		// Assert
 		$this->assertStringContainsString('TrackPointExtension', $xml);
 		$this->assertStringContainsString('<gpxtpx:atemp>25.5</gpxtpx:atemp>', $xml);
@@ -269,14 +270,14 @@ final class TrackPointExtensionTest extends TestCase
 		$extension->speed = 5.5;
 		$extension->course = 180;
 		$extension->bearing = 90;
-		
-		$document = new \DOMDocument('1.0', 'UTF-8');
-		
+
+		$document = new DOMDocument('1.0', 'UTF-8');
+
 		// Act
 		$xmlElement = TrackPointExtensionParser::toXML($extension, $document);
 		$document->appendChild($xmlElement);
 		$xml = $document->saveXML();
-		
+
 		// Assert
 		$this->assertStringContainsString('<gpxtpx:atemp>25.5</gpxtpx:atemp>', $xml);
 		$this->assertStringContainsString('<gpxtpx:wtemp>18.3</gpxtpx:wtemp>', $xml);
@@ -298,14 +299,14 @@ final class TrackPointExtensionTest extends TestCase
 		$extension = new TrackPointExtension();
 		$extension->hr = 145.0;
 		// Other properties remain null
-		
-		$document = new \DOMDocument('1.0', 'UTF-8');
-		
+
+		$document = new DOMDocument('1.0', 'UTF-8');
+
 		// Act
 		$xmlElement = TrackPointExtensionParser::toXML($extension, $document);
 		$document->appendChild($xmlElement);
 		$xml = $document->saveXML();
-		
+
 		// Assert
 		$this->assertStringContainsString('<gpxtpx:hr>145</gpxtpx:hr>', $xml);
 		$this->assertStringNotContainsString('<gpxtpx:atemp>', $xml);
@@ -329,7 +330,7 @@ final class TrackPointExtensionTest extends TestCase
 		$extension->hr = 0.0;
 		$extension->speed = 0.0;
 		$extension->course = 0;
-		
+
 		// Assert
 		$this->assertEquals(0.0, $extension->aTemp);
 		$this->assertEquals(0.0, $extension->hr);
@@ -347,7 +348,7 @@ final class TrackPointExtensionTest extends TestCase
 		$extension = new TrackPointExtension();
 		$extension->aTemp = -10.5;
 		$extension->wTemp = -5.0;
-		
+
 		// Assert
 		$this->assertEquals(-10.5, $extension->aTemp);
 		$this->assertEquals(-5.0, $extension->wTemp);
@@ -362,7 +363,7 @@ final class TrackPointExtensionTest extends TestCase
 		// Arrange & Act
 		$extension = new TrackPointExtension();
 		$extension->course = 359;
-		
+
 		// Assert
 		$this->assertEquals(359, $extension->course);
 	}
@@ -376,7 +377,7 @@ final class TrackPointExtensionTest extends TestCase
 		// Arrange & Act
 		$extension = new TrackPointExtension();
 		$extension->bearing = 359;
-		
+
 		// Assert
 		$this->assertEquals(359, $extension->bearing);
 	}
@@ -390,19 +391,19 @@ final class TrackPointExtensionTest extends TestCase
 		// Assert
 		$this->assertEquals(
 			'http://www.garmin.com/xmlschemas/TrackPointExtension/v2',
-			TrackPointExtension::EXTENSION_NAMESPACE
+			TrackPointExtension::EXTENSION_NAMESPACE,
 		);
 		$this->assertEquals(
 			'http://www.garmin.com/xmlschemas/TrackPointExtensionv2.xsd',
-			TrackPointExtension::EXTENSION_NAMESPACE_XSD
+			TrackPointExtension::EXTENSION_NAMESPACE_XSD,
 		);
 		$this->assertEquals(
 			'TrackPointExtension',
-			TrackPointExtension::EXTENSION_NAME
+			TrackPointExtension::EXTENSION_NAME,
 		);
 		$this->assertEquals(
 			'gpxtpx',
-			TrackPointExtension::EXTENSION_NAMESPACE_PREFIX
+			TrackPointExtension::EXTENSION_NAMESPACE_PREFIX,
 		);
 	}
 
@@ -415,11 +416,11 @@ final class TrackPointExtensionTest extends TestCase
 		// Assert
 		$this->assertEquals(
 			'http://www.garmin.com/xmlschemas/TrackPointExtension/v1',
-			TrackPointExtension::EXTENSION_V1_NAMESPACE
+			TrackPointExtension::EXTENSION_V1_NAMESPACE,
 		);
 		$this->assertEquals(
 			'http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd',
-			TrackPointExtension::EXTENSION_V1_NAMESPACE_XSD
+			TrackPointExtension::EXTENSION_V1_NAMESPACE_XSD,
 		);
 	}
 
@@ -435,7 +436,7 @@ final class TrackPointExtensionTest extends TestCase
 		$extension->cad = 90.0;      // Cadence (RPM)
 		$extension->speed = 8.33;    // Speed (m/s, ~30 km/h)
 		$extension->aTemp = 22.0;    // Temperature
-		
+
 		// Assert
 		$this->assertEquals(155.0, $extension->hr);
 		$this->assertEquals(90.0, $extension->cad);
@@ -453,7 +454,7 @@ final class TrackPointExtensionTest extends TestCase
 		$extension = new TrackPointExtension();
 		$extension->depth = 15.5;    // Depth in meters
 		$extension->wTemp = 18.0;    // Water temperature
-		
+
 		// Assert
 		$this->assertEquals(15.5, $extension->depth);
 		$this->assertEquals(18.0, $extension->wTemp);

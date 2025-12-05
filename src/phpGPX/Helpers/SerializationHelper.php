@@ -18,13 +18,12 @@ use phpGPX\Models\Summarizable;
  */
 abstract class SerializationHelper
 {
-
 	/**
 	 * Returns integer or null.
 	 */
 	public static function integerOrNull(mixed $value): ?int
 	{
-		return is_numeric($value) ? (integer) $value : null;
+		return is_numeric($value) ? (int) $value : null;
 	}
 
 	/**
@@ -55,9 +54,11 @@ abstract class SerializationHelper
 				$record = null;
 			}
 			$object = null;
+
 			return $result;
 		}
-  return $object != null ? $object->toArray() : null;
+
+		return $object !== null ? $object->toArray() : null;
 	}
 
 	public static function filterNotNull(array $array): array
@@ -66,7 +67,7 @@ abstract class SerializationHelper
 			if (!is_array($item)) {
 				continue;
 			}
-			
+
 			$item = self::filterNotNull($item);
 		}
 

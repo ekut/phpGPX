@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace phpGPX\Tests\Unit\Models;
 
+use DOMDocument;
 use Eris\Generators;
 use Eris\TestTrait;
+use InvalidArgumentException;
 use phpGPX\Models\Copyright;
 use phpGPX\Parsers\CopyrightParser;
 use phpGPX\Tests\Support\TestCase;
+use TypeError;
 
 /**
  * Unit tests for Copyright model.
@@ -17,6 +20,7 @@ use phpGPX\Tests\Support\TestCase;
 final class CopyrightTest extends TestCase
 {
 	use TestTrait;
+
 	/**
 	 * Test Copyright creation with author.
 	 * Requirements: 4.1
@@ -25,7 +29,7 @@ final class CopyrightTest extends TestCase
 	{
 		// Arrange & Act
 		$copyright = new Copyright('John Doe');
-		
+
 		// Assert
 		$this->assertInstanceOf(Copyright::class, $copyright);
 		$this->assertEquals('John Doe', $copyright->author);
@@ -38,8 +42,8 @@ final class CopyrightTest extends TestCase
 	public function test_copyright_construction_without_author_throws_type_error(): void
 	{
 		// Assert
-		$this->expectException(\TypeError::class);
-		
+		$this->expectException(TypeError::class);
+
 		// Act
 		new Copyright();
 	}
@@ -51,11 +55,11 @@ final class CopyrightTest extends TestCase
 	public function test_copyright_construction_with_empty_author_throws_exception(): void
 	{
 		// Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Copyright author');
 		$this->expectExceptionMessage('required');
 		$this->expectExceptionMessage('cannot be empty');
-		
+
 		// Act
 		new Copyright('');
 	}
@@ -67,11 +71,11 @@ final class CopyrightTest extends TestCase
 	public function test_copyright_construction_with_whitespace_only_author_throws_exception(): void
 	{
 		// Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Copyright author');
 		$this->expectExceptionMessage('required');
 		$this->expectExceptionMessage('cannot be empty');
-		
+
 		// Act
 		new Copyright('   ');
 	}
@@ -85,15 +89,15 @@ final class CopyrightTest extends TestCase
 		// Arrange
 		$exceptionThrown = false;
 		$exceptionMessage = '';
-		
+
 		// Act
 		try {
 			new Copyright('');
-		} catch (\InvalidArgumentException $e) {
+		} catch (InvalidArgumentException $e) {
 			$exceptionThrown = true;
 			$exceptionMessage = $e->getMessage();
 		}
-		
+
 		// Assert
 		$this->assertTrue($exceptionThrown);
 		$this->assertStringContainsString('Copyright author', $exceptionMessage);
@@ -107,7 +111,7 @@ final class CopyrightTest extends TestCase
 	{
 		// Arrange & Act
 		$copyright = new Copyright('John Doe', '2024', 'https://creativecommons.org/licenses/by/4.0/');
-		
+
 		// Assert
 		$this->assertEquals('John Doe', $copyright->author);
 		$this->assertEquals('2024', $copyright->year);
@@ -122,7 +126,7 @@ final class CopyrightTest extends TestCase
 	{
 		// Arrange & Act
 		$copyright = new Copyright('John Doe');
-		
+
 		// Assert
 		$this->assertEquals('John Doe', $copyright->author);
 		$this->assertNull($copyright->year);
@@ -137,10 +141,10 @@ final class CopyrightTest extends TestCase
 	{
 		// Arrange
 		$copyright = new Copyright('John Doe', '2024', 'https://creativecommons.org/licenses/by/4.0/');
-		
+
 		// Act
 		$array = $copyright->toArray();
-		
+
 		// Assert
 		$this->assertIsArray($array);
 		$this->assertEquals('John Doe', $array['author']);
@@ -156,10 +160,10 @@ final class CopyrightTest extends TestCase
 	{
 		// Arrange
 		$copyright = new Copyright('John Doe');
-		
+
 		// Act
 		$array = $copyright->toArray();
-		
+
 		// Assert
 		$this->assertNull($array['year']);
 		$this->assertNull($array['license']);
@@ -173,14 +177,14 @@ final class CopyrightTest extends TestCase
 	{
 		// Arrange
 		$copyright = new Copyright('John Doe', '2024', 'https://creativecommons.org/licenses/by/4.0/');
-		
-		$document = new \DOMDocument('1.0', 'UTF-8');
-		
+
+		$document = new DOMDocument('1.0', 'UTF-8');
+
 		// Act
 		$xmlElement = CopyrightParser::toXML($copyright, $document);
 		$document->appendChild($xmlElement);
 		$xml = $document->saveXML();
-		
+
 		// Assert
 		$this->assertStringContainsString('<copyright', $xml);
 		$this->assertStringContainsString('author="John Doe"', $xml);
@@ -196,14 +200,14 @@ final class CopyrightTest extends TestCase
 	{
 		// Arrange
 		$copyright = new Copyright('John Doe');
-		
-		$document = new \DOMDocument('1.0', 'UTF-8');
-		
+
+		$document = new DOMDocument('1.0', 'UTF-8');
+
 		// Act
 		$xmlElement = CopyrightParser::toXML($copyright, $document);
 		$document->appendChild($xmlElement);
 		$xml = $document->saveXML();
-		
+
 		// Assert
 		$this->assertStringContainsString('<copyright', $xml);
 		$this->assertStringContainsString('author="John Doe"', $xml);
@@ -220,11 +224,11 @@ final class CopyrightTest extends TestCase
 		// Arrange & Act - Single year
 		$copyright1 = new Copyright('John Doe', '2024');
 		$this->assertEquals('2024', $copyright1->year);
-		
+
 		// Arrange & Act - Year range
 		$copyright2 = new Copyright('John Doe', '2020-2024');
 		$this->assertEquals('2020-2024', $copyright2->year);
-		
+
 		// Arrange & Act - Multiple years
 		$copyright3 = new Copyright('John Doe', '2020, 2022, 2024');
 		$this->assertEquals('2020, 2022, 2024', $copyright3->year);
@@ -239,11 +243,11 @@ final class CopyrightTest extends TestCase
 		// Arrange & Act - Creative Commons
 		$copyright1 = new Copyright('John Doe', null, 'https://creativecommons.org/licenses/by/4.0/');
 		$this->assertEquals('https://creativecommons.org/licenses/by/4.0/', $copyright1->license);
-		
+
 		// Arrange & Act - MIT License
 		$copyright2 = new Copyright('Jane Smith', null, 'https://opensource.org/licenses/MIT');
 		$this->assertEquals('https://opensource.org/licenses/MIT', $copyright2->license);
-		
+
 		// Arrange & Act - GPL
 		$copyright3 = new Copyright('Bob Johnson', null, 'https://www.gnu.org/licenses/gpl-3.0.html');
 		$this->assertEquals('https://www.gnu.org/licenses/gpl-3.0.html', $copyright3->license);
@@ -257,7 +261,7 @@ final class CopyrightTest extends TestCase
 	{
 		// Arrange & Act
 		$copyright = new Copyright('Acme Corporation', '2024');
-		
+
 		// Assert
 		$this->assertEquals('Acme Corporation', $copyright->author);
 	}
@@ -270,7 +274,7 @@ final class CopyrightTest extends TestCase
 	{
 		// Arrange & Act
 		$copyright = new Copyright('José García & Associates');
-		
+
 		// Assert
 		$this->assertEquals('José García & Associates', $copyright->author);
 	}
@@ -283,10 +287,10 @@ final class CopyrightTest extends TestCase
 	{
 		// Arrange
 		$currentYear = date('Y');
-		
+
 		// Act
 		$copyright = new Copyright('John Doe', $currentYear);
-		
+
 		// Assert
 		$this->assertEquals($currentYear, $copyright->year);
 	}
@@ -299,7 +303,7 @@ final class CopyrightTest extends TestCase
 	{
 		// Arrange & Act
 		$copyright = new Copyright('Historical Society', '1995');
-		
+
 		// Assert
 		$this->assertEquals('1995', $copyright->year);
 	}
@@ -312,7 +316,7 @@ final class CopyrightTest extends TestCase
 	{
 		// Arrange & Act
 		$copyright = new Copyright('Public Domain Contributor', null, 'https://creativecommons.org/publicdomain/zero/1.0/');
-		
+
 		// Assert
 		$this->assertEquals('https://creativecommons.org/publicdomain/zero/1.0/', $copyright->license);
 	}
@@ -325,21 +329,21 @@ final class CopyrightTest extends TestCase
 	{
 		// Arrange
 		$copyright = new Copyright('Test Author', '2024', 'https://example.com/license');
-		
+
 		// Act - Serialize to array
 		$array = $copyright->toArray();
-		
+
 		// Assert - All data preserved in array
 		$this->assertEquals('Test Author', $array['author']);
 		$this->assertEquals('2024', $array['year']);
 		$this->assertEquals('https://example.com/license', $array['license']);
-		
+
 		// Act - Serialize to XML
-		$document = new \DOMDocument('1.0', 'UTF-8');
+		$document = new DOMDocument('1.0', 'UTF-8');
 		$xmlElement = CopyrightParser::toXML($copyright, $document);
 		$document->appendChild($xmlElement);
 		$xml = $document->saveXML();
-		
+
 		// Assert - All data preserved in XML
 		$this->assertStringContainsString('author="Test Author"', $xml);
 		$this->assertStringContainsString('<year>2024</year>', $xml);
@@ -348,7 +352,7 @@ final class CopyrightTest extends TestCase
 
 	/**
 	 * Property test: Copyright requires author parameter.
-	 * 
+	 *
 	 * **Feature: gpx-schema-compliance, Property 12: Copyright requires author**
 	 * **Validates: Requirements 4.1**
 	 */
@@ -356,22 +360,22 @@ final class CopyrightTest extends TestCase
 	{
 		// This property is enforced by PHP's type system
 		// Attempting to call new Copyright() without parameters will throw TypeError
-		
+
 		// We verify this by checking that TypeError is thrown
 		$exceptionThrown = false;
-		
+
 		try {
 			new Copyright();
-		} catch (\TypeError $e) {
+		} catch (TypeError $e) {
 			$exceptionThrown = true;
 		}
-		
+
 		$this->assertTrue($exceptionThrown, 'TypeError should be thrown when creating Copyright without author');
 	}
 
 	/**
 	 * Property test: Copyright author validation.
-	 * 
+	 *
 	 * **Feature: gpx-schema-compliance, Property 13: Copyright author validation**
 	 * **Validates: Requirements 4.2**
 	 */
@@ -380,29 +384,29 @@ final class CopyrightTest extends TestCase
 		$this
 			->withRand('mt_rand')
 			->forAll(
-				Generators::elements(['', '   ', "\t", "\n", "  \t\n  "])
+				Generators::elements(['', '   ', "\t", "\n", "  \t\n  "]),
 			)
 			->withMaxSize(100)
-			->then(function ($emptyAuthor) {
+			->then(function ($emptyAuthor): void {
 				// For any empty or whitespace-only author string,
 				// Copyright construction should throw InvalidArgumentException
-				
+
 				$exceptionThrown = false;
 				$exceptionMessage = '';
-				
+
 				try {
 					new Copyright($emptyAuthor);
-				} catch (\InvalidArgumentException $e) {
+				} catch (InvalidArgumentException $e) {
 					$exceptionThrown = true;
 					$exceptionMessage = $e->getMessage();
 				}
-				
+
 				// Assert exception was thrown
 				$this->assertTrue(
 					$exceptionThrown,
-					'InvalidArgumentException should be thrown for empty/whitespace author'
+					'InvalidArgumentException should be thrown for empty/whitespace author',
 				);
-				
+
 				// Assert error message contains required information
 				$this->assertStringContainsString('Copyright author', $exceptionMessage);
 				$this->assertStringContainsString('required', $exceptionMessage);
@@ -412,7 +416,7 @@ final class CopyrightTest extends TestCase
 
 	/**
 	 * Property test: Copyright accepts valid non-empty author strings.
-	 * 
+	 *
 	 * **Feature: gpx-schema-compliance, Property 13: Copyright author validation**
 	 * **Validates: Requirements 4.2**
 	 */
@@ -442,16 +446,16 @@ final class CopyrightTest extends TestCase
 					'Author 100%',
 					'Author™',
 					'Author©',
-					'Author®'
-				])
+					'Author®',
+				]),
 			)
 			->withMaxSize(100)
-			->then(function ($validAuthor) {
+			->then(function ($validAuthor): void {
 				// For any valid non-empty author string,
 				// Copyright construction should succeed
-				
+
 				$copyright = new Copyright($validAuthor);
-				
+
 				// Assert copyright was created successfully
 				$this->assertInstanceOf(Copyright::class, $copyright);
 				$this->assertEquals($validAuthor, $copyright->author);

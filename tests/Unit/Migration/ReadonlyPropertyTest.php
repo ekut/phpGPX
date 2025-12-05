@@ -6,11 +6,11 @@ namespace phpGPX\Tests\Unit\Migration;
 
 use Eris\Generators;
 use Eris\TestTrait;
+use Error;
 use phpGPX\Enums\PointType;
 use phpGPX\Models\Point;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use ReflectionProperty;
 
 /**
  * Property-based tests for readonly property enforcement in PHP 8.4 migration.
@@ -23,7 +23,7 @@ final class ReadonlyPropertyTest extends TestCase
 	/**
 	 * **Feature: php-8-4-migration, Property 5: Readonly enforcement**
 	 * **Validates: Requirements 4.2**
-	 * 
+	 *
 	 * For any property declared as readonly, attempting to modify it after construction SHALL throw an Error.
 	 */
 	public function test_property_point_type_is_readonly_and_cannot_be_modified(): void
@@ -40,26 +40,28 @@ final class ReadonlyPropertyTest extends TestCase
 					PointType::WAYPOINT,
 					PointType::TRACKPOINT,
 					PointType::ROUTEPOINT,
-				])
+				]),
+				Generators::choose(-90, 90),   // latitude
+				Generators::choose(-180, 179), // longitude (must be < 180)
 			)
 			->withMaxSize(100)
-			->then(function (PointType $initialType, PointType $newType) {
-				// Create point with initial type
-				$point = new Point($initialType);
-				
+			->then(function (PointType $initialType, PointType $newType, int $lat, int $lon): void {
+				// Create point with initial type and valid coordinates
+				$point = new Point($initialType, (float)$lat, (float)$lon);
+
 				// Verify the pointType property is readonly
 				$reflection = new ReflectionClass(Point::class);
 				$property = $reflection->getProperty('pointType');
-				
+
 				$this->assertTrue(
 					$property->isReadOnly(),
-					"The pointType property should be declared as readonly"
+					"The pointType property should be declared as readonly",
 				);
-				
+
 				// Attempt to modify the readonly property should throw an Error
-				$this->expectException(\Error::class);
+				$this->expectException(Error::class);
 				$this->expectExceptionMessageMatches('/Cannot modify readonly property/');
-				
+
 				// Use reflection to attempt modification (simulates direct property access)
 				$property->setAccessible(true);
 				$property->setValue($point, $newType);
@@ -73,15 +75,15 @@ final class ReadonlyPropertyTest extends TestCase
 	{
 		$reflection = new ReflectionClass(Point::class);
 		$pointTypeProperty = $reflection->getProperty('pointType');
-		
+
 		$this->assertTrue(
 			$pointTypeProperty->isReadOnly(),
-			"The pointType property should be marked as readonly in reflection"
+			"The pointType property should be marked as readonly in reflection",
 		);
-		
+
 		$this->assertTrue(
 			$pointTypeProperty->isPrivate(),
-			"The pointType property should be private"
+			"The pointType property should be private",
 		);
 	}
 
@@ -97,17 +99,19 @@ final class ReadonlyPropertyTest extends TestCase
 					PointType::WAYPOINT,
 					PointType::TRACKPOINT,
 					PointType::ROUTEPOINT,
-				])
+				]),
+				Generators::choose(-90, 90),   // latitude
+				Generators::choose(-180, 179), // longitude (must be < 180)
 			)
 			->withMaxSize(100)
-			->then(function (PointType $pointType) {
-				$point = new Point($pointType);
-				
+			->then(function (PointType $pointType, int $lat, int $lon): void {
+				$point = new Point($pointType, (float)$lat, (float)$lon);
+
 				// Get the type multiple times
 				$type1 = $point->getPointType();
 				$type2 = $point->getPointType();
 				$type3 = $point->getPointType();
-				
+
 				// All should be the same instance
 				$this->assertSame($type1, $type2);
 				$this->assertSame($type2, $type3);

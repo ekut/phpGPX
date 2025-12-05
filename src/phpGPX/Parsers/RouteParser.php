@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created            10/02/2017 15:44
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
@@ -6,8 +8,11 @@
 
 namespace phpGPX\Parsers;
 
+use DOMDocument;
+use DOMElement;
 use phpGPX\Models\Route;
 use phpGPX\phpGPX;
+use SimpleXMLElement;
 
 /**
  * Class RouteParser
@@ -20,44 +25,44 @@ abstract class RouteParser
 	private static $attributeMapper = [
 		'name' => [
 			'name' => 'name',
-			'type' => 'string'
+			'type' => 'string',
 		],
 		'cmt' => [
 			'name' => 'comment',
-			'type' => 'string'
+			'type' => 'string',
 		],
 		'desc' => [
 			'name' => 'description',
-			'type' => 'string'
+			'type' => 'string',
 		],
 		'src' => [
 			'name' => 'source',
-			'type' => 'string'
+			'type' => 'string',
 		],
 		'links' => [
 			'name' => 'links',
-			'type' => 'array'
+			'type' => 'array',
 		],
 		'number' => [
 			'name' => 'number',
-			'type' => 'integer'
+			'type' => 'integer',
 		],
 		'type' => [
 			'name' => 'type',
-			'type' => 'string'
+			'type' => 'string',
 		],
 		'extensions' => [
 			'name' => 'extensions',
-			'type' => 'object'
+			'type' => 'object',
 		],
 		'rtept' => [
 			'name' => 'points',
-			'type' => 'array'
+			'type' => 'array',
 		],
 	];
 
 	/**
-	 * @param \SimpleXMLElement[] $nodes
+	 * @param SimpleXMLElement[] $nodes
 	 * @return Route[]
 	 */
 	public static function parse($nodes)
@@ -85,7 +90,7 @@ abstract class RouteParser
 						}
 						break;
 					default:
-						if (!in_array($attribute['type'], ['object', 'array'])) {
+						if (!in_array($attribute['type'], ['object', 'array'], true)) {
 							$value = $node->$key ?? null;
 							if ($value !== null) {
 								// @phpstan-ignore cast.string
@@ -111,9 +116,9 @@ abstract class RouteParser
 	}
 
 	/**
-  * @return \DOMElement
+  * @return DOMElement
   */
- public static function toXML(Route $route, \DOMDocument &$document)
+	public static function toXML(Route $route, DOMDocument &$document)
 	{
 		$node = $document->createElement(self::$tagName);
 
@@ -150,9 +155,9 @@ abstract class RouteParser
 	}
 
 	/**
-  * @return \DOMElement[]
+  * @return DOMElement[]
   */
- public static function toXMLArray(array $routes, \DOMDocument &$document)
+	public static function toXMLArray(array $routes, DOMDocument &$document)
 	{
 		$result = [];
 

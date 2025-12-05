@@ -23,11 +23,12 @@ use phpGPX\Tests\Support\TestCase;
 final class CollectionTest extends TestCase
 {
 	use TestTrait;
+
 	public function test_collection_initializes_with_default_values(): void
 	{
 		// Arrange & Act - using Track as concrete implementation
 		$collection = new Track();
-		
+
 		// Assert
 		$this->assertNull($collection->name);
 		$this->assertNull($collection->comment);
@@ -44,10 +45,10 @@ final class CollectionTest extends TestCase
 	{
 		// Arrange
 		$collection = new Track();
-		
+
 		// Act
 		$collection->name = 'Test Collection Name';
-		
+
 		// Assert
 		$this->assertEquals('Test Collection Name', $collection->name);
 	}
@@ -56,10 +57,10 @@ final class CollectionTest extends TestCase
 	{
 		// Arrange
 		$collection = new Route();
-		
+
 		// Act
 		$collection->comment = 'This is a test comment';
-		
+
 		// Assert
 		$this->assertEquals('This is a test comment', $collection->comment);
 	}
@@ -68,10 +69,10 @@ final class CollectionTest extends TestCase
 	{
 		// Arrange
 		$collection = new Track();
-		
+
 		// Act
 		$collection->description = 'A detailed description of the collection';
-		
+
 		// Assert
 		$this->assertEquals('A detailed description of the collection', $collection->description);
 	}
@@ -80,10 +81,10 @@ final class CollectionTest extends TestCase
 	{
 		// Arrange
 		$collection = new Route();
-		
+
 		// Act
 		$collection->source = 'Garmin eTrex 30';
-		
+
 		// Assert
 		$this->assertEquals('Garmin eTrex 30', $collection->source);
 	}
@@ -92,10 +93,10 @@ final class CollectionTest extends TestCase
 	{
 		// Arrange
 		$collection = new Track();
-		
+
 		// Act
 		$collection->number = 42;
-		
+
 		// Assert
 		$this->assertEquals(42, $collection->number);
 	}
@@ -104,10 +105,10 @@ final class CollectionTest extends TestCase
 	{
 		// Arrange
 		$collection = new Route();
-		
+
 		// Act
 		$collection->type = 'hiking';
-		
+
 		// Assert
 		$this->assertEquals('hiking', $collection->type);
 	}
@@ -117,10 +118,10 @@ final class CollectionTest extends TestCase
 		// Arrange
 		$collection = new Track();
 		$link = new Link('https://example.com', 'Example Link');
-		
+
 		// Act
 		$collection->links[] = $link;
-		
+
 		// Assert
 		$this->assertCount(1, $collection->links);
 		$this->assertSame($link, $collection->links[0]);
@@ -133,16 +134,16 @@ final class CollectionTest extends TestCase
 		// Arrange
 		$collection = new Route();
 		$link1 = new Link('https://example.com/1', 'Link 1');
-		
+
 		$link2 = new Link('https://example.com/2', 'Link 2');
-		
+
 		$link3 = new Link('https://example.com/3', 'Link 3');
-		
+
 		// Act
 		$collection->links[] = $link1;
 		$collection->links[] = $link2;
 		$collection->links[] = $link3;
-		
+
 		// Assert
 		$this->assertCount(3, $collection->links);
 		$this->assertSame($link1, $collection->links[0]);
@@ -156,14 +157,14 @@ final class CollectionTest extends TestCase
 		$collection = new Track();
 		$link1 = new Link('https://example.com/1');
 		$link2 = new Link('https://example.com/2');
-		
+
 		$collection->links[] = $link1;
 		$collection->links[] = $link2;
-		
+
 		// Act
 		unset($collection->links[0]);
 		$collection->links = array_values($collection->links); // Re-index
-		
+
 		// Assert
 		$this->assertCount(1, $collection->links);
 		$this->assertSame($link2, $collection->links[0]);
@@ -175,16 +176,16 @@ final class CollectionTest extends TestCase
 		$collection = new Route();
 		$link1 = new Link('https://example.com/1');
 		$link2 = new Link('https://example.com/2');
-		
+
 		$collection->links[] = $link1;
 		$collection->links[] = $link2;
-		
+
 		// Act
 		$hrefs = [];
 		foreach ($collection->links as $link) {
 			$hrefs[] = $link->href;
 		}
-		
+
 		// Assert
 		$this->assertEquals(['https://example.com/1', 'https://example.com/2'], $hrefs);
 	}
@@ -194,10 +195,10 @@ final class CollectionTest extends TestCase
 		// Arrange
 		$collection = new Track();
 		$extensions = new Extensions();
-		
+
 		// Act
 		$collection->extensions = $extensions;
-		
+
 		// Assert
 		$this->assertInstanceOf(Extensions::class, $collection->extensions);
 		$this->assertSame($extensions, $collection->extensions);
@@ -209,10 +210,10 @@ final class CollectionTest extends TestCase
 		$collection = new Route();
 		$stats = new Stats();
 		$stats->distance = 1000.0;
-		
+
 		// Act
 		$collection->stats = $stats;
-		
+
 		// Assert
 		$this->assertInstanceOf(Stats::class, $collection->stats);
 		$this->assertSame($stats, $collection->stats);
@@ -223,7 +224,7 @@ final class CollectionTest extends TestCase
 	{
 		// Arrange & Act
 		$collection = new Track();
-		
+
 		// Assert
 		$this->assertInstanceOf(\phpGPX\Models\Summarizable::class, $collection);
 	}
@@ -232,7 +233,7 @@ final class CollectionTest extends TestCase
 	{
 		// Arrange & Act
 		$collection = new Route();
-		
+
 		// Assert
 		$this->assertInstanceOf(\phpGPX\Models\StatsCalculator::class, $collection);
 	}
@@ -240,21 +241,21 @@ final class CollectionTest extends TestCase
 	public function test_collection_get_points_is_abstract_method(): void
 	{
 		// This test verifies that getPoints() is properly implemented in concrete classes
-		
+
 		// Test with Track
 		$track = new Track();
 		$segment = SegmentFactory::createWithPoints(3);
 		$track->segments[] = $segment;
-		
+
 		$trackPoints = $track->getPoints();
 		$this->assertIsArray($trackPoints);
 		$this->assertCount(3, $trackPoints);
-		
+
 		// Test with Route
 		$route = new Route();
 		$route->points[] = PointFactory::create();
 		$route->points[] = PointFactory::create();
-		
+
 		$routePoints = $route->getPoints();
 		$this->assertIsArray($routePoints);
 		$this->assertCount(2, $routePoints);
@@ -270,13 +271,13 @@ final class CollectionTest extends TestCase
 		$track->source = 'Test source';
 		$track->number = 99;
 		$track->type = 'running';
-		
+
 		$link = new Link('https://example.com');
 		$track->links[] = $link;
-		
+
 		// Act
 		$array = $track->toArray();
-		
+
 		// Assert
 		$this->assertIsArray($array);
 		$this->assertArrayHasKey('name', $array);
@@ -288,7 +289,7 @@ final class CollectionTest extends TestCase
 		$this->assertArrayHasKey('link', $array);
 		$this->assertArrayHasKey('extensions', $array);
 		$this->assertArrayHasKey('stats', $array);
-		
+
 		$this->assertEquals('Serialization Test', $array['name']);
 		$this->assertEquals('Test comment', $array['cmt']);
 		$this->assertEquals('Test description', $array['desc']);
@@ -309,10 +310,10 @@ final class CollectionTest extends TestCase
 		$route->source = 'Route source';
 		$route->number = 42;
 		$route->type = 'cycling';
-		
+
 		// Act
 		$array = $route->toArray();
-		
+
 		// Assert
 		$this->assertIsArray($array);
 		$this->assertArrayHasKey('name', $array);
@@ -324,7 +325,7 @@ final class CollectionTest extends TestCase
 		$this->assertArrayHasKey('link', $array);
 		$this->assertArrayHasKey('extensions', $array);
 		$this->assertArrayHasKey('stats', $array);
-		
+
 		$this->assertEquals('Route Serialization Test', $array['name']);
 		$this->assertEquals('Route comment', $array['cmt']);
 		$this->assertEquals('Route description', $array['desc']);
@@ -338,10 +339,10 @@ final class CollectionTest extends TestCase
 		// Arrange
 		$collection = new Track();
 		// Leave all properties as null (default state)
-		
+
 		// Act
 		$array = $collection->toArray();
-		
+
 		// Assert
 		$this->assertIsArray($array);
 		$this->assertNull($array['name']);
@@ -364,16 +365,16 @@ final class CollectionTest extends TestCase
 		$collection->source = 'GPS Device';
 		$collection->number = 123;
 		$collection->type = 'hiking';
-		
+
 		$link = new Link('https://example.com');
 		$collection->links[] = $link;
-		
+
 		$extensions = new Extensions();
 		$collection->extensions = $extensions;
-		
+
 		$stats = new Stats();
 		$collection->stats = $stats;
-		
+
 		// Act & Assert - verify all properties are accessible
 		$this->assertEquals('Complete Collection', $collection->name);
 		$this->assertEquals('Full comment', $collection->comment);
@@ -393,10 +394,10 @@ final class CollectionTest extends TestCase
 		$collection->links[] = new Link('https://example.com/1');
 		$collection->links[] = new Link('https://example.com/2');
 		$this->assertCount(2, $collection->links);
-		
+
 		// Act
 		$collection->links = [];
-		
+
 		// Assert
 		$this->assertIsArray($collection->links);
 		$this->assertEmpty($collection->links);
@@ -408,11 +409,11 @@ final class CollectionTest extends TestCase
 		$collection = new Route();
 		$collection->name = 'Original Name';
 		$collection->number = 1;
-		
+
 		// Act
 		$collection->name = 'Updated Name';
 		$collection->number = 2;
-		
+
 		// Assert
 		$this->assertEquals('Updated Name', $collection->name);
 		$this->assertEquals(2, $collection->number);
@@ -425,12 +426,12 @@ final class CollectionTest extends TestCase
 		$collection->name = 'Test Name';
 		$collection->number = 42;
 		$collection->type = 'running';
-		
+
 		// Act
 		$collection->name = null;
 		$collection->number = null;
 		$collection->type = null;
-		
+
 		// Assert
 		$this->assertNull($collection->name);
 		$this->assertNull($collection->number);
@@ -439,7 +440,7 @@ final class CollectionTest extends TestCase
 
 	/**
 	 * Property test: Collection count invariant.
-	 * 
+	 *
 	 * **Feature: test-coverage, Property 10: Collection count invariant**
 	 * **Validates: Requirements 5.4**
 	 */
@@ -451,77 +452,77 @@ final class CollectionTest extends TestCase
 				Generators::choose(0, 10), // Initial number of segments for Track
 				Generators::choose(1, 5),  // Number of segments to add
 				Generators::choose(0, 10), // Initial number of points for Route
-				Generators::choose(1, 5)   // Number of points to add
+				Generators::choose(1, 5),   // Number of points to add
 			)
 			->withMaxSize(100)
-			->then(function ($initialSegments, $segmentsToAdd, $initialPoints, $pointsToAdd) {
+			->then(function ($initialSegments, $segmentsToAdd, $initialPoints, $pointsToAdd): void {
 				// Test with Track (adding segments)
 				$track = new Track();
-				
+
 				// Add initial segments
 				for ($i = 0; $i < $initialSegments; $i++) {
 					$track->segments[] = SegmentFactory::createWithPoints(2);
 				}
-				
+
 				$originalSegmentCount = count($track->segments);
-				
+
 				// Add segments one by one and verify count increases by 1 each time
 				for ($i = 0; $i < $segmentsToAdd; $i++) {
 					$expectedCount = $originalSegmentCount + $i + 1;
 					$track->segments[] = SegmentFactory::createWithPoints(2);
-					
+
 					$this->assertEquals(
 						$expectedCount,
 						count($track->segments),
-						"Adding segment should increase count by exactly 1"
+						"Adding segment should increase count by exactly 1",
 					);
 				}
-				
+
 				// Test with Route (adding points)
 				$route = new Route();
-				
+
 				// Add initial points
 				for ($i = 0; $i < $initialPoints; $i++) {
 					$route->points[] = PointFactory::create();
 				}
-				
+
 				$originalPointCount = count($route->points);
-				
+
 				// Add points one by one and verify count increases by 1 each time
 				for ($i = 0; $i < $pointsToAdd; $i++) {
 					$expectedCount = $originalPointCount + $i + 1;
 					$route->points[] = PointFactory::create();
-					
+
 					$this->assertEquals(
 						$expectedCount,
 						count($route->points),
-						"Adding point should increase count by exactly 1"
+						"Adding point should increase count by exactly 1",
 					);
 				}
-				
+
 				// Test with links (common to all collections)
 				$collection = new Track();
-				
+
 				// Add initial links
 				$initialLinkCount = mt_rand(0, 5);
 				for ($i = 0; $i < $initialLinkCount; $i++) {
 					$link = new Link("https://example.com/{$i}");
 					$collection->links[] = $link;
 				}
-				
+
 				$originalLinkCount = count($collection->links);
-				
+
 				// Add links one by one and verify count increases by 1 each time
 				$linksToAdd = mt_rand(1, 3);
 				for ($i = 0; $i < $linksToAdd; $i++) {
 					$expectedCount = $originalLinkCount + $i + 1;
 					$link = new Link("https://example.com/new-{$i}");
 					$collection->links[] = $link;
-					
+
 					$this->assertEquals(
 						$expectedCount,
 						count($collection->links),
-						"Adding link should increase count by exactly 1"
+						"Adding link should increase count by exactly 1",
 					);
 				}
 			});

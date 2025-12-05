@@ -42,12 +42,13 @@ Repository branches:
 
 ## Installation
 
-You can easily install phpGPX library with [composer](https://getcomposer.org/). There is no stable release yet, so
-please use release candidates.
+You can easily install phpGPX library with [composer](https://getcomposer.org/).
 
 ```
-composer require sibyx/phpgpx:1.3.0
+composer require sibyx/phpgpx:^2.0
 ```
+
+**Version 2.0 includes breaking changes for GPX 1.1 schema compliance. See the [Migration Guide](#migration-guide-v1x-to-v20) below.**
 
 ## Examples
 
@@ -100,6 +101,7 @@ use phpGPX\Models\Metadata;
 use phpGPX\Models\Point;
 use phpGPX\Models\Segment;
 use phpGPX\Models\Track;
+use phpGPX\Enums\PointType;
 
 require_once '/vendor/autoload.php';
 
@@ -131,12 +133,12 @@ $sample_data = [
 ];
 
 // Creating sample link object for metadata
-$link = new Link();
-$link->href = "https://sibyx.github.io/phpgpx";
-$link->text = 'phpGPX Docs';
+// Note: href is now required and must be non-empty
+$link = new Link("https://sibyx.github.io/phpgpx", 'phpGPX Docs');
 
 // GpxFile contains data and handles serialization of objects
-$gpx_file = new GpxFile();
+// Note: creator is now required and must be non-empty
+$gpx_file = new GpxFile('My GPS App v1.0');
 
 // Creating sample Metadata object
 $gpx_file->metadata = new Metadata();
@@ -170,9 +172,12 @@ $segment = new Segment();
 foreach ($sample_data as $sample_point)
 {
 	// Creating trackpoint
-	$point = new Point(Point::TRACKPOINT);
-	$point->latitude = $sample_point['latitude'];
-	$point->longitude = $sample_point['longitude'];
+	// Note: latitude and longitude are now required parameters
+	$point = new Point(
+		PointType::TRACKPOINT,
+		$sample_point['latitude'],
+		$sample_point['longitude']
+	);
 	$point->elevation = $sample_point['elevation'];
 	$point->time = $sample_point['time'];
 
@@ -276,6 +281,210 @@ public static $APPLY_DISTANCE_SMOOTHING = false;
  */
 public static $DISTANCE_SMOOTHING_THRESHOLD = 2;
 ```
+
+## Migration Guide (v1.x to v2.0)
+
+Version 2.0 introduces breaking changes to enforce GPX 1.1 schema compliance. All models with required attributes now enforce them at construction time.
+
+### Breaking Changes Summary
+
+| Model | v1.x (Old) | v2.0 (New) |
+|-------|-----------|-----------|
+| **Point** | `new Point(Point::WAYPOINT)` | `new Point(PointType::WAYPOINT, 54.93, 9.86)` |
+| **Bounds** | `new Bounds(null, null, null, null)` | `new Bounds(54.0, 9.0, 55.0, 10.0)` |
+| **Link** | `new Link()` | `new Link('https://example.com')` |
+| **Copyright** | `new Copyright()` | `new Copyright('Author Name')` |
+| **Email** | `new Email()` | `new Email('user', 'example.com')` |
+| **GpxFile** | `new GpxFile()` | `new GpxFile('My GPS App v1.0')` |
+
+### Detailed Migration Steps
+
+#### 1. Update Point Construction
+
+**Before (v1.x):**
+```php
+$point = new Point(Point::WAYPOINT);
+$point->latitude = 54.93;
+$point->longitude = 9.86;
+```
+
+**After (v2.0):**
+```php
+use phpGPX\Enums\PointType;
+
+$point = new Point(PointType::WAYPOINT, 54.93, 9.86);
+// Note: PointType is now an enum, not a string constant
+```
+
+#### 2. Update Bounds Construction
+
+**Before (v1.x):**
+```php
+$bounds = new Bounds(null, null, null, null);
+$bounds->minLatitude = 54.0;
+$bounds->minLongitude = 9.0;
+$bounds->maxLatitude = 55.0;
+$bounds->maxLongitude = 10.0;
+```
+
+**After (v2.0):**
+```php
+$bounds = new Bounds(
+    minLatitude: 54.0,
+    minLongitude: 9.0,
+    maxLatitude: 55.0,
+    maxLongitude: 10.0
+);
+```
+
+#### 3. Update Link Construction
+
+**Before (v1.x):**
+```php
+$link = new Link();
+$link->href = 'https://example.com';
+$link->text = 'Example';
+```
+
+**After (v2.0):**
+```php
+$link = new Link('https://example.com', 'Example');
+// href is required, text is optional
+```
+
+#### 4. Update Copyright Construction
+
+**Before (v1.x):**
+```php
+$copyright = new Copyright();
+$copyright->author = 'Author Name';
+```
+
+**After (v2.0):**
+```php
+$copyright = new Copyright('Author Name');
+```
+
+#### 5. Update Email Construction
+
+**Before (v1.x):**
+```php
+$email = new Email();
+$email->id = 'user';
+$email->domain = 'example.com';
+```
+
+**After (v2.0):**
+```php
+$email = new Email('user', 'example.com');
+```
+
+#### 6. Update GpxFile Construction
+
+**Before (v1.x):**
+```php
+$gpx = new GpxFile();
+```
+
+**After (v2.0):**
+```php
+$gpx = new GpxFile('My GPS App v1.0');
+// creator is required
+```
+
+### Validation Rules
+
+Version 2.0 enforces all GPX 1.1 schema constraints:
+
+#### Coordinate Validation
+
+- **Latitude**: Must be between -90.0 and 90.0 degrees (WGS84 datum)
+- **Longitude**: Must be between -180.0 (inclusive) and 180.0 (exclusive) degrees (WGS84 datum)
+- **Bounds Consistency**: minLat ≤ maxLat and minLon ≤ maxLon
+
+```php
+// ✅ Valid
+$point = new Point(PointType::WAYPOINT, 54.93, 9.86);
+
+// ❌ Invalid - throws InvalidArgumentException
+$point = new Point(PointType::WAYPOINT, 95.0, 9.86);
+// Error: "Latitude must be between -90.0 and 90.0 degrees (WGS84 datum). Got: 95.0"
+```
+
+#### Point Optional Fields
+
+- **Magnetic Variation (magVar)**: Must be between 0.0 (inclusive) and 360.0 (exclusive) degrees
+- **DGPS Station ID (dgpsId)**: Must be between 0 and 1023 (inclusive)
+- **Satellite Count (sat)**: Must be non-negative (≥ 0)
+
+```php
+$point = new Point(PointType::WAYPOINT, 54.93, 9.86);
+
+// ✅ Valid
+$point->setMagVar(45.5);
+$point->setDgpsId(100);
+$point->setSat(8);
+
+// ❌ Invalid - throws InvalidArgumentException
+$point->setMagVar(400.0);  // Error: must be [0, 360)
+$point->setDgpsId(2000);   // Error: must be [0, 1023]
+$point->setSat(-5);        // Error: must be >= 0
+```
+
+#### GPS Fix Type
+
+GPS fix type now uses the `GpsFixType` enum:
+
+```php
+use phpGPX\Enums\GpsFixType;
+
+$point->fix = GpsFixType::THREE_D;
+// Valid values: NONE, TWO_D, THREE_D, DGPS, PPS
+```
+
+#### Required String Attributes
+
+All required string attributes must be non-empty (whitespace-only strings are rejected):
+
+```php
+// ❌ Invalid - throws InvalidArgumentException
+$link = new Link('');
+$link = new Link('   ');
+$copyright = new Copyright('');
+$email = new Email('', 'example.com');
+$gpx = new GpxFile('');
+```
+
+### Benefits of Schema Compliance
+
+After migrating to v2.0, your code will:
+
+- ✅ **Only create valid GPX files** - Invalid files are impossible to construct
+- ✅ **Catch errors early** - Validation happens at construction time (fail fast)
+- ✅ **Better IDE support** - Required parameters improve autocomplete
+- ✅ **Schema validation** - Generated GPX validates against official GPX 1.1 XSD
+- ✅ **Clear error messages** - Descriptive exceptions help debug issues quickly
+
+### Handling Validation Errors
+
+When validation fails, the library throws `InvalidArgumentException` with detailed messages:
+
+```php
+try {
+    $point = new Point(PointType::WAYPOINT, 95.0, 9.86);
+} catch (\InvalidArgumentException $e) {
+    echo $e->getMessage();
+    // Output: "Latitude must be between -90.0 and 90.0 degrees (WGS84 datum). Got: 95.0"
+}
+```
+
+### Testing Your Migration
+
+After migrating, verify your code:
+
+1. **Run your tests** - Ensure all tests pass with the new API
+2. **Validate GPX output** - Use an XSD validator to confirm schema compliance
+3. **Check error handling** - Ensure validation errors are caught appropriately
 
 I wrote this library as part of my job in [Backbone s.r.o.](https://www.backbone.sk/en/).
 

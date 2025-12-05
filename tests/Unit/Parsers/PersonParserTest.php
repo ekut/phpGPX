@@ -1,10 +1,14 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
  */
 
 namespace phpGPX\Tests\Unit\Parsers;
 
+use DOMDocument;
+use DOMElement;
 use phpGPX\Models\GpxFile;
 use phpGPX\Models\Metadata;
 use phpGPX\Models\Person;
@@ -13,6 +17,7 @@ use phpGPX\Parsers\PersonParser;
 class PersonParserTest extends AbstractParserTest
 {
 	protected $testModelClass = Person::class;
+
 	protected $testParserClass = PersonParser::class;
 
 	/**
@@ -32,13 +37,13 @@ class PersonParserTest extends AbstractParserTest
 	}
 
 	protected function setUp(): void
-    {
+	{
 		parent::setUp();
 
 		$this->testModelInstance = self::createTestInstance();
 	}
 
-	public function testParse()
+	public function testParse(): void
 	{
 		$person = PersonParser::parse($this->testXmlFile->author);
 
@@ -65,10 +70,10 @@ class PersonParserTest extends AbstractParserTest
 	/**
 	 * Returns output of ::toXML method of tested parser.
 	 * @depends testParse
-	 * @param \DOMDocument $document
-	 * @return \DOMElement
+	 * @param DOMDocument $document
+	 * @return DOMElement
 	 */
-	protected function convertToXML(\DOMDocument $document)
+	protected function convertToXML(DOMDocument $document)
 	{
 		return PersonParser::toXML($this->testModelInstance, $document);
 	}
@@ -76,7 +81,7 @@ class PersonParserTest extends AbstractParserTest
 	/**
 	 * @url https://github.com/Sibyx/phpGPX/issues/48
 	 */
-	public function testEmptyLinks()
+	public function testEmptyLinks(): void
 	{
 		$gpx_file = new GpxFile('Test Creator');
 

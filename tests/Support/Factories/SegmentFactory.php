@@ -21,7 +21,7 @@ class SegmentFactory
 	{
 		$segment = new Segment();
 		$segment->points = $overrides['points'] ?? [];
-		
+
 		return $segment;
 	}
 
@@ -34,6 +34,7 @@ class SegmentFactory
 	public static function createWithPoints(int $pointCount): Segment
 	{
 		$points = PointFactory::createSequence($pointCount);
+
 		return self::create(['points' => $points]);
 	}
 }

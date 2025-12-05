@@ -1,16 +1,21 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
  */
 
 namespace phpGPX\Tests\Unit\Parsers;
 
+use DOMDocument;
+use DOMElement;
 use phpGPX\Models\Copyright;
 use phpGPX\Parsers\CopyrightParser;
 
 class CopyrightParserTest extends AbstractParserTest
 {
 	protected $testModelClass = Copyright::class;
+
 	protected $testParserClass = CopyrightParser::class;
 
 	/**
@@ -23,20 +28,20 @@ class CopyrightParserTest extends AbstractParserTest
 		$copyright = new Copyright(
 			"Jakub Dubec",
 			'2017',
-			"https://github.com/Sibyx/phpGPX/blob/master/LICENSE"
+			"https://github.com/Sibyx/phpGPX/blob/master/LICENSE",
 		);
 
 		return $copyright;
 	}
 
 	protected function setUp(): void
-    {
+	{
 		parent::setUp();
 
 		$this->testModelInstance = self::createTestInstance();
 	}
 
-	public function testParse()
+	public function testParse(): void
 	{
 		$copyright = CopyrightParser::parse($this->testXmlFile->copyright);
 
@@ -51,10 +56,10 @@ class CopyrightParserTest extends AbstractParserTest
 
 	/**
 	 * Returns output of ::toXML method of tested parser.
-	 * @param \DOMDocument $document
-	 * @return \DOMElement
+	 * @param DOMDocument $document
+	 * @return DOMElement
 	 */
-	protected function convertToXML(\DOMDocument $document)
+	protected function convertToXML(DOMDocument $document)
 	{
 		return CopyrightParser::toXML($this->testModelInstance, $document);
 	}

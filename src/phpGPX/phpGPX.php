@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created            26/08/16 13:45
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
@@ -18,11 +20,11 @@ use phpGPX\Parsers\WaypointParser;
  */
 class phpGPX
 {
-	const JSON_FORMAT = 'json';
-	const XML_FORMAT = 'xml';
+	public const JSON_FORMAT = 'json';
+	public const XML_FORMAT = 'xml';
 
-	const PACKAGE_NAME = 'phpGPX';
-	const VERSION = '1.3.0';
+	public const PACKAGE_NAME = 'phpGPX';
+	public const VERSION = '1.3.0';
 
 	/**
 	 * Create Stats object for each track, segment and route
@@ -115,13 +117,13 @@ class phpGPX
   * Parse GPX data string.
   * @param $xml
   */
- public static function parse($xml): \phpGPX\Models\GpxFile
+	public static function parse($xml): \phpGPX\Models\GpxFile
 	{
 		$xml = simplexml_load_string($xml);
 
 		// Parse creator (required by GPX 1.1 schema)
 		$creator = isset($xml['creator']) ? (string)$xml['creator'] : self::getSignature();
-		
+
 		$gpx = new GpxFile($creator);
 
 		// Parse metadata
@@ -142,7 +144,7 @@ class phpGPX
 	/**
   * Create library signature from name and version.
   */
- public static function getSignature(): string
+	public static function getSignature(): string
 	{
 		return sprintf("%s/%s", self::PACKAGE_NAME, self::VERSION);
 	}

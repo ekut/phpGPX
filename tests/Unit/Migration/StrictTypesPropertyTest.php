@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace phpGPX\Tests\Unit\Migration;
 
-use Eris\Generators;
 use Eris\TestTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -19,7 +18,7 @@ final class StrictTypesPropertyTest extends TestCase
 	/**
 	 * **Feature: php-8-4-migration, Property 1: Strict types declaration universality**
 	 * **Validates: Requirements 1.1, 1.3**
-	 * 
+	 *
 	 * For any PHP file in the src directory, the file SHALL contain `declare(strict_types=1);` on line 2.
 	 */
 	public function test_property_all_helper_files_have_strict_types_declaration(): void
@@ -47,22 +46,22 @@ final class StrictTypesPropertyTest extends TestCase
 		$this->assertFileExists($fullPath, "File {$filePath} does not exist");
 
 		$content = file_get_contents($fullPath);
-		
+
 		// Check if the file contains declare(strict_types=1) in the first 5 lines
 		$lines = explode("\n", $content);
 		$found = false;
 		$searchLines = min(5, count($lines));
-		
+
 		for ($i = 0; $i < $searchLines; $i++) {
 			if (strpos($lines[$i], 'declare(strict_types=1)') !== false) {
 				$found = true;
 				break;
 			}
 		}
-		
+
 		$this->assertTrue(
 			$found,
-			"File {$filePath} does not have strict_types declaration in the first 5 lines"
+			"File {$filePath} does not have strict_types declaration in the first 5 lines",
 		);
 	}
 }

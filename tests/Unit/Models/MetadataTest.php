@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace phpGPX\Tests\Unit\Models;
 
+use DateTime;
+use DateTimeZone;
 use phpGPX\Models\Bounds;
 use phpGPX\Models\Copyright;
 use phpGPX\Models\Extensions;
@@ -26,7 +28,7 @@ final class MetadataTest extends TestCase
 	{
 		// Arrange & Act
 		$metadata = new Metadata();
-		
+
 		// Assert
 		$this->assertInstanceOf(Metadata::class, $metadata);
 		$this->assertNull($metadata->name);
@@ -49,11 +51,11 @@ final class MetadataTest extends TestCase
 	{
 		// Arrange
 		$metadata = new Metadata();
-		
+
 		// Act
 		$metadata->name = 'My GPX Track';
 		$metadata->description = 'A beautiful hiking trail';
-		
+
 		// Assert
 		$this->assertEquals('My GPX Track', $metadata->name);
 		$this->assertEquals('A beautiful hiking trail', $metadata->description);
@@ -69,10 +71,10 @@ final class MetadataTest extends TestCase
 		$metadata = new Metadata();
 		$author = new Person();
 		$author->name = 'John Doe';
-		
+
 		// Act
 		$metadata->author = $author;
-		
+
 		// Assert
 		$this->assertInstanceOf(Person::class, $metadata->author);
 		$this->assertEquals('John Doe', $metadata->author->name);
@@ -87,10 +89,10 @@ final class MetadataTest extends TestCase
 		// Arrange
 		$metadata = new Metadata();
 		$copyright = new Copyright('John Doe', '2024', 'https://creativecommons.org/licenses/by/4.0/');
-		
+
 		// Act
 		$metadata->copyright = $copyright;
-		
+
 		// Assert
 		$this->assertInstanceOf(Copyright::class, $metadata->copyright);
 		$this->assertEquals('John Doe', $metadata->copyright->author);
@@ -108,10 +110,10 @@ final class MetadataTest extends TestCase
 		$metadata = new Metadata();
 		$link = new Link('https://example.com', 'Example Website');
 		$link->type = 'text/html';
-		
+
 		// Act
 		$metadata->links = [$link];
-		
+
 		// Assert
 		$this->assertCount(1, $metadata->links);
 		$this->assertInstanceOf(Link::class, $metadata->links[0]);
@@ -128,15 +130,15 @@ final class MetadataTest extends TestCase
 	{
 		// Arrange
 		$metadata = new Metadata();
-		
+
 		$link1 = new Link('https://example.com', 'Example Website');
-		
+
 		$link2 = new Link('https://photos.example.com/track.jpg', 'Track Photo');
 		$link2->type = 'image/jpeg';
-		
+
 		// Act
 		$metadata->links = [$link1, $link2];
-		
+
 		// Assert
 		$this->assertCount(2, $metadata->links);
 		$this->assertEquals('https://example.com', $metadata->links[0]->href);
@@ -151,13 +153,13 @@ final class MetadataTest extends TestCase
 	{
 		// Arrange
 		$metadata = new Metadata();
-		$time = new \DateTime('2024-01-15 10:30:00', new \DateTimeZone('UTC'));
-		
+		$time = new DateTime('2024-01-15 10:30:00', new DateTimeZone('UTC'));
+
 		// Act
 		$metadata->time = $time;
-		
+
 		// Assert
-		$this->assertInstanceOf(\DateTime::class, $metadata->time);
+		$this->assertInstanceOf(DateTime::class, $metadata->time);
 		$this->assertEquals($time->getTimestamp(), $metadata->time->getTimestamp());
 	}
 
@@ -169,10 +171,10 @@ final class MetadataTest extends TestCase
 	{
 		// Arrange
 		$metadata = new Metadata();
-		
+
 		// Act
 		$metadata->keywords = 'hiking, trail, mountains, nature';
-		
+
 		// Assert
 		$this->assertEquals('hiking, trail, mountains, nature', $metadata->keywords);
 	}
@@ -186,10 +188,10 @@ final class MetadataTest extends TestCase
 		// Arrange
 		$metadata = new Metadata();
 		$bounds = new Bounds(50.0, 10.0, 55.0, 15.0);
-		
+
 		// Act
 		$metadata->bounds = $bounds;
-		
+
 		// Assert
 		$this->assertInstanceOf(Bounds::class, $metadata->bounds);
 		$this->assertEquals(50.0, $metadata->bounds->minLatitude);
@@ -207,10 +209,10 @@ final class MetadataTest extends TestCase
 		// Arrange
 		$metadata = new Metadata();
 		$extensions = new Extensions();
-		
+
 		// Act
 		$metadata->extensions = $extensions;
-		
+
 		// Assert
 		$this->assertInstanceOf(Extensions::class, $metadata->extensions);
 	}
@@ -223,18 +225,18 @@ final class MetadataTest extends TestCase
 	{
 		// Arrange
 		$metadata = new Metadata();
-		
+
 		$author = new Person();
 		$author->name = 'Jane Smith';
-		
+
 		$copyright = new Copyright('Jane Smith', '2024');
-		
+
 		$link = new Link('https://example.com');
-		
+
 		$bounds = new Bounds(50.0, 10.0, 55.0, 15.0);
 		$extensions = new Extensions();
-		$time = new \DateTime('2024-01-15 10:30:00', new \DateTimeZone('UTC'));
-		
+		$time = new DateTime('2024-01-15 10:30:00', new DateTimeZone('UTC'));
+
 		// Act
 		$metadata->name = 'Complete Track';
 		$metadata->description = 'A track with all metadata';
@@ -245,14 +247,14 @@ final class MetadataTest extends TestCase
 		$metadata->keywords = 'complete, test';
 		$metadata->bounds = $bounds;
 		$metadata->extensions = $extensions;
-		
+
 		// Assert
 		$this->assertEquals('Complete Track', $metadata->name);
 		$this->assertEquals('A track with all metadata', $metadata->description);
 		$this->assertInstanceOf(Person::class, $metadata->author);
 		$this->assertInstanceOf(Copyright::class, $metadata->copyright);
 		$this->assertCount(1, $metadata->links);
-		$this->assertInstanceOf(\DateTime::class, $metadata->time);
+		$this->assertInstanceOf(DateTime::class, $metadata->time);
 		$this->assertEquals('complete, test', $metadata->keywords);
 		$this->assertInstanceOf(Bounds::class, $metadata->bounds);
 		$this->assertInstanceOf(Extensions::class, $metadata->extensions);
@@ -266,10 +268,10 @@ final class MetadataTest extends TestCase
 	{
 		// Arrange
 		$metadata = new Metadata();
-		
+
 		// Act
 		$array = $metadata->toArray();
-		
+
 		// Assert
 		$this->assertIsArray($array);
 		$this->assertArrayHasKey('name', $array);
@@ -281,7 +283,7 @@ final class MetadataTest extends TestCase
 		$this->assertArrayHasKey('keywords', $array);
 		$this->assertArrayHasKey('bounds', $array);
 		$this->assertArrayHasKey('extensions', $array);
-		
+
 		$this->assertNull($array['name']);
 		$this->assertNull($array['desc']);
 		$this->assertNull($array['author']);
@@ -302,10 +304,10 @@ final class MetadataTest extends TestCase
 		$metadata = new Metadata();
 		$metadata->name = 'Test Track';
 		$metadata->description = 'Test Description';
-		
+
 		// Act
 		$array = $metadata->toArray();
-		
+
 		// Assert
 		$this->assertEquals('Test Track', $array['name']);
 		$this->assertEquals('Test Description', $array['desc']);
@@ -322,10 +324,10 @@ final class MetadataTest extends TestCase
 		$author = new Person();
 		$author->name = 'John Doe';
 		$metadata->author = $author;
-		
+
 		// Act
 		$array = $metadata->toArray();
-		
+
 		// Assert
 		$this->assertIsArray($array['author']);
 		$this->assertEquals('John Doe', $array['author']['name']);
@@ -341,10 +343,10 @@ final class MetadataTest extends TestCase
 		$metadata = new Metadata();
 		$copyright = new Copyright('Jane Smith', '2024', 'https://example.com/license');
 		$metadata->copyright = $copyright;
-		
+
 		// Act
 		$array = $metadata->toArray();
-		
+
 		// Assert
 		$this->assertIsArray($array['copyright']);
 		$this->assertEquals('Jane Smith', $array['copyright']['author']);
@@ -360,16 +362,16 @@ final class MetadataTest extends TestCase
 	{
 		// Arrange
 		$metadata = new Metadata();
-		
+
 		$link1 = new Link('https://example.com', 'Example');
-		
+
 		$link2 = new Link('https://test.com', 'Test');
-		
+
 		$metadata->links = [$link1, $link2];
-		
+
 		// Act
 		$array = $metadata->toArray();
-		
+
 		// Assert
 		$this->assertIsArray($array['links']);
 		$this->assertCount(2, $array['links']);
@@ -387,12 +389,12 @@ final class MetadataTest extends TestCase
 	{
 		// Arrange
 		$metadata = new Metadata();
-		$time = new \DateTime('2024-01-15T10:30:00Z');
+		$time = new DateTime('2024-01-15T10:30:00Z');
 		$metadata->time = $time;
-		
+
 		// Act
 		$array = $metadata->toArray();
-		
+
 		// Assert
 		$this->assertNotNull($array['time']);
 		$this->assertIsString($array['time']);
@@ -408,10 +410,10 @@ final class MetadataTest extends TestCase
 		// Arrange
 		$metadata = new Metadata();
 		$metadata->keywords = 'hiking, trail, mountains';
-		
+
 		// Act
 		$array = $metadata->toArray();
-		
+
 		// Assert
 		$this->assertEquals('hiking, trail, mountains', $array['keywords']);
 	}
@@ -426,10 +428,10 @@ final class MetadataTest extends TestCase
 		$metadata = new Metadata();
 		$bounds = new Bounds(50.0, 10.0, 55.0, 15.0);
 		$metadata->bounds = $bounds;
-		
+
 		// Act
 		$array = $metadata->toArray();
-		
+
 		// Assert
 		$this->assertIsArray($array['bounds']);
 		$this->assertEquals(50.0, $array['bounds']['minlat']);
@@ -448,10 +450,10 @@ final class MetadataTest extends TestCase
 		$metadata = new Metadata();
 		$extensions = new Extensions();
 		$metadata->extensions = $extensions;
-		
+
 		// Act
 		$array = $metadata->toArray();
-		
+
 		// Assert
 		$this->assertIsArray($array['extensions']);
 	}
@@ -464,18 +466,18 @@ final class MetadataTest extends TestCase
 	{
 		// Arrange
 		$metadata = new Metadata();
-		
+
 		$author = new Person();
 		$author->name = 'Complete Author';
-		
+
 		$copyright = new Copyright('Complete Author', '2024');
-		
+
 		$link = new Link('https://complete.example.com');
-		
+
 		$bounds = new Bounds(50.0, 10.0, 55.0, 15.0);
 		$extensions = new Extensions();
-		$time = new \DateTime('2024-01-15T10:30:00Z');
-		
+		$time = new DateTime('2024-01-15T10:30:00Z');
+
 		$metadata->name = 'Complete Metadata';
 		$metadata->description = 'All fields populated';
 		$metadata->author = $author;
@@ -485,10 +487,10 @@ final class MetadataTest extends TestCase
 		$metadata->keywords = 'complete, all, fields';
 		$metadata->bounds = $bounds;
 		$metadata->extensions = $extensions;
-		
+
 		// Act
 		$array = $metadata->toArray();
-		
+
 		// Assert
 		$this->assertEquals('Complete Metadata', $array['name']);
 		$this->assertEquals('All fields populated', $array['desc']);
@@ -512,12 +514,12 @@ final class MetadataTest extends TestCase
 	{
 		// Arrange
 		$metadata = new Metadata();
-		
+
 		// Act
 		$metadata->name = '';
 		$metadata->description = '';
 		$metadata->keywords = '';
-		
+
 		// Assert
 		$this->assertEquals('', $metadata->name);
 		$this->assertEquals('', $metadata->description);
@@ -535,10 +537,10 @@ final class MetadataTest extends TestCase
 		$metadata->name = '';
 		$metadata->description = '';
 		$metadata->keywords = '';
-		
+
 		// Act
 		$array = $metadata->toArray();
-		
+
 		// Assert
 		$this->assertEquals('', $array['name']);
 		$this->assertEquals('', $array['desc']);
@@ -554,12 +556,12 @@ final class MetadataTest extends TestCase
 		// Arrange
 		$metadata = new Metadata();
 		$longString = str_repeat('A', 1000);
-		
+
 		// Act
 		$metadata->name = $longString;
 		$metadata->description = $longString;
 		$metadata->keywords = $longString;
-		
+
 		// Assert
 		$this->assertEquals($longString, $metadata->name);
 		$this->assertEquals($longString, $metadata->description);
@@ -575,12 +577,12 @@ final class MetadataTest extends TestCase
 	{
 		// Arrange
 		$metadata = new Metadata();
-		
+
 		// Act
 		$metadata->name = 'Track with "quotes" & <special> characters';
 		$metadata->description = 'Description with émojis 🏔️ and ümlauts';
 		$metadata->keywords = 'special, characters, <>&"\'';
-		
+
 		// Assert
 		$this->assertEquals('Track with "quotes" & <special> characters', $metadata->name);
 		$this->assertEquals('Description with émojis 🏔️ and ümlauts', $metadata->description);
@@ -595,12 +597,12 @@ final class MetadataTest extends TestCase
 	{
 		// Arrange
 		$metadata = new Metadata();
-		
+
 		// Act
 		$metadata->name = '日本語のトラック';
 		$metadata->description = 'Описание на русском';
 		$metadata->keywords = 'العربية, 中文, हिन्दी';
-		
+
 		// Assert
 		$this->assertEquals('日本語のトラック', $metadata->name);
 		$this->assertEquals('Описание на русском', $metadata->description);
@@ -615,10 +617,10 @@ final class MetadataTest extends TestCase
 	{
 		// Arrange
 		$metadata = new Metadata();
-		
+
 		// Act
 		$array = $metadata->toArray();
-		
+
 		// Assert
 		$this->assertIsArray($metadata->links);
 		$this->assertEmpty($metadata->links);
@@ -633,18 +635,18 @@ final class MetadataTest extends TestCase
 	{
 		// Arrange
 		$metadata = new Metadata();
-		$timeUTC = new \DateTime('2024-01-15 10:30:00', new \DateTimeZone('UTC'));
-		$timeEST = new \DateTime('2024-01-15 10:30:00', new \DateTimeZone('America/New_York'));
-		
+		$timeUTC = new DateTime('2024-01-15 10:30:00', new DateTimeZone('UTC'));
+		$timeEST = new DateTime('2024-01-15 10:30:00', new DateTimeZone('America/New_York'));
+
 		// Act
 		$metadata->time = $timeUTC;
 		$utcTimestamp = $metadata->time->getTimestamp();
-		
+
 		$metadata->time = $timeEST;
 		$estTimestamp = $metadata->time->getTimestamp();
-		
+
 		// Assert
 		$this->assertNotEquals($utcTimestamp, $estTimestamp);
-		$this->assertInstanceOf(\DateTime::class, $metadata->time);
+		$this->assertInstanceOf(DateTime::class, $metadata->time);
 	}
 }

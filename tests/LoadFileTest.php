@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace phpGPX\Tests;
 
 use phpGPX\phpGPX;
@@ -7,11 +9,11 @@ use PHPUnit\Framework\TestCase;
 
 class LoadFileTest extends TestCase
 {
-    /**
-     * @coversNothing
-     * @return void
-     */
-    public function testLoadXmlFileGeneratedByTimezero()
+	/**
+	 * @coversNothing
+	 * @return void
+	 */
+	public function testLoadXmlFileGeneratedByTimezero(): void
 	{
 		$file = __DIR__ . '/fixtures/timezero.gpx';
 
@@ -92,34 +94,34 @@ class LoadFileTest extends TestCase
 								'avgSpeed' => 0.2571582846315159,
 								'avgPace' => 3888.6555859279733,
 								'minAltitude' => 0.0,
-                                'minAltitudeCoords' => [
-                                    'lat' => 49.3635449998312,
-                                    'lng' => 0.0801483333364938
-                                ],
+								'minAltitudeCoords' => [
+									'lat' => 49.3635449998312,
+									'lng' => 0.0801483333364938,
+								],
 								'maxAltitude' => 0.0,
 								'cumulativeElevationGain' => 0.0,
 								'cumulativeElevationLoss' => 0.0,
 								'startedAt' => '2010-01-01T14:48:37+00:00',
-                                'startedAtCoords' => [
-                                    'lat' => 49.3635449998312,
-                                    'lng' => 0.0801483333364938
-                                ],
+								'startedAtCoords' => [
+									'lat' => 49.3635449998312,
+									'lng' => 0.0801483333364938,
+								],
 								'finishedAt' => '2010-01-01T14:48:46+00:00',
-                                'finishedAtCoords' => [
-                                    'lat' => 49.3635266991555,
-                                    'lng' => 0.0801333333365323
-                                ],
+								'finishedAtCoords' => [
+									'lat' => 49.3635266991555,
+									'lng' => 0.0801333333365323,
+								],
 								'duration' => 9.0,
 								'bounds' => [
 									[
 										'lat' => 49.3635449998312,
-										'lng' => 0.0801333333365323
+										'lng' => 0.0801333333365323,
 									],
 									[
 										'lat' => 49.3635266991555,
-										'lng' => 0.0801483333364938
+										'lng' => 0.0801483333364938,
 									],
-								]
+								],
 							],
 						],
 					],
@@ -129,34 +131,34 @@ class LoadFileTest extends TestCase
 						'avgSpeed' => 0.2571582846315159,
 						'avgPace' => 3888.6555859279733,
 						'minAltitude' => 0.0,
-                        'minAltitudeCoords' => [
-                            'lat' => 49.3635449998312,
-                            'lng' => 0.0801483333364938
-                        ],
+						'minAltitudeCoords' => [
+							'lat' => 49.3635449998312,
+							'lng' => 0.0801483333364938,
+						],
 						'maxAltitude' => 0.0,
 						'cumulativeElevationGain' => 0.0,
 						'cumulativeElevationLoss' => 0.0,
 						'startedAt' => '2010-01-01T14:48:37+00:00',
-                        'startedAtCoords' => [
-                            'lat' => 49.3635449998312,
-                            'lng' => 0.0801483333364938
-                        ],
+						'startedAtCoords' => [
+							'lat' => 49.3635449998312,
+							'lng' => 0.0801483333364938,
+						],
 						'finishedAt' => '2010-01-01T14:48:46+00:00',
-                        'finishedAtCoords' => [
-                            'lat' => 49.3635266991555,
-                            'lng' => 0.0801333333365323
-                        ],
+						'finishedAtCoords' => [
+							'lat' => 49.3635266991555,
+							'lng' => 0.0801333333365323,
+						],
 						'duration' => 9.0,
 						'bounds' => [
 							[
 								'lat' => 49.4574117319429,
-								'lng' => 0.0342948235267376
+								'lng' => 0.0342948235267376,
 							],
 							[
 								'lat' => 49.4573700325059,
-								'lng' => 0.0343682156842231
+								'lng' => 0.0343682156842231,
 							],
-						]
+						],
 					],
 				],
 				[
@@ -195,34 +197,34 @@ class LoadFileTest extends TestCase
 								'avgSpeed' => 2.354243434165751,
 								'avgPace' => 424.7649098167112,
 								'minAltitude' => 0.0,
-                                'minAltitudeCoords' => [
-                                    'lat' => 49.4574117319429,
-                                    'lng' => 0.0343682156842231
-                                ],
+								'minAltitudeCoords' => [
+									'lat' => 49.4574117319429,
+									'lng' => 0.0343682156842231,
+								],
 								'maxAltitude' => 0.0,
 								'cumulativeElevationGain' => 0.0,
 								'cumulativeElevationLoss' => 0.0,
 								'startedAt' => '2016-04-03T14:13:09+00:00',
-                                'startedAtCoords' => [
-                                    'lat' => 49.4574117319429,
-                                    'lng' => 0.0343682156842231
-                                ],
+								'startedAtCoords' => [
+									'lat' => 49.4574117319429,
+									'lng' => 0.0343682156842231,
+								],
 								'finishedAt' => '2016-04-03T14:13:12+00:00',
-                                'finishedAtCoords' => [
-                                    'lat' => 49.4573700325059,
-                                    'lng' => 0.0342948235267376
-                                ],
+								'finishedAtCoords' => [
+									'lat' => 49.4573700325059,
+									'lng' => 0.0342948235267376,
+								],
 								'duration' => 3.0,
 								'bounds' => [
 									[
 										'lat' => 49.4574117319429,
-										'lng' => 0.0342948235267376
+										'lng' => 0.0342948235267376,
 									],
 									[
 										'lat' => 49.4573700325059,
-										'lng' => 0.0343682156842231
+										'lng' => 0.0343682156842231,
 									],
-								]
+								],
 							],
 						],
 					],
@@ -232,34 +234,34 @@ class LoadFileTest extends TestCase
 						'avgSpeed' => 2.354243434165751,
 						'avgPace' => 424.7649098167112,
 						'minAltitude' => 0.0,
-                        'minAltitudeCoords' => [
-                            'lat' => 49.4574117319429,
-                            'lng' => 0.0343682156842231
-                        ],
+						'minAltitudeCoords' => [
+							'lat' => 49.4574117319429,
+							'lng' => 0.0343682156842231,
+						],
 						'maxAltitude' => 0.0,
 						'cumulativeElevationGain' => 0.0,
 						'cumulativeElevationLoss' => 0.0,
 						'startedAt' => '2016-04-03T14:13:09+00:00',
-                        'startedAtCoords' => [
-                            'lat' => 49.4574117319429,
-                            'lng' => 0.0343682156842231
-                        ],
+						'startedAtCoords' => [
+							'lat' => 49.4574117319429,
+							'lng' => 0.0343682156842231,
+						],
 						'finishedAt' => '2016-04-03T14:13:12+00:00',
-                        'finishedAtCoords' => [
-                            'lat' => 49.4573700325059,
-                            'lng' => 0.0342948235267376
-                        ],
+						'finishedAtCoords' => [
+							'lat' => 49.4573700325059,
+							'lng' => 0.0342948235267376,
+						],
 						'duration' => 3.0,
 						'bounds' => [
 							[
 								'lat' => 49.4574117319429,
-								'lng' => 0.0342948235267376
+								'lng' => 0.0342948235267376,
 							],
 							[
 								'lat' => 49.4573700325059,
-								'lng' => 0.0343682156842231
+								'lng' => 0.0343682156842231,
 							],
-						]
+						],
 					],
 				],
 			],

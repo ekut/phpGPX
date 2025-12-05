@@ -8,12 +8,15 @@ declare(strict_types=1);
 
 namespace phpGPX\Tests\Unit\Parsers;
 
+use DOMDocument;
+use DOMElement;
 use phpGPX\Models\Bounds;
 use phpGPX\Parsers\BoundsParser;
 
 class BoundsParserTest extends AbstractParserTest
 {
 	protected $testModelClass = Bounds::class;
+
 	protected $testParserClass = BoundsParser::class;
 
 	/**
@@ -32,7 +35,7 @@ class BoundsParserTest extends AbstractParserTest
 		$this->testModelInstance = self::createTestInstance();
 	}
 
-	public function testParse()
+	public function testParse(): void
 	{
 		$bounds = BoundsParser::parse($this->testXmlFile->bounds);
 
@@ -258,10 +261,10 @@ class BoundsParserTest extends AbstractParserTest
 	/**
 	 * Returns output of ::toXML method of tested parser.
 	 * @depends testParse
-	 * @param \DOMDocument $document
-	 * @return \DOMElement
+	 * @param DOMDocument $document
+	 * @return DOMElement
 	 */
-	protected function convertToXML(\DOMDocument $document)
+	protected function convertToXML(DOMDocument $document)
 	{
 		return BoundsParser::toXML($this->testModelInstance, $document);
 	}

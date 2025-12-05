@@ -29,7 +29,7 @@ class Copyright implements Summarizable
 	public function __construct(
 		public string $author,
 		public ?string $year = null,
-		public ?string $license = null
+		public ?string $license = null,
 	) {
 		GpxValidator::validateNonEmptyString($author, 'Copyright author');
 	}
@@ -42,7 +42,7 @@ class Copyright implements Summarizable
 		return [
 			'author' => $this->author,
 			'year' => SerializationHelper::stringOrNull($this->year),
-			'license' => SerializationHelper::stringOrNull($this->license)
+			'license' => SerializationHelper::stringOrNull($this->license),
 		];
 	}
 }

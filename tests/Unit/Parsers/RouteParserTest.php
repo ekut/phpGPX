@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace phpGPX\Tests\Unit\Parsers;
 
+use DOMDocument;
+use DOMElement;
 use phpGPX\Helpers\DateTimeHelper;
 use phpGPX\Models\Route;
 use phpGPX\Parsers\RouteParser;
@@ -16,6 +18,7 @@ use phpGPX\phpGPX;
 class RouteParserTest extends AbstractParserTest
 {
 	protected $testModelClass = Route::class;
+
 	protected $testParserClass = RouteParser::class;
 
 	/**
@@ -32,28 +35,22 @@ class RouteParserTest extends AbstractParserTest
 		$route->source = 'GPS Device';
 		$route->number = 1;
 		$route->type = 'cycling';
-		
+
 		// Add route points (must be ROUTEPOINT type, not TRACKPOINT)
-		$point1 = new \phpGPX\Models\Point(\phpGPX\Models\Point::ROUTEPOINT);
-		$point1->latitude = 46.571948;
-		$point1->longitude = 8.414757;
+		$point1 = new \phpGPX\Models\Point(\phpGPX\Models\Point::ROUTEPOINT, 46.571948, 8.414757);
 		$point1->elevation = 2419;
 		$point1->time = DateTimeHelper::parseDateTime("2017-08-13T07:10:41.000Z");
-		
-		$point2 = new \phpGPX\Models\Point(\phpGPX\Models\Point::ROUTEPOINT);
-		$point2->latitude = 46.572016;
-		$point2->longitude = 8.414866;
+
+		$point2 = new \phpGPX\Models\Point(\phpGPX\Models\Point::ROUTEPOINT, 46.572016, 8.414866);
 		$point2->elevation = 2418.8833883882;
 		$point2->time = DateTimeHelper::parseDateTime("2017-08-13T07:10:54.000Z");
-		
-		$point3 = new \phpGPX\Models\Point(\phpGPX\Models\Point::ROUTEPOINT);
-		$point3->latitude = 46.572088;
-		$point3->longitude = 8.414911;
+
+		$point3 = new \phpGPX\Models\Point(\phpGPX\Models\Point::ROUTEPOINT, 46.572088, 8.414911);
 		$point3->elevation = 2419.8999900064;
 		$point3->time = DateTimeHelper::parseDateTime("2017-08-13T07:11:56.000Z");
-		
+
 		$route->points = [$point1, $point2, $point3];
-		
+
 		$route->recalculateStats();
 
 		return $route;
@@ -65,14 +62,14 @@ class RouteParserTest extends AbstractParserTest
 		$this->testModelInstance = self::createTestInstance();
 	}
 
-	public function testParse()
+	public function testParse(): void
 	{
 		$routes = RouteParser::parse($this->testXmlFile->rte);
 
 		$this->assertNotEmpty($routes);
 		$this->assertIsArray($routes);
 		$this->assertCount(1, $routes);
-		
+
 		$route = $routes[0];
 		$this->assertInstanceOf(Route::class, $route);
 		$this->assertEquals($this->testModelInstance->name, $route->name);
@@ -81,7 +78,7 @@ class RouteParserTest extends AbstractParserTest
 		$this->assertEquals($this->testModelInstance->source, $route->source);
 		$this->assertEquals($this->testModelInstance->number, $route->number);
 		$this->assertEquals($this->testModelInstance->type, $route->type);
-		
+
 		// Check points
 		$this->assertNotEmpty($route->points);
 		$this->assertCount(3, $route->points);
@@ -120,18 +117,18 @@ class RouteParserTest extends AbstractParserTest
 
 		$this->assertIsArray($routes);
 		$this->assertCount(1, $routes);
-		
+
 		$route = $routes[0];
 		$this->assertInstanceOf(Route::class, $route);
 		$this->assertEquals('Mountain Route', $route->name);
 		$this->assertCount(3, $route->points);
-		
+
 		// Verify first point
 		$this->assertEquals(46.571948, $route->points[0]->latitude);
 		$this->assertEquals(8.414757, $route->points[0]->longitude);
 		$this->assertEquals(2419, $route->points[0]->elevation);
 		$this->assertEquals('Start Point', $route->points[0]->name);
-		
+
 		// Verify last point
 		$this->assertEquals(46.572088, $route->points[2]->latitude);
 		$this->assertEquals(8.414911, $route->points[2]->longitude);
@@ -165,7 +162,7 @@ class RouteParserTest extends AbstractParserTest
 
 		$this->assertCount(1, $routes);
 		$route = $routes[0];
-		
+
 		$this->assertEquals('Scenic Route', $route->name);
 		$this->assertEquals('Beautiful views', $route->comment);
 		$this->assertEquals('A scenic cycling route', $route->description);
@@ -177,7 +174,7 @@ class RouteParserTest extends AbstractParserTest
 	/**
 	 * Test parsing route with links.
 	 * Requirements: 3.2, 3.4
-	 * 
+	 *
 	 * Note: RouteParser has a bug where it checks for 'link' but the attribute mapper has 'links'.
 	 * This test documents the current behavior.
 	 */
@@ -202,7 +199,7 @@ class RouteParserTest extends AbstractParserTest
 
 		$this->assertCount(1, $routes);
 		$route = $routes[0];
-		
+
 		// Currently, links are not parsed due to a bug in RouteParser
 		// The parser checks for 'link' but the attribute mapper has 'links'
 		$this->assertEmpty($route->links);
@@ -232,7 +229,7 @@ class RouteParserTest extends AbstractParserTest
 
 		$this->assertCount(1, $routes);
 		$route = $routes[0];
-		
+
 		$this->assertNotNull($route->extensions);
 	}
 
@@ -254,7 +251,7 @@ class RouteParserTest extends AbstractParserTest
 
 		$this->assertCount(1, $routes);
 		$route = $routes[0];
-		
+
 		$this->assertEquals('Empty Route', $route->name);
 		$this->assertEmpty($route->points);
 	}
@@ -277,7 +274,7 @@ class RouteParserTest extends AbstractParserTest
 
 		$this->assertCount(1, $routes);
 		$route = $routes[0];
-		
+
 		$this->assertNull($route->name);
 		$this->assertNull($route->comment);
 		$this->assertNull($route->description);
@@ -349,7 +346,7 @@ class RouteParserTest extends AbstractParserTest
 
 		$this->assertCount(1, $routes);
 		$route = $routes[0];
-		
+
 		$this->assertNotNull($route->stats);
 		$this->assertGreaterThan(0, $route->stats->distance);
 
@@ -379,7 +376,7 @@ class RouteParserTest extends AbstractParserTest
 
 		$this->assertCount(1, $routes);
 		$route = $routes[0];
-		
+
 		$this->assertCount(1, $route->points);
 		$this->assertEquals(50.0, $route->points[0]->latitude);
 		$this->assertEquals(10.0, $route->points[0]->longitude);
@@ -407,7 +404,7 @@ class RouteParserTest extends AbstractParserTest
 
 		$this->assertCount(1, $routes);
 		$route = $routes[0];
-		
+
 		$this->assertCount(3, $route->points);
 		$this->assertNull($route->points[0]->elevation);
 		$this->assertNull($route->points[1]->elevation);
@@ -435,7 +432,7 @@ class RouteParserTest extends AbstractParserTest
 
 		$this->assertCount(1, $routes);
 		$route = $routes[0];
-		
+
 		$this->assertCount(3, $route->points);
 		$this->assertEquals(50.0, $route->points[0]->latitude);
 		$this->assertEquals(10.0, $route->points[0]->longitude);
@@ -481,16 +478,16 @@ class RouteParserTest extends AbstractParserTest
 
 		$this->assertCount(1, $routes);
 		$route = $routes[0];
-		
+
 		$this->assertCount(2, $route->points);
-		
+
 		// Check first point metadata
 		$this->assertEquals('Point 1', $route->points[0]->name);
 		$this->assertEquals('First waypoint', $route->points[0]->comment);
 		$this->assertEquals('Starting point', $route->points[0]->description);
 		$this->assertEquals('Flag', $route->points[0]->symbol);
 		$this->assertEquals('Summit', $route->points[0]->type);
-		
+
 		// Check second point metadata
 		$this->assertEquals('Point 2', $route->points[1]->name);
 		$this->assertEquals('Second waypoint', $route->points[1]->comment);
@@ -502,10 +499,10 @@ class RouteParserTest extends AbstractParserTest
 	/**
 	 * Returns output of ::toXML method of tested parser.
 	 * @depends testParse
-	 * @param \DOMDocument $document
-	 * @return \DOMElement
+	 * @param DOMDocument $document
+	 * @return DOMElement
 	 */
-	protected function convertToXML(\DOMDocument $document)
+	protected function convertToXML(DOMDocument $document)
 	{
 		return RouteParser::toXML($this->testModelInstance, $document);
 	}

@@ -9,10 +9,12 @@ declare(strict_types=1);
 
 namespace phpGPX\Models;
 
+use DateTime;
+use InvalidArgumentException;
 use phpGPX\Enums\PointType;
-use phpGPX\Helpers\SerializationHelper;
 use phpGPX\Helpers\DateTimeHelper;
 use phpGPX\Helpers\GpxValidator;
+use phpGPX\Helpers\SerializationHelper;
 use phpGPX\phpGPX;
 
 /**
@@ -50,7 +52,7 @@ class Point implements Summarizable
 	 * Creation/modification timestamp for element. Date and time in are in Univeral Coordinated Time (UTC), not local time!
 	 * Fractional seconds are allowed for millisecond timing in tracklogs.
 	 */
-	public ?\DateTime $time = null;
+	public ?DateTime $time = null;
 
 	/**
 	 * Magnetic variation (in degrees) at the point
@@ -179,21 +181,21 @@ class Point implements Summarizable
 
 	/**
 	 * Point constructor.
-	 * 
+	 *
 	 * @param PointType|string $pointType Type of the point (WAYPOINT, TRACKPOINT, or ROUTEPOINT)
 	 * @param float $latitude Latitude in decimal degrees (WGS84 datum), must be between -90.0 and 90.0
 	 * @param float $longitude Longitude in decimal degrees (WGS84 datum), must be between -180.0 (inclusive) and 180.0 (exclusive)
-	 * @throws \InvalidArgumentException If latitude or longitude is outside valid range
+	 * @throws InvalidArgumentException If latitude or longitude is outside valid range
 	 */
 	public function __construct(PointType|string $pointType, float $latitude, float $longitude)
 	{
 		// Support both enum and legacy string values for backward compatibility
 		$this->pointType = $pointType instanceof PointType ? $pointType : PointType::from($pointType);
-		
+
 		// Validate coordinates using GpxValidator
 		GpxValidator::validateLatitude($latitude);
 		GpxValidator::validateLongitude($longitude);
-		
+
 		// Set validated coordinates
 		$this->latitude = $latitude;
 		$this->longitude = $longitude;
@@ -209,9 +211,9 @@ class Point implements Summarizable
 
 	/**
 	 * Set magnetic variation value with validation.
-	 * 
+	 *
 	 * @param float|null $magVar Magnetic variation in degrees, must be between 0.0 (inclusive) and 360.0 (exclusive)
-	 * @throws \InvalidArgumentException If magnetic variation is outside valid range
+	 * @throws InvalidArgumentException If magnetic variation is outside valid range
 	 */
 	public function setMagVar(?float $magVar): void
 	{
@@ -223,9 +225,9 @@ class Point implements Summarizable
 
 	/**
 	 * Set DGPS station ID with validation.
-	 * 
+	 *
 	 * @param int|null $dgpsId DGPS station ID, must be between 0 and 1023 (inclusive)
-	 * @throws \InvalidArgumentException If DGPS station ID is outside valid range
+	 * @throws InvalidArgumentException If DGPS station ID is outside valid range
 	 */
 	public function setDgpsId(?int $dgpsId): void
 	{
@@ -237,9 +239,9 @@ class Point implements Summarizable
 
 	/**
 	 * Set satellite count with validation.
-	 * 
+	 *
 	 * @param int|null $sat Number of satellites, must be non-negative
-	 * @throws \InvalidArgumentException If satellite count is negative
+	 * @throws InvalidArgumentException If satellite count is negative
 	 */
 	public function setSat(?int $sat): void
 	{
@@ -252,7 +254,7 @@ class Point implements Summarizable
 	/**
   * Serialize object to array
   */
- public function toArray(): array
+	public function toArray(): array
 	{
 		return [
 			'lat' => (float) $this->latitude,
@@ -277,7 +279,7 @@ class Point implements Summarizable
 			'dgpsid' => SerializationHelper::integerOrNull($this->dgpsid),
 			'difference' => SerializationHelper::floatOrNull($this->difference),
 			'distance' => SerializationHelper::floatOrNull($this->distance),
-			'extensions' => SerializationHelper::serialize($this->extensions)
+			'extensions' => SerializationHelper::serialize($this->extensions),
 		];
 	}
 }

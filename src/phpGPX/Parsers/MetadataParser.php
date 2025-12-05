@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created            17/02/2017 15:58
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
@@ -6,8 +8,10 @@
 
 namespace phpGPX\Parsers;
 
+use DOMDocument;
 use phpGPX\Helpers\DateTimeHelper;
 use phpGPX\Models\Metadata;
+use SimpleXMLElement;
 
 /**
  * Class MetadataParser
@@ -20,46 +24,46 @@ abstract class MetadataParser
 	private static $attributeMapper = [
 		'name' => [
 			'name' => 'name',
-			'type' => 'string'
+			'type' => 'string',
 		],
 		'desc' => [
 			'name' => 'description',
-			'type' => 'string'
+			'type' => 'string',
 		],
 		'author' => [
 			'name' => 'author',
-			'type' => 'object'
+			'type' => 'object',
 		],
 		'copyright' => [
 			'name' => 'copyright',
-			'type' => 'object'
+			'type' => 'object',
 		],
 		'link' => [
 			'name' => 'links',
-			'type' => 'array'
+			'type' => 'array',
 		],
 		'time' => [
 			'name' => 'time',
-			'type' => 'object'
+			'type' => 'object',
 		],
 		'keywords' => [
 			'name' => 'keywords',
-			'type' => 'string'
+			'type' => 'string',
 		],
 		'bounds' => [
 			'name' => 'bounds',
-			'type' => 'object'
+			'type' => 'object',
 		],
 		'extensions' => [
 			'name' => 'extensions',
-			'type' => 'object'
-		]
+			'type' => 'object',
+		],
 	];
 
 	/**
   * @return Metadata
   */
- public static function parse(\SimpleXMLElement $node)
+	public static function parse(SimpleXMLElement $node)
 	{
 		$metadata = new Metadata();
 
@@ -75,7 +79,7 @@ abstract class MetadataParser
 					$metadata->links = property_exists($node, 'link') && $node->link !== null ? LinkParser::parse($node->link) : null;
 					break;
 				case 'time':
-					$metadata->time = property_exists($node, 'time') && $node->time !== null ? DateTimeHelper::parseDateTime($node->time) : null;
+					$metadata->time = property_exists($node, 'time') && $node->time !== null ? DateTimeHelper::parseDateTime((string) $node->time) : null;
 					break;
 				case 'bounds':
 					$metadata->bounds = property_exists($node, 'bounds') && $node->bounds !== null ? BoundsParser::parse($node->bounds) : null;
@@ -84,7 +88,7 @@ abstract class MetadataParser
 					$metadata->extensions = property_exists($node, 'extensions') && $node->extensions !== null ? ExtensionParser::parse($node->extensions) : null;
 					break;
 				default:
-					if (!in_array($attribute['type'], ['object', 'array'])) {
+					if (!in_array($attribute['type'], ['object', 'array'], true)) {
 						$metadata->{$attribute['name']} = $node->$key ?? null;
 						if (!is_null($metadata->{$attribute['name']})) {
 							settype($metadata->{$attribute['name']}, $attribute['type']);
@@ -97,7 +101,7 @@ abstract class MetadataParser
 		return $metadata;
 	}
 
-	public static function toXML(Metadata $metadata, \DOMDocument &$document)
+	public static function toXML(Metadata $metadata, DOMDocument &$document)
 	{
 		$node =  $document->createElement(self::$tagName);
 

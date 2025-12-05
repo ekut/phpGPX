@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace phpGPX\Tests\Unit\Models;
 
+use DateTime;
+use DOMDocument;
+use DOMElement;
 use phpGPX\Models\Extensions;
 use phpGPX\Models\Point;
 use phpGPX\Models\Segment;
@@ -22,7 +25,7 @@ final class SegmentTest extends TestCase
 	{
 		// Arrange & Act
 		$segment = new Segment();
-		
+
 		// Assert
 		$this->assertInstanceOf(Segment::class, $segment);
 		$this->assertIsArray($segment->points);
@@ -37,11 +40,11 @@ final class SegmentTest extends TestCase
 		$segment = new Segment();
 		$point1 = PointFactory::create();
 		$point2 = PointFactory::create();
-		
+
 		// Act
 		$segment->points[] = $point1;
 		$segment->points[] = $point2;
-		
+
 		// Assert
 		$this->assertCount(2, $segment->points);
 		$this->assertSame($point1, $segment->points[0]);
@@ -52,10 +55,10 @@ final class SegmentTest extends TestCase
 	{
 		// Arrange
 		$segment = SegmentFactory::createWithPoints(5);
-		
+
 		// Act
 		$points = $segment->getPoints();
-		
+
 		// Assert
 		$this->assertCount(5, $points);
 		$this->assertContainsOnlyInstancesOf(Point::class, $points);
@@ -65,10 +68,10 @@ final class SegmentTest extends TestCase
 	{
 		// Arrange
 		$segment = new Segment();
-		
+
 		// Act
 		$points = $segment->getPoints();
-		
+
 		// Assert
 		$this->assertIsArray($points);
 		$this->assertEmpty($points);
@@ -78,10 +81,10 @@ final class SegmentTest extends TestCase
 	{
 		// Arrange
 		$segment = SegmentFactory::createWithPoints(5);
-		
+
 		// Act
 		$segment->recalculateStats();
-		
+
 		// Assert
 		$this->assertInstanceOf(Stats::class, $segment->stats);
 	}
@@ -90,10 +93,10 @@ final class SegmentTest extends TestCase
 	{
 		// Arrange
 		$segment = SegmentFactory::createWithPoints(10);
-		
+
 		// Act
 		$segment->recalculateStats();
-		
+
 		// Assert
 		$this->assertIsFloat($segment->stats->distance);
 		$this->assertGreaterThan(0, $segment->stats->distance);
@@ -103,10 +106,10 @@ final class SegmentTest extends TestCase
 	{
 		// Arrange
 		$segment = new Segment();
-		
+
 		// Act
 		$segment->recalculateStats();
-		
+
 		// Assert
 		$this->assertInstanceOf(Stats::class, $segment->stats);
 		$this->assertEquals(0.0, $segment->stats->distance);
@@ -117,10 +120,10 @@ final class SegmentTest extends TestCase
 		// Arrange
 		$segment = new Segment();
 		$segment->points[] = PointFactory::create();
-		
+
 		// Act
 		$segment->recalculateStats();
-		
+
 		// Assert
 		$this->assertInstanceOf(Stats::class, $segment->stats);
 		$this->assertNotNull($segment->stats->startedAtCoords);
@@ -132,7 +135,7 @@ final class SegmentTest extends TestCase
 	{
 		// Arrange
 		$segment = new Segment();
-		
+
 		for ($i = 0; $i < 10; $i++) {
 			$point = PointFactory::create([
 				'latitude' => 54.0 + ($i * 0.01),
@@ -141,10 +144,10 @@ final class SegmentTest extends TestCase
 			]);
 			$segment->points[] = $point;
 		}
-		
+
 		// Act
 		$segment->recalculateStats();
-		
+
 		// Assert
 		$this->assertNotNull($segment->stats->cumulativeElevationGain);
 		$this->assertGreaterThan(0, $segment->stats->cumulativeElevationGain);
@@ -157,8 +160,8 @@ final class SegmentTest extends TestCase
 	{
 		// Arrange
 		$segment = new Segment();
-		$baseTime = new \DateTime('2024-01-01 10:00:00');
-		
+		$baseTime = new DateTime('2024-01-01 10:00:00');
+
 		for ($i = 0; $i < 10; $i++) {
 			$point = PointFactory::create([
 				'latitude' => 54.0 + ($i * 0.01),
@@ -167,13 +170,13 @@ final class SegmentTest extends TestCase
 			]);
 			$segment->points[] = $point;
 		}
-		
+
 		// Act
 		$segment->recalculateStats();
-		
+
 		// Assert
-		$this->assertInstanceOf(\DateTime::class, $segment->stats->startedAt);
-		$this->assertInstanceOf(\DateTime::class, $segment->stats->finishedAt);
+		$this->assertInstanceOf(DateTime::class, $segment->stats->startedAt);
+		$this->assertInstanceOf(DateTime::class, $segment->stats->finishedAt);
 		$this->assertNotNull($segment->stats->duration);
 		$this->assertEquals(540, $segment->stats->duration); // 9 minutes = 540 seconds
 		$this->assertNotNull($segment->stats->averageSpeed);
@@ -184,8 +187,8 @@ final class SegmentTest extends TestCase
 	{
 		// Arrange
 		$segment = new Segment();
-		$baseTime = new \DateTime('2024-01-01 10:00:00');
-		
+		$baseTime = new DateTime('2024-01-01 10:00:00');
+
 		for ($i = 0; $i < 10; $i++) {
 			$point = PointFactory::create([
 				'latitude' => 54.0 + ($i * 0.01),
@@ -194,10 +197,10 @@ final class SegmentTest extends TestCase
 			]);
 			$segment->points[] = $point;
 		}
-		
+
 		// Act
 		$segment->recalculateStats();
-		
+
 		// Assert
 		$this->assertNotNull($segment->stats->averagePace);
 		$this->assertGreaterThan(0, $segment->stats->averagePace);
@@ -207,10 +210,10 @@ final class SegmentTest extends TestCase
 	{
 		// Arrange
 		$segment = SegmentFactory::createWithPoints(10);
-		
+
 		// Act
 		$segment->recalculateStats();
-		
+
 		// Assert
 		$this->assertNotNull($segment->stats->bounds);
 		$this->assertIsArray($segment->stats->bounds);
@@ -221,16 +224,16 @@ final class SegmentTest extends TestCase
 	{
 		// Arrange
 		$segment = new Segment();
-		
+
 		// Add points with varying elevations
 		$segment->points[] = PointFactory::create(['elevation' => 150.0]);
 		$segment->points[] = PointFactory::create(['elevation' => 200.0]); // Max
 		$segment->points[] = PointFactory::create(['elevation' => 100.0]); // Min
 		$segment->points[] = PointFactory::create(['elevation' => 175.0]);
-		
+
 		// Act
 		$segment->recalculateStats();
-		
+
 		// Assert
 		$this->assertEquals(100.0, $segment->stats->minAltitude);
 		$this->assertEquals(200.0, $segment->stats->maxAltitude);
@@ -242,16 +245,16 @@ final class SegmentTest extends TestCase
 	{
 		// Arrange
 		$segment = new Segment();
-		
+
 		// Create a profile with ups and downs
 		$segment->points[] = PointFactory::create(['elevation' => 100.0]);
 		$segment->points[] = PointFactory::create(['elevation' => 150.0]); // +50
 		$segment->points[] = PointFactory::create(['elevation' => 120.0]); // -30
 		$segment->points[] = PointFactory::create(['elevation' => 180.0]); // +60
-		
+
 		// Act
 		$segment->recalculateStats();
-		
+
 		// Assert
 		$this->assertNotNull($segment->stats->cumulativeElevationGain);
 		$this->assertNotNull($segment->stats->cumulativeElevationLoss);
@@ -263,10 +266,10 @@ final class SegmentTest extends TestCase
 	{
 		// Arrange
 		$segment = SegmentFactory::createWithPoints(3);
-		
+
 		// Act
 		$array = $segment->toArray();
-		
+
 		// Assert
 		$this->assertIsArray($array);
 		$this->assertArrayHasKey('points', $array);
@@ -278,10 +281,10 @@ final class SegmentTest extends TestCase
 	{
 		// Arrange
 		$segment = SegmentFactory::createWithPoints(5);
-		
+
 		// Act
 		$array = $segment->toArray();
-		
+
 		// Assert
 		$this->assertIsArray($array['points']);
 		$this->assertCount(5, $array['points']);
@@ -292,10 +295,10 @@ final class SegmentTest extends TestCase
 		// Arrange
 		$segment = SegmentFactory::createWithPoints(5);
 		$segment->recalculateStats();
-		
+
 		// Act
 		$array = $segment->toArray();
-		
+
 		// Assert
 		$this->assertIsArray($array['stats']);
 		$this->assertArrayHasKey('distance', $array['stats']);
@@ -305,10 +308,10 @@ final class SegmentTest extends TestCase
 	{
 		// Arrange
 		$segment = new Segment();
-		
+
 		// Act
 		$array = $segment->toArray();
-		
+
 		// Assert
 		$this->assertIsArray($array);
 		$this->assertEmpty($array['points']);
@@ -320,13 +323,13 @@ final class SegmentTest extends TestCase
 	{
 		// Arrange
 		$segment = SegmentFactory::createWithPoints(3);
-		$document = new \DOMDocument('1.0', 'UTF-8');
-		
+		$document = new DOMDocument('1.0', 'UTF-8');
+
 		// Act
 		$xmlNode = SegmentParser::toXML($segment, $document);
-		
+
 		// Assert
-		$this->assertInstanceOf(\DOMElement::class, $xmlNode);
+		$this->assertInstanceOf(DOMElement::class, $xmlNode);
 		$this->assertEquals('trkseg', $xmlNode->nodeName);
 	}
 
@@ -334,11 +337,11 @@ final class SegmentTest extends TestCase
 	{
 		// Arrange
 		$segment = SegmentFactory::createWithPoints(5);
-		$document = new \DOMDocument('1.0', 'UTF-8');
-		
+		$document = new DOMDocument('1.0', 'UTF-8');
+
 		// Act
 		$xmlNode = SegmentParser::toXML($segment, $document);
-		
+
 		// Assert
 		$pointNodes = $xmlNode->getElementsByTagName('trkpt');
 		$this->assertEquals(5, $pointNodes->length);
@@ -348,13 +351,13 @@ final class SegmentTest extends TestCase
 	{
 		// Arrange
 		$segment = new Segment();
-		$document = new \DOMDocument('1.0', 'UTF-8');
-		
+		$document = new DOMDocument('1.0', 'UTF-8');
+
 		// Act
 		$xmlNode = SegmentParser::toXML($segment, $document);
-		
+
 		// Assert
-		$this->assertInstanceOf(\DOMElement::class, $xmlNode);
+		$this->assertInstanceOf(DOMElement::class, $xmlNode);
 		$this->assertEquals('trkseg', $xmlNode->nodeName);
 		$pointNodes = $xmlNode->getElementsByTagName('trkpt');
 		$this->assertEquals(0, $pointNodes->length);
@@ -366,12 +369,12 @@ final class SegmentTest extends TestCase
 		$segment = new Segment();
 		$segment->points[] = PointFactory::create();
 		$segment->extensions = new Extensions();
-		
-		$document = new \DOMDocument('1.0', 'UTF-8');
-		
+
+		$document = new DOMDocument('1.0', 'UTF-8');
+
 		// Act
 		$xmlNode = SegmentParser::toXML($segment, $document);
-		
+
 		// Assert
 		$extensionNodes = $xmlNode->getElementsByTagName('extensions');
 		$this->assertEquals(1, $extensionNodes->length);
@@ -382,10 +385,10 @@ final class SegmentTest extends TestCase
 		// Arrange
 		$segment = new Segment();
 		$extensions = new Extensions();
-		
+
 		// Act
 		$segment->extensions = $extensions;
-		
+
 		// Assert
 		$this->assertInstanceOf(Extensions::class, $segment->extensions);
 		$this->assertSame($extensions, $segment->extensions);
@@ -395,15 +398,15 @@ final class SegmentTest extends TestCase
 	{
 		// Arrange
 		$segment = new Segment();
-		
+
 		// Add points with some null elevations
 		$segment->points[] = PointFactory::create(['elevation' => 100.0]);
 		$segment->points[] = PointFactory::create(['elevation' => null]);
 		$segment->points[] = PointFactory::create(['elevation' => 150.0]);
-		
+
 		// Act
 		$segment->recalculateStats();
-		
+
 		// Assert - should handle null elevations gracefully
 		$this->assertInstanceOf(Stats::class, $segment->stats);
 	}
@@ -412,15 +415,15 @@ final class SegmentTest extends TestCase
 	{
 		// Arrange
 		$segment = new Segment();
-		
+
 		// Add points with some null times
-		$segment->points[] = PointFactory::create(['time' => new \DateTime('2024-01-01 10:00:00')]);
+		$segment->points[] = PointFactory::create(['time' => new DateTime('2024-01-01 10:00:00')]);
 		$segment->points[] = PointFactory::create(['time' => null]);
-		$segment->points[] = PointFactory::create(['time' => new \DateTime('2024-01-01 10:10:00')]);
-		
+		$segment->points[] = PointFactory::create(['time' => new DateTime('2024-01-01 10:10:00')]);
+
 		// Act
 		$segment->recalculateStats();
-		
+
 		// Assert - should handle null times gracefully
 		$this->assertInstanceOf(Stats::class, $segment->stats);
 	}
@@ -429,7 +432,7 @@ final class SegmentTest extends TestCase
 	{
 		// Arrange
 		$segment = new Segment();
-		
+
 		for ($i = 0; $i < 5; $i++) {
 			$point = PointFactory::create([
 				'latitude' => 54.0 + ($i * 0.01),
@@ -438,10 +441,10 @@ final class SegmentTest extends TestCase
 			]);
 			$segment->points[] = $point;
 		}
-		
+
 		// Act
 		$segment->recalculateStats();
-		
+
 		// Assert
 		$this->assertNotNull($segment->stats->realDistance);
 		$this->assertGreaterThan(0, $segment->stats->realDistance);
@@ -456,10 +459,10 @@ final class SegmentTest extends TestCase
 		$segment->points[] = PointFactory::create(['latitude' => 54.0, 'longitude' => 9.0]);
 		$segment->points[] = PointFactory::create(['latitude' => 54.1, 'longitude' => 9.1]);
 		$segment->points[] = PointFactory::create(['latitude' => 54.2, 'longitude' => 9.2]);
-		
+
 		// Act
 		$segment->recalculateStats();
-		
+
 		// Assert
 		$this->assertIsArray($segment->stats->startedAtCoords);
 		$this->assertIsArray($segment->stats->finishedAtCoords);
@@ -473,17 +476,16 @@ final class SegmentTest extends TestCase
 		$segment = SegmentFactory::createWithPoints(5);
 		$segment->recalculateStats();
 		$firstDistance = $segment->stats->distance;
-		
+
 		// Add more points
 		$segment->points[] = PointFactory::create(['latitude' => 55.0, 'longitude' => 10.0]);
 		$segment->points[] = PointFactory::create(['latitude' => 55.1, 'longitude' => 10.1]);
-		
+
 		// Act
 		$segment->recalculateStats();
-		
+
 		// Assert - distance should be recalculated and different
 		$this->assertNotEquals($firstDistance, $segment->stats->distance);
 		$this->assertGreaterThan($firstDistance, $segment->stats->distance);
 	}
 }
-

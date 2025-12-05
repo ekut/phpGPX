@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created            15/02/2017 18:14
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
@@ -6,97 +8,100 @@
 
 namespace phpGPX\Parsers;
 
+use DOMDocument;
+use DOMElement;
 use phpGPX\Helpers\DateTimeHelper;
 use phpGPX\Models\Point;
+use SimpleXMLElement;
 
 abstract class PointParser
 {
 	private static $attributeMapper = [
 		'ele' => [
 			'name' => 'elevation',
-			'type' => 'float'
+			'type' => 'float',
 		],
 		'time' => [
 			'name' => 'time',
-			'type' => 'object'
+			'type' => 'object',
 		],
 		'magvar' => [
 			'name' => 'magVar',
-			'type' => 'float'
+			'type' => 'float',
 		],
 		'geoidheight' => [
 			'name' => 'geoidHeight',
-			'type' => 'float'
+			'type' => 'float',
 		],
 		'name' => [
 			'name' => 'name',
-			'type' => 'string'
+			'type' => 'string',
 		],
 		'cmt' => [
 			'name' => 'comment',
-			'type' => 'string'
+			'type' => 'string',
 		],
 		'desc' => [
 			'name' => 'description',
-			'type' => 'string'
+			'type' => 'string',
 		],
 		'src' => [
 			'name' => 'source',
-			'type' => 'string'
+			'type' => 'string',
 		],
 		'link' => [
 			'name' => 'links',
-			'type' => 'object'
+			'type' => 'object',
 		],
 		'sym' => [
 			'name' => 'symbol',
-			'type' => 'string'
+			'type' => 'string',
 		],
 		'type' => [
 			'name' => 'type',
-			'type' => 'string'
+			'type' => 'string',
 		],
 		'fix' => [
 			'name' => 'fix',
-			'type' => 'string'
+			'type' => 'string',
 		],
 		'sat' => [
 			'name' => 'satellitesNumber',
-			'type' => 'integer'
+			'type' => 'integer',
 		],
 		'hdop' => [
 			'name' => 'hdop',
-			'type' => 'float'
+			'type' => 'float',
 		],
 		'vdop' => [
 			'name' => 'vdop',
-			'type' => 'float'
+			'type' => 'float',
 		],
 		'pdop' => [
 			'name' => 'pdop',
-			'type' => 'float'
+			'type' => 'float',
 		],
 		'ageofdgpsdata' => [
 			'name' => 'ageOfGpsData',
-			'type' => 'float'
+			'type' => 'float',
 		],
 		'dgpsid' => [
 			'name' => 'dgpsid',
-			'type' => 'integer'
+			'type' => 'integer',
 		],
 		'extensions' => [
 			'name' => 'extensions',
-			'type' => 'object'
-		]
+			'type' => 'object',
+		],
 	];
 
 	private static $typeMapper = [
 		'trkpt' => Point::TRACKPOINT,
 		'wpt' => Point::WAYPOINT,
-		'rtept' => Point::ROUTEPOINT
+		'rtept' => Point::ROUTEPOINT,
 	];
 
-	public static function parse(\SimpleXMLElement $node)
+	public static function parse(SimpleXMLElement $node)
 	{
 		if (!array_key_exists($node->getName(), self::$typeMapper)) {
 			return null;
@@ -115,7 +120,7 @@ abstract class PointParser
 		foreach (self::$attributeMapper as $key => $attribute) {
 			switch ($key) {
 				case 'time':
-					$point->time = property_exists($node, 'time') && $node->time !== null ? DateTimeHelper::parseDateTime($node->time) : null;
+					$point->time = property_exists($node, 'time') && $node->time !== null ? DateTimeHelper::parseDateTime((string) $node->time) : null;
 					break;
 				case 'extensions':
 					$point->extensions = property_exists($node, 'extensions') && $node->extensions !== null ? ExtensionParser::parse($node->extensions) : null;
@@ -124,7 +129,7 @@ abstract class PointParser
 					$point->links = property_exists($node, 'link') && $node->link !== null ? LinkParser::parse($node->link) : [];
 					break;
 				default:
-					if (!in_array($attribute['type'], ['object', 'array'])) {
+					if (!in_array($attribute['type'], ['object', 'array'], true)) {
 						$value = $node->$key ?? null;
 						if (!is_null($value)) {
 							// Cast SimpleXMLElement to proper type
@@ -154,16 +159,16 @@ abstract class PointParser
 	}
 
 	/**
-	 * @return \DOMElement
+	 * @return DOMElement
 	 */
-	public static function toXML(Point $point, \DOMDocument &$document)
+	public static function toXML(Point $point, DOMDocument &$document)
 	{
 		// Get the enum value and find the corresponding XML element name
 		$pointTypeValue = $point->getPointType()->value;
-		$node = $document->createElement(array_search($pointTypeValue, self::$typeMapper));
+		$node = $document->createElement(array_search($pointTypeValue, self::$typeMapper, true));
 
-		$node->setAttribute('lat', $point->latitude);
-		$node->setAttribute('lon', $point->longitude);
+		$node->setAttribute('lat', (string) $point->latitude);
+		$node->setAttribute('lon', (string) $point->longitude);
 
 		foreach (self::$attributeMapper as $key => $attribute) {
 			if (!is_null($point->{$attribute['name']})) {
@@ -198,9 +203,9 @@ abstract class PointParser
 	}
 
 	/**
-  * @return \DOMElement[]
+  * @return DOMElement[]
   */
- public static function toXMLArray(array $points, \DOMDocument &$document)
+	public static function toXMLArray(array $points, DOMDocument &$document)
 	{
 		$result = [];
 

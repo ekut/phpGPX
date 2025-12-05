@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created            30/08/16 13:31
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
@@ -6,8 +8,11 @@
 
 namespace phpGPX\Parsers;
 
+use DOMDocument;
+use DOMElement;
 use phpGPX\Models\Track;
 use phpGPX\phpGPX;
+use SimpleXMLElement;
 
 /**
  * Class TrackParser
@@ -20,46 +25,46 @@ abstract class TrackParser
 	private static $attributeMapper = [
 		'name' => [
 			'name' => 'name',
-			'type' => 'string'
+			'type' => 'string',
 		],
 		'cmt' => [
 			'name' => 'comment',
-			'type' => 'string'
+			'type' => 'string',
 		],
 		'desc' => [
 			'name' => 'description',
-			'type' => 'string'
+			'type' => 'string',
 		],
 		'src' => [
 			'name' => 'source',
-			'type' => 'string'
+			'type' => 'string',
 		],
 		'link' => [
 			'name' => 'links',
-			'type' => 'array'
+			'type' => 'array',
 		],
 		'number' => [
 			'name' => 'number',
-			'type' => 'integer'
+			'type' => 'integer',
 		],
 		'type' => [
 			'name' => 'type',
-			'type' => 'string'
+			'type' => 'string',
 		],
 		'extensions' => [
 			'name' => 'extensions',
-			'type' => 'object'
+			'type' => 'object',
 		],
 		'trkseg' => [
 			'name' => 'segments',
-			'type' => 'array'
+			'type' => 'array',
 		],
 	];
 
 	/**
   * @return Track[]
   */
- public static function parse(\SimpleXMLElement $nodes)
+	public static function parse(SimpleXMLElement $nodes)
 	{
 		$tracks = [];
 
@@ -78,7 +83,7 @@ abstract class TrackParser
 						$track->segments = property_exists($node, 'trkseg') && $node->trkseg !== null ? SegmentParser::parse($node->trkseg) : [];
 						break;
 					default:
-						if (!in_array($attribute['type'], ['object', 'array'])) {
+						if (!in_array($attribute['type'], ['object', 'array'], true)) {
 							$value = $node->$key ?? null;
 							if ($value !== null) {
 								// @phpstan-ignore cast.string
@@ -104,9 +109,9 @@ abstract class TrackParser
 	}
 
 	/**
-  * @return \DOMElement
+  * @return DOMElement
   */
- public static function toXML(Track $track, \DOMDocument &$document)
+	public static function toXML(Track $track, DOMDocument &$document)
 	{
 		$node = $document->createElement(self::$tagName);
 
@@ -143,9 +148,9 @@ abstract class TrackParser
 	}
 
 	/**
-  * @return \DOMElement[]
+  * @return DOMElement[]
   */
- public static function toXMLArray(array $tracks, \DOMDocument &$document)
+	public static function toXMLArray(array $tracks, DOMDocument &$document)
 	{
 		$result = [];
 

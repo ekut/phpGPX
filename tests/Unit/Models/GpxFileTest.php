@@ -4,19 +4,21 @@ declare(strict_types=1);
 
 namespace phpGPX\Tests\Unit\Models;
 
+use DOMDocument;
 use Eris\Generators;
 use Eris\TestTrait;
+use InvalidArgumentException;
 use phpGPX\Models\GpxFile;
+use phpGPX\Models\Metadata;
 use phpGPX\Models\Point;
 use phpGPX\Models\Route;
-use phpGPX\Models\Track;
-use phpGPX\Models\Metadata;
-use phpGPX\Models\Extensions;
 use phpGPX\phpGPX;
-use phpGPX\Tests\Support\TestCase;
+use phpGPX\Tests\Support\Factories\MetadataFactory;
 use phpGPX\Tests\Support\Factories\PointFactory;
 use phpGPX\Tests\Support\Factories\TrackFactory;
-use phpGPX\Tests\Support\Factories\MetadataFactory;
+use phpGPX\Tests\Support\TestCase;
+use RuntimeException;
+use TypeError;
 
 /**
  * Unit tests for GpxFile model.
@@ -24,6 +26,7 @@ use phpGPX\Tests\Support\Factories\MetadataFactory;
 final class GpxFileTest extends TestCase
 {
 	use TestTrait;
+
 	public function test_gpx_file_can_be_created(): void
 	{
 		// Act
@@ -45,7 +48,7 @@ final class GpxFileTest extends TestCase
 	public function test_gpx_file_requires_creator(): void
 	{
 		// Assert
-		$this->expectException(\TypeError::class);
+		$this->expectException(TypeError::class);
 
 		// Act
 		new GpxFile();
@@ -54,7 +57,7 @@ final class GpxFileTest extends TestCase
 	public function test_gpx_file_rejects_empty_creator(): void
 	{
 		// Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('GPX creator');
 		$this->expectExceptionMessage('required');
 		$this->expectExceptionMessage('cannot be empty');
@@ -66,7 +69,7 @@ final class GpxFileTest extends TestCase
 	public function test_gpx_file_rejects_whitespace_only_creator(): void
 	{
 		// Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('GPX creator');
 		$this->expectExceptionMessage('required');
 		$this->expectExceptionMessage('cannot be empty');
@@ -147,7 +150,7 @@ final class GpxFileTest extends TestCase
 		$gpxFile = new GpxFile('Test Creator');
 		$metadata = MetadataFactory::create([
 			'name' => 'My GPX File',
-			'description' => 'A test GPX file'
+			'description' => 'A test GPX file',
 		]);
 
 		// Act
@@ -260,7 +263,7 @@ final class GpxFileTest extends TestCase
 		$document = $gpxFile->toXML();
 
 		// Assert
-		$this->assertInstanceOf(\DOMDocument::class, $document);
+		$this->assertInstanceOf(DOMDocument::class, $document);
 		$xml = $document->saveXML();
 		$this->assertValidGpxXml($xml);
 	}
@@ -315,7 +318,7 @@ final class GpxFileTest extends TestCase
 			'pointType' => Point::WAYPOINT,
 			'name' => 'Test Waypoint',
 			'latitude' => 50.0,
-			'longitude' => 10.0
+			'longitude' => 10.0,
 		]);
 		$gpxFile->waypoints[] = $waypoint;
 
@@ -405,7 +408,7 @@ final class GpxFileTest extends TestCase
 		$gpxFile = new GpxFile('Complete Test');
 		$gpxFile->metadata = MetadataFactory::create(['name' => 'Complete File']);
 		$gpxFile->waypoints[] = PointFactory::create(['pointType' => Point::WAYPOINT, 'name' => 'WP1']);
-		
+
 		// Create a route with route points
 		$route = new Route();
 		$route->name = 'Complete Route';
@@ -413,7 +416,7 @@ final class GpxFileTest extends TestCase
 			PointFactory::create(['pointType' => Point::ROUTEPOINT, 'latitude' => 54.0, 'longitude' => 9.0]),
 		];
 		$gpxFile->routes[] = $route;
-		
+
 		$gpxFile->tracks[] = TrackFactory::createWithPoints(3);
 
 		// Act
@@ -488,7 +491,7 @@ final class GpxFileTest extends TestCase
 		$tempFile = sys_get_temp_dir() . '/test_gpx_' . uniqid() . '.txt';
 
 		// Assert
-		$this->expectException(\RuntimeException::class);
+		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage('Unsupported file format!');
 
 		// Act
@@ -503,7 +506,7 @@ final class GpxFileTest extends TestCase
 	{
 		// This property is tested by the type system
 		// Attempting to create GpxFile without creator throws TypeError
-		$this->expectException(\TypeError::class);
+		$this->expectException(TypeError::class);
 		new GpxFile();
 	}
 
@@ -516,13 +519,13 @@ final class GpxFileTest extends TestCase
 		$this
 			->withRand('mt_rand')
 			->forAll(
-				Generators::elements(['', ' ', '  ', "\t", "\n", "   \t\n   "])
+				Generators::elements(['', ' ', '  ', "\t", "\n", "   \t\n   "]),
 			)
-			->then(function ($emptyCreator) {
+			->then(function ($emptyCreator): void {
 				try {
 					new GpxFile($emptyCreator);
 					$this->fail('Expected InvalidArgumentException for empty/whitespace creator: ' . json_encode($emptyCreator));
-				} catch (\InvalidArgumentException $e) {
+				} catch (InvalidArgumentException $e) {
 					// Verify error message contains required information
 					$this->assertStringContainsString('GPX creator', $e->getMessage());
 					$this->assertStringContainsString('required', $e->getMessage());

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1" creator="phpGPX Route Sample" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <rte>
+    <name>Sample Route</name>
+    <desc>A sample route demonstrating GPX 1.1 compliance</desc>
+    <rtept lat="54.932862108889" lon="9.8606242161401">
+      <name>Route Start</name>
+    </rtept>
+    <rtept lat="54.942862108889" lon="9.8706242161401">
+      <name>Route Waypoint</name>
+    </rtept>
+    <rtept lat="54.952862108889" lon="9.8806242161401">
+      <name>Route End</name>
+    </rtept>
+  </rte>
+</gpx>

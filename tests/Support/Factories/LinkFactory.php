@@ -22,7 +22,7 @@ class LinkFactory
 		$href = $overrides['href'] ?? 'https://example.com';
 		$text = $overrides['text'] ?? null;
 		$type = $overrides['type'] ?? null;
-		
+
 		return new Link($href, $text, $type);
 	}
 

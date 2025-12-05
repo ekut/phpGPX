@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace phpGPX\Tests\Unit\Models;
 
+use DateTime;
+use DOMDocument;
+use DOMElement;
 use phpGPX\Models\Link;
 use phpGPX\Models\Point;
 use phpGPX\Models\Route;
@@ -21,7 +24,7 @@ final class RouteTest extends TestCase
 	{
 		// Arrange & Act
 		$route = new Route();
-		
+
 		// Assert
 		$this->assertInstanceOf(Route::class, $route);
 		$this->assertIsArray($route->points);
@@ -34,7 +37,7 @@ final class RouteTest extends TestCase
 	{
 		// Arrange
 		$route = new Route();
-		
+
 		// Act
 		$route->name = 'City Tour';
 		$route->comment = 'Nice route';
@@ -42,7 +45,7 @@ final class RouteTest extends TestCase
 		$route->source = 'GPS Device';
 		$route->number = 5;
 		$route->type = 'walking';
-		
+
 		// Assert
 		$this->assertEquals('City Tour', $route->name);
 		$this->assertEquals('Nice route', $route->comment);
@@ -58,11 +61,11 @@ final class RouteTest extends TestCase
 		$route = new Route();
 		$point1 = PointFactory::create();
 		$point2 = PointFactory::create();
-		
+
 		// Act
 		$route->points[] = $point1;
 		$route->points[] = $point2;
-		
+
 		// Assert
 		$this->assertCount(2, $route->points);
 		$this->assertSame($point1, $route->points[0]);
@@ -74,10 +77,10 @@ final class RouteTest extends TestCase
 		// Arrange
 		$route = new Route();
 		$link = new Link('https://example.com/route', 'Route Info');
-		
+
 		// Act
 		$route->links[] = $link;
-		
+
 		// Assert
 		$this->assertCount(1, $route->links);
 		$this->assertEquals('https://example.com/route', $route->links[0]->href);
@@ -94,10 +97,10 @@ final class RouteTest extends TestCase
 				'longitude' => 9.0 + ($i * 0.01),
 			]);
 		}
-		
+
 		// Act
 		$points = $route->getPoints();
-		
+
 		// Assert
 		$this->assertCount(5, $points);
 		$this->assertContainsOnlyInstancesOf(Point::class, $points);
@@ -107,10 +110,10 @@ final class RouteTest extends TestCase
 	{
 		// Arrange
 		$route = new Route();
-		
+
 		// Act
 		$points = $route->getPoints();
-		
+
 		// Assert
 		$this->assertIsArray($points);
 		$this->assertEmpty($points);
@@ -126,10 +129,10 @@ final class RouteTest extends TestCase
 				'longitude' => 9.0 + ($i * 0.01),
 			]);
 		}
-		
+
 		// Act
 		$route->recalculateStats();
-		
+
 		// Assert
 		$this->assertInstanceOf(Stats::class, $route->stats);
 	}
@@ -144,10 +147,10 @@ final class RouteTest extends TestCase
 				'longitude' => 9.0 + ($i * 0.01),
 			]);
 		}
-		
+
 		// Act
 		$route->recalculateStats();
-		
+
 		// Assert
 		$this->assertIsFloat($route->stats->distance);
 		$this->assertGreaterThan(0, $route->stats->distance);
@@ -157,10 +160,10 @@ final class RouteTest extends TestCase
 	{
 		// Arrange
 		$route = new Route();
-		
+
 		// Act
 		$route->recalculateStats();
-		
+
 		// Assert
 		$this->assertInstanceOf(Stats::class, $route->stats);
 		$this->assertEquals(0.0, $route->stats->distance);
@@ -171,10 +174,10 @@ final class RouteTest extends TestCase
 		// Arrange
 		$route = new Route();
 		$route->points[] = PointFactory::create();
-		
+
 		// Act
 		$route->recalculateStats();
-		
+
 		// Assert
 		$this->assertInstanceOf(Stats::class, $route->stats);
 		$this->assertNotNull($route->stats->startedAtCoords);
@@ -186,7 +189,7 @@ final class RouteTest extends TestCase
 	{
 		// Arrange
 		$route = new Route();
-		
+
 		for ($i = 0; $i < 10; $i++) {
 			$point = PointFactory::create([
 				'latitude' => 54.0 + ($i * 0.01),
@@ -195,10 +198,10 @@ final class RouteTest extends TestCase
 			]);
 			$route->points[] = $point;
 		}
-		
+
 		// Act
 		$route->recalculateStats();
-		
+
 		// Assert
 		$this->assertNotNull($route->stats->cumulativeElevationGain);
 		$this->assertGreaterThan(0, $route->stats->cumulativeElevationGain);
@@ -211,8 +214,8 @@ final class RouteTest extends TestCase
 	{
 		// Arrange
 		$route = new Route();
-		$baseTime = new \DateTime('2024-01-01 10:00:00');
-		
+		$baseTime = new DateTime('2024-01-01 10:00:00');
+
 		for ($i = 0; $i < 10; $i++) {
 			$point = PointFactory::create([
 				'latitude' => 54.0 + ($i * 0.01),
@@ -221,13 +224,13 @@ final class RouteTest extends TestCase
 			]);
 			$route->points[] = $point;
 		}
-		
+
 		// Act
 		$route->recalculateStats();
-		
+
 		// Assert
-		$this->assertInstanceOf(\DateTime::class, $route->stats->startedAt);
-		$this->assertInstanceOf(\DateTime::class, $route->stats->finishedAt);
+		$this->assertInstanceOf(DateTime::class, $route->stats->startedAt);
+		$this->assertInstanceOf(DateTime::class, $route->stats->finishedAt);
 		$this->assertNotNull($route->stats->duration);
 		$this->assertEquals(540, $route->stats->duration); // 9 minutes = 540 seconds
 		$this->assertNotNull($route->stats->averageSpeed);
@@ -238,16 +241,16 @@ final class RouteTest extends TestCase
 	{
 		// Arrange
 		$route = new Route();
-		
+
 		// Add points with varying elevations
 		$route->points[] = PointFactory::create(['elevation' => 150.0]);
 		$route->points[] = PointFactory::create(['elevation' => 200.0]); // Max
 		$route->points[] = PointFactory::create(['elevation' => 100.0]); // Min
 		$route->points[] = PointFactory::create(['elevation' => 175.0]);
-		
+
 		// Act
 		$route->recalculateStats();
-		
+
 		// Assert
 		$this->assertEquals(100.0, $route->stats->minAltitude);
 		$this->assertEquals(200.0, $route->stats->maxAltitude);
@@ -263,10 +266,10 @@ final class RouteTest extends TestCase
 		$route->description = 'Test Description';
 		$route->number = 1;
 		$route->type = 'cycling';
-		
+
 		// Act
 		$array = $route->toArray();
-		
+
 		// Assert
 		$this->assertIsArray($array);
 		$this->assertArrayHasKey('name', $array);
@@ -288,10 +291,10 @@ final class RouteTest extends TestCase
 		for ($i = 0; $i < 3; $i++) {
 			$route->points[] = PointFactory::create();
 		}
-		
+
 		// Act
 		$array = $route->toArray();
-		
+
 		// Assert
 		$this->assertArrayHasKey('rtep', $array);
 		$this->assertIsArray($array['rtep']);
@@ -309,10 +312,10 @@ final class RouteTest extends TestCase
 			]);
 		}
 		$route->recalculateStats();
-		
+
 		// Act
 		$array = $route->toArray();
-		
+
 		// Assert
 		$this->assertArrayHasKey('stats', $array);
 		$this->assertIsArray($array['stats']);
@@ -327,21 +330,21 @@ final class RouteTest extends TestCase
 		for ($i = 0; $i < 3; $i++) {
 			$route->points[] = PointFactory::create(['pointType' => Point::ROUTEPOINT]);
 		}
-		
-		$document = new \DOMDocument('1.0', 'UTF-8');
-		
+
+		$document = new DOMDocument('1.0', 'UTF-8');
+
 		// Act
 		$xmlNode = RouteParser::toXML($route, $document);
-		
+
 		// Assert
-		$this->assertInstanceOf(\DOMElement::class, $xmlNode);
+		$this->assertInstanceOf(DOMElement::class, $xmlNode);
 		$this->assertEquals('rte', $xmlNode->nodeName);
-		
+
 		// Check for name element
 		$nameNodes = $xmlNode->getElementsByTagName('name');
 		$this->assertGreaterThan(0, $nameNodes->length);
 		$this->assertEquals('XML Test Route', $nameNodes->item(0)->nodeValue);
-		
+
 		// Check for route point elements
 		$pointNodes = $xmlNode->getElementsByTagName('rtept');
 		$this->assertEquals(3, $pointNodes->length);
@@ -357,12 +360,12 @@ final class RouteTest extends TestCase
 		$route->source = 'Test source';
 		$route->number = 42;
 		$route->type = 'hiking';
-		
-		$document = new \DOMDocument('1.0', 'UTF-8');
-		
+
+		$document = new DOMDocument('1.0', 'UTF-8');
+
 		// Act
 		$xmlNode = RouteParser::toXML($route, $document);
-		
+
 		// Assert
 		$this->assertEquals('Complete Route', $xmlNode->getElementsByTagName('name')->item(0)->nodeValue);
 		$this->assertEquals('Full description', $xmlNode->getElementsByTagName('desc')->item(0)->nodeValue);
@@ -376,13 +379,13 @@ final class RouteTest extends TestCase
 	{
 		// Arrange
 		$route = new Route();
-		$document = new \DOMDocument('1.0', 'UTF-8');
-		
+		$document = new DOMDocument('1.0', 'UTF-8');
+
 		// Act
 		$xmlNode = RouteParser::toXML($route, $document);
-		
+
 		// Assert
-		$this->assertInstanceOf(\DOMElement::class, $xmlNode);
+		$this->assertInstanceOf(DOMElement::class, $xmlNode);
 		$this->assertEquals('rte', $xmlNode->nodeName);
 		$pointNodes = $xmlNode->getElementsByTagName('rtept');
 		$this->assertEquals(0, $pointNodes->length);
@@ -393,15 +396,15 @@ final class RouteTest extends TestCase
 		// Arrange
 		$route = new Route();
 		$route->name = 'Route with Links';
-		
+
 		$link = new Link('https://example.com', 'Example');
 		$route->links[] = $link;
-		
-		$document = new \DOMDocument('1.0', 'UTF-8');
-		
+
+		$document = new DOMDocument('1.0', 'UTF-8');
+
 		// Act
 		$xmlNode = RouteParser::toXML($route, $document);
-		
+
 		// Assert
 		$linkNodes = $xmlNode->getElementsByTagName('link');
 		$this->assertEquals(1, $linkNodes->length);
@@ -411,7 +414,7 @@ final class RouteTest extends TestCase
 	{
 		// Arrange
 		$route = new Route();
-		
+
 		for ($i = 0; $i < 5; $i++) {
 			$point = PointFactory::create([
 				'latitude' => 54.0 + ($i * 0.01),
@@ -420,10 +423,10 @@ final class RouteTest extends TestCase
 			]);
 			$route->points[] = $point;
 		}
-		
+
 		// Act
 		$route->recalculateStats();
-		
+
 		// Assert
 		$this->assertNotNull($route->stats->realDistance);
 		$this->assertGreaterThan(0, $route->stats->realDistance);
@@ -438,10 +441,10 @@ final class RouteTest extends TestCase
 		$route->points[] = PointFactory::create(['latitude' => 54.0, 'longitude' => 9.0]);
 		$route->points[] = PointFactory::create(['latitude' => 54.1, 'longitude' => 9.1]);
 		$route->points[] = PointFactory::create(['latitude' => 54.2, 'longitude' => 9.2]);
-		
+
 		// Act
 		$route->recalculateStats();
-		
+
 		// Assert
 		$this->assertIsArray($route->stats->startedAtCoords);
 		$this->assertIsArray($route->stats->finishedAtCoords);
@@ -454,26 +457,26 @@ final class RouteTest extends TestCase
 		// Arrange
 		$originalSortSetting = \phpGPX\phpGPX::$SORT_BY_TIMESTAMP;
 		\phpGPX\phpGPX::$SORT_BY_TIMESTAMP = true;
-		
+
 		$route = new Route();
-		
+
 		// Add points with timestamps in reverse order
-		$time3 = new \DateTime('2024-01-01 12:00:00');
-		$time2 = new \DateTime('2024-01-01 11:00:00');
-		$time1 = new \DateTime('2024-01-01 10:00:00');
-		
+		$time3 = new DateTime('2024-01-01 12:00:00');
+		$time2 = new DateTime('2024-01-01 11:00:00');
+		$time1 = new DateTime('2024-01-01 10:00:00');
+
 		$route->points[] = PointFactory::create(['time' => $time3, 'latitude' => 54.3]);
 		$route->points[] = PointFactory::create(['time' => $time2, 'latitude' => 54.2]);
 		$route->points[] = PointFactory::create(['time' => $time1, 'latitude' => 54.1]);
-		
+
 		// Act
 		$points = $route->getPoints();
-		
+
 		// Assert
 		$this->assertEquals($time1, $points[0]->time);
 		$this->assertEquals($time2, $points[1]->time);
 		$this->assertEquals($time3, $points[2]->time);
-		
+
 		// Restore original setting
 		\phpGPX\phpGPX::$SORT_BY_TIMESTAMP = $originalSortSetting;
 	}
@@ -483,26 +486,26 @@ final class RouteTest extends TestCase
 		// Arrange
 		$originalSortSetting = \phpGPX\phpGPX::$SORT_BY_TIMESTAMP;
 		\phpGPX\phpGPX::$SORT_BY_TIMESTAMP = false;
-		
+
 		$route = new Route();
-		
+
 		// Add points with timestamps in reverse order
-		$time3 = new \DateTime('2024-01-01 12:00:00');
-		$time2 = new \DateTime('2024-01-01 11:00:00');
-		$time1 = new \DateTime('2024-01-01 10:00:00');
-		
+		$time3 = new DateTime('2024-01-01 12:00:00');
+		$time2 = new DateTime('2024-01-01 11:00:00');
+		$time1 = new DateTime('2024-01-01 10:00:00');
+
 		$route->points[] = PointFactory::create(['time' => $time3, 'latitude' => 54.3]);
 		$route->points[] = PointFactory::create(['time' => $time2, 'latitude' => 54.2]);
 		$route->points[] = PointFactory::create(['time' => $time1, 'latitude' => 54.1]);
-		
+
 		// Act
 		$points = $route->getPoints();
-		
+
 		// Assert - should remain in original order
 		$this->assertEquals($time3, $points[0]->time);
 		$this->assertEquals($time2, $points[1]->time);
 		$this->assertEquals($time1, $points[2]->time);
-		
+
 		// Restore original setting
 		\phpGPX\phpGPX::$SORT_BY_TIMESTAMP = $originalSortSetting;
 	}
@@ -511,15 +514,15 @@ final class RouteTest extends TestCase
 	{
 		// Arrange
 		$route = new Route();
-		
+
 		// Add points with some null elevations
 		$route->points[] = PointFactory::create(['elevation' => 100.0]);
 		$route->points[] = PointFactory::create(['elevation' => null]);
 		$route->points[] = PointFactory::create(['elevation' => 150.0]);
-		
+
 		// Act
 		$route->recalculateStats();
-		
+
 		// Assert - should handle null elevations gracefully
 		$this->assertInstanceOf(Stats::class, $route->stats);
 	}
@@ -536,14 +539,14 @@ final class RouteTest extends TestCase
 		}
 		$route->recalculateStats();
 		$firstDistance = $route->stats->distance;
-		
+
 		// Add more points
 		$route->points[] = PointFactory::create(['latitude' => 55.0, 'longitude' => 10.0]);
 		$route->points[] = PointFactory::create(['latitude' => 55.1, 'longitude' => 10.1]);
-		
+
 		// Act
 		$route->recalculateStats();
-		
+
 		// Assert - distance should be recalculated and different
 		$this->assertNotEquals($firstDistance, $route->stats->distance);
 		$this->assertGreaterThan($firstDistance, $route->stats->distance);
@@ -553,10 +556,10 @@ final class RouteTest extends TestCase
 	{
 		// Arrange
 		$route = new Route();
-		
+
 		// Act
 		$array = $route->toArray();
-		
+
 		// Assert
 		$this->assertIsArray($array);
 		$this->assertEmpty($array['rtep']);
@@ -567,8 +570,8 @@ final class RouteTest extends TestCase
 	{
 		// Arrange
 		$route = new Route();
-		$baseTime = new \DateTime('2024-01-01 10:00:00');
-		
+		$baseTime = new DateTime('2024-01-01 10:00:00');
+
 		for ($i = 0; $i < 10; $i++) {
 			$point = PointFactory::create([
 				'latitude' => 54.0 + ($i * 0.01),
@@ -577,10 +580,10 @@ final class RouteTest extends TestCase
 			]);
 			$route->points[] = $point;
 		}
-		
+
 		// Act
 		$route->recalculateStats();
-		
+
 		// Assert
 		$this->assertNotNull($route->stats->averagePace);
 		$this->assertGreaterThan(0, $route->stats->averagePace);

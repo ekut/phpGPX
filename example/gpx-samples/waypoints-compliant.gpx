@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1" creator="phpGPX Waypoint Sample" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <wpt lat="54.932862108889" lon="9.8606242161401">
+    <ele>42.5</ele>
+    <time>2024-01-15T10:30:00+00:00</time>
+    <name>Sample Waypoint 1</name>
+    <desc>A sample waypoint demonstrating GPX 1.1 compliance</desc>
+  </wpt>
+  <wpt lat="54.942862108889" lon="9.8706242161401">
+    <ele>38.2</ele>
+    <time>2024-01-15T10:35:00+00:00</time>
+    <name>Sample Waypoint 2</name>
+    <desc>Another sample waypoint</desc>
+  </wpt>
+</gpx>

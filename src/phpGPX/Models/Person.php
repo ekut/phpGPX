@@ -31,7 +31,7 @@ class Person implements Summarizable
 	public function __construct(
 		public ?string $name = null,
 		public ?Email $email = null,
-		public array $links = []
+		public array $links = [],
 	) {
 	}
 
@@ -43,7 +43,7 @@ class Person implements Summarizable
 		return [
 			'name' => $this->name !== null ? (string) $this->name : null,
 			'email' => SerializationHelper::serialize($this->email),
-			'links' => SerializationHelper::serialize($this->links)
+			'links' => SerializationHelper::serialize($this->links),
 		];
 	}
 }

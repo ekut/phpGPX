@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1" creator="phpGPX Comprehensive Sample" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata>
+    <name>Comprehensive GPX Sample</name>
+    <desc>A comprehensive GPX file demonstrating all GPX 1.1 features</desc>
+    <author>
+      <name>Sample Author</name>
+      <email id="author" domain="example.com"/>
+    </author>
+    <copyright author="phpGPX Contributors">
+      <year>2024</year>
+      <license>https://opensource.org/licenses/MIT</license>
+    </copyright>
+    <link href="https://github.com/Sibyx/phpGPX">
+      <text>phpGPX Library</text>
+      <type>text/html</type>
+    </link>
+    <time>2024-01-15T10:00:00+00:00</time>
+    <keywords>sample, gpx, compliance, validation</keywords>
+    <bounds minlat="54.9" minlon="9.8" maxlat="55" maxlon="9.9"/>
+  </metadata>
+  <wpt lat="54.95" lon="9.85">
+    <ele>45</ele>
+    <name>Comprehensive Waypoint</name>
+  </wpt>
+  <rte>
+    <name>Comprehensive Route</name>
+    <rtept lat="54.94" lon="9.84"/>
+    <rtept lat="54.95" lon="9.85"/>
+  </rte>
+  <trk>
+    <name>Comprehensive Track</name>
+    <trkseg>
+      <trkpt lat="54.92" lon="9.82"/>
+      <trkpt lat="54.93" lon="9.83"/>
+    </trkseg>
+  </trk>
+</gpx>

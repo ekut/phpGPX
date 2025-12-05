@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace phpGPX\Tests\Support\Factories;
 
+use DateTime;
+use phpGPX\Models\Link;
 use phpGPX\Models\Metadata;
 use phpGPX\Models\Person;
-use phpGPX\Models\Link;
 
 /**
  * Factory for creating Metadata instances for testing.
@@ -24,16 +25,16 @@ class MetadataFactory
 		$metadata = new Metadata();
 		$metadata->name = $overrides['name'] ?? 'Test GPX File';
 		$metadata->description = $overrides['description'] ?? 'Test description';
-		$metadata->time = $overrides['time'] ?? new \DateTime();
-		
+		$metadata->time = $overrides['time'] ?? new DateTime();
+
 		if (isset($overrides['author'])) {
 			$metadata->author = $overrides['author'];
 		}
-		
+
 		if (isset($overrides['links'])) {
 			$metadata->links = $overrides['links'];
 		}
-		
+
 		return $metadata;
 	}
 
@@ -47,7 +48,7 @@ class MetadataFactory
 	{
 		$author = new Person();
 		$author->name = $authorName;
-		
+
 		return self::create(['author' => $author]);
 	}
 
@@ -63,7 +64,7 @@ class MetadataFactory
 		foreach ($linkUrls as $url) {
 			$links[] = new Link($url);
 		}
-		
+
 		return self::create(['links' => $links]);
 	}
 }

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created            16/02/2017 23:08
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
@@ -6,7 +8,9 @@
 
 namespace phpGPX\Parsers;
 
+use DOMDocument;
 use phpGPX\Models\Person;
+use SimpleXMLElement;
 
 /**
  * Class PersonParser
@@ -19,7 +23,7 @@ abstract class PersonParser
 	/**
 	 * @return Person
 	 */
-	public static function parse(\SimpleXMLElement $node)
+	public static function parse(SimpleXMLElement $node)
 	{
 		$name = property_exists($node, 'name') && $node->name !== null ? ((string) $node->name) : null;
 		$email = property_exists($node, 'email') && $node->email !== null ? EmailParser::parse($node->email) : null;
@@ -28,7 +32,7 @@ abstract class PersonParser
 		return new Person($name, $email, $links);
 	}
 
-	public static function toXML(Person $person, \DOMDocument &$document)
+	public static function toXML(Person $person, DOMDocument &$document)
 	{
 		$node =  $document->createElement(self::$tagName);
 
@@ -42,7 +46,7 @@ abstract class PersonParser
 			$node->appendChild($child);
 		}
 
-		# TODO: is_iterable
+		// TODO: is_iterable
 		if (!is_null($person->links)) {
 			foreach ($person->links as $link) {
 				$child = LinkParser::toXML($link, $document);

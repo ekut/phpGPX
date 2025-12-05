@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created            17/02/2017 19:29
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
@@ -6,6 +8,8 @@
 
 namespace phpGPX\Parsers;
 
+use DOMDocument;
+use DOMElement;
 use phpGPX\Models\Segment;
 use phpGPX\phpGPX;
 
@@ -52,9 +56,9 @@ abstract class SegmentParser
 	}
 
 	/**
-  * @return \DOMElement
+  * @return DOMElement
   */
- public static function toXML(Segment $segment, \DOMDocument &$document)
+	public static function toXML(Segment $segment, DOMDocument &$document)
 	{
 		$node = $document->createElement(self::$tagName);
 
@@ -70,9 +74,9 @@ abstract class SegmentParser
 	}
 
 	/**
-  * @return \DOMElement[]
+  * @return DOMElement[]
   */
- public static function toXMLArray(array $segments, \DOMDocument $document)
+	public static function toXMLArray(array $segments, DOMDocument $document)
 	{
 		$result = [];
 

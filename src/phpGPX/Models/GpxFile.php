@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created            17/02/2017 17:46
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
@@ -6,6 +8,8 @@
 
 namespace phpGPX\Models;
 
+use DOMDocument;
+use InvalidArgumentException;
 use phpGPX\Helpers\GpxValidator;
 use phpGPX\Helpers\SerializationHelper;
 use phpGPX\Parsers\ExtensionParser;
@@ -14,6 +18,7 @@ use phpGPX\Parsers\PointParser;
 use phpGPX\Parsers\RouteParser;
 use phpGPX\Parsers\TrackParser;
 use phpGPX\phpGPX;
+use RuntimeException;
 
 /**
  * Class GpxFile
@@ -63,16 +68,15 @@ class GpxFile implements Summarizable
 
 	/**
 	 * Create a new GpxFile instance.
-	 * 
+	 *
 	 * @param string $creator The creator of the GPX file (required by GPX 1.1 schema)
-	 * @throws \InvalidArgumentException If creator is empty or whitespace-only
+	 * @throws InvalidArgumentException If creator is empty or whitespace-only
 	 */
 	public function __construct(string $creator)
 	{
 		GpxValidator::validateNonEmptyString($creator, 'GPX creator');
 		$this->creator = $creator;
 	}
-
 
 	/**
 	 * Serialize object to array
@@ -85,7 +89,7 @@ class GpxFile implements Summarizable
 			'waypoints' => SerializationHelper::serialize($this->waypoints),
 			'routes' => SerializationHelper::serialize($this->routes),
 			'tracks' => SerializationHelper::serialize($this->tracks),
-			'extensions' => SerializationHelper::serialize($this->extensions)
+			'extensions' => SerializationHelper::serialize($this->extensions),
 		]);
 	}
 
@@ -100,11 +104,11 @@ class GpxFile implements Summarizable
 
 	/**
 	 * Create XML representation of GPX file.
-	 * @return \DOMDocument
+	 * @return DOMDocument
 	 */
 	public function toXML()
 	{
-		$document = new \DOMDocument("1.0", 'UTF-8');
+		$document = new DOMDocument("1.0", 'UTF-8');
 
 		$gpx = $document->createElementNS("http://www.topografix.com/GPX/1/1", "gpx");
 		$gpx->setAttribute("version", "1.1");
@@ -135,14 +139,14 @@ class GpxFile implements Summarizable
 		// Namespaces
 		$schemaLocationArray = [
 			'http://www.topografix.com/GPX/1/1',
-			'http://www.topografix.com/GPX/1/1/gpx.xsd'
+			'http://www.topografix.com/GPX/1/1/gpx.xsd',
 		];
 
 		foreach (ExtensionParser::$usedNamespaces as $usedNamespace) {
 			$gpx->setAttributeNS(
 				"http://www.w3.org/2000/xmlns/",
 				sprintf("xmlns:%s", $usedNamespace['prefix']),
-				$usedNamespace['namespace']
+				$usedNamespace['namespace'],
 			);
 
 			$schemaLocationArray[] = $usedNamespace['namespace'];
@@ -152,7 +156,7 @@ class GpxFile implements Summarizable
 		$gpx->setAttributeNS(
 			'http://www.w3.org/2001/XMLSchema-instance',
 			'xsi:schemaLocation',
-			implode(" ", $schemaLocationArray)
+			implode(" ", $schemaLocationArray),
 		);
 
 		$document->appendChild($gpx);
@@ -161,6 +165,7 @@ class GpxFile implements Summarizable
 			$document->formatOutput = true;
 			$document->preserveWhiteSpace = true;
 		}
+
 		return $document;
 	}
 
@@ -180,7 +185,7 @@ class GpxFile implements Summarizable
 				file_put_contents($path, $this->toJSON());
 				break;
 			default:
-				throw new \RuntimeException("Unsupported file format!");
+				throw new RuntimeException("Unsupported file format!");
 		};
 	}
 }

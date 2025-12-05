@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace phpGPX\Helpers;
 
+use DateTime;
+use DateTimeZone;
 use phpGPX\Models\Point;
 
 /**
@@ -17,7 +19,6 @@ use phpGPX\Models\Point;
  */
 class DateTimeHelper
 {
-
 	/**
 	 * Compare two points by their timestamp for sorting.
 	 * Returns negative if point1 < point2, zero if equal, positive if point1 > point2.
@@ -30,12 +31,12 @@ class DateTimeHelper
 	/**
 	 * Format a DateTime object to string.
 	 */
-	public static function formatDateTime(?\DateTime $datetime, string $format = 'c', string $timezone = 'UTC'): ?string
+	public static function formatDateTime(?DateTime $datetime, string $format = 'c', string $timezone = 'UTC'): ?string
 	{
 		$formatted 				= null;
 
-		if ($datetime instanceof \DateTime) {
-			$datetime->setTimezone(new \DateTimeZone($timezone));
+		if ($datetime instanceof DateTime) {
+			$datetime->setTimezone(new DateTimeZone($timezone));
 			$formatted 			= $datetime->format($format);
 		}
 
@@ -45,11 +46,11 @@ class DateTimeHelper
 	/**
 	 * Parse a string value to DateTime object.
 	 */
-	public static function parseDateTime(string $value, string $timezone = 'Europe/London'): \DateTime
+	public static function parseDateTime(string $value, string $timezone = 'Europe/London'): DateTime
 	{
-		$timezone = new \DateTimeZone($timezone);
-		$datetime = new \DateTime($value, $timezone);
-		$datetime->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+		$timezone = new DateTimeZone($timezone);
+		$datetime = new DateTime($value, $timezone);
+		$datetime->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
 		return $datetime;
 	}

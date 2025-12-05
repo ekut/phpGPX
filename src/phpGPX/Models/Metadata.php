@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created            13/09/16 10:22
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
@@ -6,6 +8,7 @@
 
 namespace phpGPX\Models;
 
+use DateTime;
 use phpGPX\Helpers\DateTimeHelper;
 use phpGPX\Helpers\SerializationHelper;
 
@@ -18,7 +21,6 @@ use phpGPX\Helpers\SerializationHelper;
  */
 class Metadata implements Summarizable
 {
-
 	/**
 	 * The name of the GPX file.
 	 * Original GPX 1.1 attribute.
@@ -55,7 +57,7 @@ class Metadata implements Summarizable
 
 	/**
 	 * Date of GPX creation
-	 * @var \DateTime
+	 * @var DateTime
 	 */
 	public $time;
 
@@ -78,11 +80,10 @@ class Metadata implements Summarizable
 	 */
 	public $extensions;
 
-
 	/**
   * Serialize object to array
   */
- public function toArray(): array
+	public function toArray(): array
 	{
 		return [
 			'name' => SerializationHelper::stringOrNull($this->name),
@@ -93,7 +94,7 @@ class Metadata implements Summarizable
 			'time' => DateTimeHelper::formatDateTime($this->time),
 			'keywords' => SerializationHelper::stringOrNull($this->keywords),
 			'bounds' => SerializationHelper::serialize($this->bounds),
-			'extensions' => SerializationHelper::serialize($this->extensions)
+			'extensions' => SerializationHelper::serialize($this->extensions),
 		];
 	}
 }

@@ -15,7 +15,6 @@ namespace phpGPX\Models;
  */
 abstract class Collection implements Summarizable, StatsCalculator
 {
-
 	/**
 	 * GPS name of route / track.
 	 * An original GPX 1.1 attribute.
@@ -69,7 +68,6 @@ abstract class Collection implements Summarizable, StatsCalculator
 	 * Objects contains calculated statistics for collection.
 	 */
 	public ?Stats $stats = null;
-
 
 	/**
 	 * Return all points in collection.

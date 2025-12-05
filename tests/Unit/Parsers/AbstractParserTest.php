@@ -8,13 +8,17 @@ declare(strict_types=1);
 
 namespace phpGPX\Tests\Unit\Parsers;
 
+use DOMDocument;
+use DOMElement;
 use phpGPX\Models\Summarizable;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
+use SimpleXMLElement;
 
 abstract class AbstractParserTest extends TestCase
 {
 	/**
-	 * @var \SimpleXMLElement
+	 * @var SimpleXMLElement
 	 */
 	protected $testXmlFile;
 
@@ -40,8 +44,8 @@ abstract class AbstractParserTest extends TestCase
 	protected $testParserClass;
 
 	protected function setUp(): void
-    {
-		$reflection = new \ReflectionClass($this->testParserClass);
+	{
+		$reflection = new ReflectionClass($this->testParserClass);
 
 		$this->testXmlFile = simplexml_load_file(sprintf("%s/%sTest.xml", __DIR__, $reflection->getShortName()));
 	}
@@ -51,14 +55,14 @@ abstract class AbstractParserTest extends TestCase
 	/**
 	 * Returns output of ::toXML method of tested parser.
 	 * @depends testParse
-	 * @param \DOMDocument $document
-	 * @return \DOMElement
+	 * @param DOMDocument $document
+	 * @return DOMElement
 	 */
-	abstract protected function convertToXML(\DOMDocument $document);
+	abstract protected function convertToXML(DOMDocument $document);
 
-	public function testToXML()
+	public function testToXML(): void
 	{
-		$document = new \DOMDocument("1.0", 'UTF-8');
+		$document = new DOMDocument("1.0", 'UTF-8');
 
 		$root = $document->createElement("document");
 		$root->appendChild($this->convertToXML($document));
@@ -68,13 +72,13 @@ abstract class AbstractParserTest extends TestCase
 		$this->assertXmlStringEqualsXmlString($this->testXmlFile->asXML(), $document->saveXML());
 	}
 
-	public function testToJSON()
+	public function testToJSON(): void
 	{
-		$reflection = new \ReflectionClass($this->testParserClass);
+		$reflection = new ReflectionClass($this->testParserClass);
 
 		$this->assertJsonStringEqualsJsonFile(
 			sprintf("%s/%sTest.json", __DIR__, $reflection->getShortName()),
-			json_encode($this->testModelInstance->toArray())
+			json_encode($this->testModelInstance->toArray()),
 		);
 	}
 }

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created            30/08/16 15:50
  * @author            Jakub Dubec <jakub.dubec@gmail.com>

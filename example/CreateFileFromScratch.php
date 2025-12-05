@@ -1,16 +1,19 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
  */
 
+use phpGPX\Enums\PointType;
+use phpGPX\Models\Extensions;
+use phpGPX\Models\Extensions\TrackPointExtension;
 use phpGPX\Models\GpxFile;
 use phpGPX\Models\Link;
 use phpGPX\Models\Metadata;
 use phpGPX\Models\Point;
 use phpGPX\Models\Segment;
 use phpGPX\Models\Track;
-use phpGPX\Models\Extensions;
-use phpGPX\Models\Extensions\TrackPointExtension;
 
 require_once '../vendor/autoload.php';
 
@@ -20,29 +23,29 @@ $sample_data = [
 		'latitude' => 54.9328621088893,
 		'elevation' => 0,
 		'aTemp' => 22,
-		'time' => new \DateTime("+ 1 MINUTE")
+		'time' => new \DateTime("+ 1 MINUTE"),
 	],
 	[
 		'latitude' => 54.83293237320851,
 		'longitude' => 9.76092208681491,
 		'elevation' => 10.0,
 		'aTemp' => 23,
-		'time' => new \DateTime("+ 2 MINUTE")
+		'time' => new \DateTime("+ 2 MINUTE"),
 	],
 	[
 		'latitude' => 54.73327743521187,
 		'longitude' => 9.66187816543752,
 		'elevation' => 42.42,
 		'aTemp' => 24,
-		'time' => new \DateTime("+ 3 MINUTE")
+		'time' => new \DateTime("+ 3 MINUTE"),
 	],
 	[
 		'latitude' => 54.63342326167919,
 		'longitude' => 9.562439849679859,
 		'elevation' => 12,
 		'aTemp' => 25,
-		'time' => new \DateTime("+ 4 MINUTE")
-	]
+		'time' => new \DateTime("+ 4 MINUTE"),
+	],
 ];
 
 // Creating sample link object for metadata
@@ -79,12 +82,14 @@ $track->source 					= sprintf("MySpecificGarminDevice");
 // Creating Track segment
 $segment 						= new Segment();
 
-
 foreach ($sample_data as $sample_point) {
 	// Creating trackpoint
-	$point 						= new Point(Point::TRACKPOINT);
-	$point->latitude 			= $sample_point['latitude'];
-	$point->longitude 			= $sample_point['longitude'];
+	// Note: latitude and longitude are now required constructor parameters
+	$point 						= new Point(
+		PointType::TRACKPOINT,
+		$sample_point['latitude'],
+		$sample_point['longitude'],
+	);
 	$point->elevation 			= $sample_point['elevation'];
 	$point->time 				= $sample_point['time'];
 
@@ -104,10 +109,13 @@ $track->segments[] 				= $segment;
 $gpx_file->tracks[] 			= $track;
 
 // Create waypoint
-$point 							= new Point(Point::WAYPOINT);
+// Note: latitude and longitude are now required constructor parameters
+$point 							= new Point(
+	PointType::WAYPOINT,
+	$sample_point['latitude'],
+	$sample_point['longitude'],
+);
 $point->name 					= 'Example Waypoint';
-$point->latitude 				= $sample_point['latitude'];
-$point->longitude 				= $sample_point['longitude'];
 $point->elevation 				= $sample_point['elevation'];
 $point->time 					= $sample_point['time'];
 

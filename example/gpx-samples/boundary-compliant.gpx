@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1" creator="phpGPX Boundary Test" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata>
+    <name>Boundary Coordinates Test</name>
+    <bounds minlat="-90" minlon="-180" maxlat="90" maxlon="179.999999"/>
+  </metadata>
+  <wpt lat="-90" lon="0"/>
+  <wpt lat="90" lon="0"/>
+  <wpt lat="0" lon="-180"/>
+  <wpt lat="0" lon="179.999999"/>
+</gpx>

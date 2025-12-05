@@ -13,7 +13,7 @@ class PointFactory
 {
 	/**
 	 * Generate a random valid latitude value.
-	 * 
+	 *
 	 * @return float A latitude value between -90.0 and 90.0 (inclusive)
 	 */
 	public static function randomLatitude(): float
@@ -24,7 +24,7 @@ class PointFactory
 
 	/**
 	 * Generate a random valid longitude value.
-	 * 
+	 *
 	 * @return float A longitude value between -180.0 (inclusive) and 180.0 (exclusive)
 	 */
 	public static function randomLongitude(): float
@@ -44,13 +44,13 @@ class PointFactory
 		$pointType = $overrides['pointType'] ?? Point::TRACKPOINT;
 		$latitude = $overrides['latitude'] ?? 54.9328621088893;
 		$longitude = $overrides['longitude'] ?? 9.860624216140083;
-		
+
 		$point = new Point($pointType, $latitude, $longitude);
 		$point->elevation = $overrides['elevation'] ?? null;
 		$point->time = $overrides['time'] ?? null;
 		$point->name = $overrides['name'] ?? null;
 		$point->description = $overrides['description'] ?? null;
-		
+
 		return $point;
 	}
 
@@ -93,17 +93,17 @@ class PointFactory
 		int $count,
 		float $startLat = 54.0,
 		float $startLon = 9.0,
-		float $increment = 0.01
+		float $increment = 0.01,
 	): array {
 		$points = [];
-		
+
 		for ($i = 0; $i < $count; $i++) {
 			$points[] = self::create([
 				'latitude' => $startLat + ($i * $increment),
 				'longitude' => $startLon + ($i * $increment),
 			]);
 		}
-		
+
 		return $points;
 	}
 }

@@ -21,7 +21,7 @@ final class EnumUsagePropertyTest extends TestCase
 	/**
 	 * **Feature: php-8-4-migration, Property 8: Enum usage consistency**
 	 * **Validates: Requirements 7.3**
-	 * 
+	 *
 	 * For any reference to point types, the code SHALL use enum cases rather than string literals.
 	 */
 	public function test_property_point_constructor_accepts_enum_and_returns_enum(): void
@@ -33,26 +33,28 @@ final class EnumUsagePropertyTest extends TestCase
 					PointType::WAYPOINT,
 					PointType::TRACKPOINT,
 					PointType::ROUTEPOINT,
-				])
+				]),
+				Generators::choose(-90, 90),   // latitude
+				Generators::choose(-180, 179), // longitude (must be < 180)
 			)
 			->withMaxSize(100)
-			->then(function (PointType $pointType) {
-				// Create point with enum
-				$point = new Point($pointType);
-				
+			->then(function (PointType $pointType, int $lat, int $lon): void {
+				// Create point with enum and valid coordinates
+				$point = new Point($pointType, (float)$lat, (float)$lon);
+
 				// Verify getPointType returns the same enum
 				$returnedType = $point->getPointType();
-				
+
 				$this->assertInstanceOf(
 					PointType::class,
 					$returnedType,
-					"getPointType() should return a PointType enum instance"
+					"getPointType() should return a PointType enum instance",
 				);
-				
+
 				$this->assertSame(
 					$pointType,
 					$returnedType,
-					"getPointType() should return the same enum value that was passed to constructor"
+					"getPointType() should return the same enum value that was passed to constructor",
 				);
 			});
 	}
@@ -69,26 +71,28 @@ final class EnumUsagePropertyTest extends TestCase
 					['string' => 'waypoint', 'enum' => PointType::WAYPOINT],
 					['string' => 'track', 'enum' => PointType::TRACKPOINT],
 					['string' => 'route', 'enum' => PointType::ROUTEPOINT],
-				])
+				]),
+				Generators::choose(-90, 90),   // latitude
+				Generators::choose(-180, 179), // longitude (must be < 180)
 			)
 			->withMaxSize(100)
-			->then(function (array $testCase) {
-				// Create point with legacy string
-				$point = new Point($testCase['string']);
-				
+			->then(function (array $testCase, int $lat, int $lon): void {
+				// Create point with legacy string and valid coordinates
+				$point = new Point($testCase['string'], (float)$lat, (float)$lon);
+
 				// Verify getPointType returns enum
 				$returnedType = $point->getPointType();
-				
+
 				$this->assertInstanceOf(
 					PointType::class,
 					$returnedType,
-					"getPointType() should return a PointType enum even when constructed with string"
+					"getPointType() should return a PointType enum even when constructed with string",
 				);
-				
+
 				$this->assertSame(
 					$testCase['enum'],
 					$returnedType,
-					"getPointType() should return the correct enum for the legacy string value"
+					"getPointType() should return the correct enum for the legacy string value",
 				);
 			});
 	}
@@ -101,7 +105,7 @@ final class EnumUsagePropertyTest extends TestCase
 		$this->assertSame('waypoint', PointType::WAYPOINT->value);
 		$this->assertSame('track', PointType::TRACKPOINT->value);
 		$this->assertSame('route', PointType::ROUTEPOINT->value);
-		
+
 		// Verify legacy constants still exist for backward compatibility
 		$this->assertSame('waypoint', Point::WAYPOINT);
 		$this->assertSame('track', Point::TRACKPOINT);

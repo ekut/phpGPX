@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace phpGPX\Tests\Unit\Models;
 
+use DOMDocument;
 use Eris\Generators;
 use Eris\TestTrait;
+use InvalidArgumentException;
 use phpGPX\Models\Bounds;
 use phpGPX\Parsers\BoundsParser;
 use phpGPX\Tests\Support\TestCase;
@@ -17,6 +19,7 @@ use phpGPX\Tests\Support\TestCase;
 final class BoundsTest extends TestCase
 {
 	use TestTrait;
+
 	/**
 	 * Test Bounds creation with valid coordinates.
 	 * Requirements: 2.2
@@ -28,9 +31,9 @@ final class BoundsTest extends TestCase
 			minLatitude: 49.072489,
 			minLongitude: 18.814543,
 			maxLatitude: 49.090543,
-			maxLongitude: 18.886939
+			maxLongitude: 18.886939,
 		);
-		
+
 		// Assert
 		$this->assertInstanceOf(Bounds::class, $bounds);
 		$this->assertEquals(49.072489, $bounds->minLatitude);
@@ -46,16 +49,16 @@ final class BoundsTest extends TestCase
 	public function test_bounds_rejects_invalid_min_latitude_too_low(): void
 	{
 		// Arrange & Act & Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('-90.0');
 		$this->expectExceptionMessage('90.0');
 		$this->expectExceptionMessage('-95.5');
-		
+
 		new Bounds(
 			minLatitude: -95.5,
 			minLongitude: 0.0,
 			maxLatitude: 50.0,
-			maxLongitude: 10.0
+			maxLongitude: 10.0,
 		);
 	}
 
@@ -66,16 +69,16 @@ final class BoundsTest extends TestCase
 	public function test_bounds_rejects_invalid_min_latitude_too_high(): void
 	{
 		// Arrange & Act & Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('-90.0');
 		$this->expectExceptionMessage('90.0');
 		$this->expectExceptionMessage('95.5');
-		
+
 		new Bounds(
 			minLatitude: 95.5,
 			minLongitude: 0.0,
 			maxLatitude: 50.0,
-			maxLongitude: 10.0
+			maxLongitude: 10.0,
 		);
 	}
 
@@ -86,16 +89,16 @@ final class BoundsTest extends TestCase
 	public function test_bounds_rejects_invalid_max_latitude_too_low(): void
 	{
 		// Arrange & Act & Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('-90.0');
 		$this->expectExceptionMessage('90.0');
 		$this->expectExceptionMessage('-95.5');
-		
+
 		new Bounds(
 			minLatitude: 0.0,
 			minLongitude: 0.0,
 			maxLatitude: -95.5,
-			maxLongitude: 10.0
+			maxLongitude: 10.0,
 		);
 	}
 
@@ -106,16 +109,16 @@ final class BoundsTest extends TestCase
 	public function test_bounds_rejects_invalid_max_latitude_too_high(): void
 	{
 		// Arrange & Act & Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('-90.0');
 		$this->expectExceptionMessage('90.0');
 		$this->expectExceptionMessage('95.5');
-		
+
 		new Bounds(
 			minLatitude: 0.0,
 			minLongitude: 0.0,
 			maxLatitude: 95.5,
-			maxLongitude: 10.0
+			maxLongitude: 10.0,
 		);
 	}
 
@@ -126,16 +129,16 @@ final class BoundsTest extends TestCase
 	public function test_bounds_rejects_invalid_min_longitude_too_low(): void
 	{
 		// Arrange & Act & Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('-180.0');
 		$this->expectExceptionMessage('180.0');
 		$this->expectExceptionMessage('-185.5');
-		
+
 		new Bounds(
 			minLatitude: 0.0,
 			minLongitude: -185.5,
 			maxLatitude: 50.0,
-			maxLongitude: 10.0
+			maxLongitude: 10.0,
 		);
 	}
 
@@ -146,16 +149,16 @@ final class BoundsTest extends TestCase
 	public function test_bounds_rejects_invalid_min_longitude_too_high(): void
 	{
 		// Arrange & Act & Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('-180.0');
 		$this->expectExceptionMessage('180.0');
 		$this->expectExceptionMessage('180.0');
-		
+
 		new Bounds(
 			minLatitude: 0.0,
 			minLongitude: 180.0,
 			maxLatitude: 50.0,
-			maxLongitude: 10.0
+			maxLongitude: 10.0,
 		);
 	}
 
@@ -166,16 +169,16 @@ final class BoundsTest extends TestCase
 	public function test_bounds_rejects_invalid_max_longitude_too_low(): void
 	{
 		// Arrange & Act & Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('-180.0');
 		$this->expectExceptionMessage('180.0');
 		$this->expectExceptionMessage('-185.5');
-		
+
 		new Bounds(
 			minLatitude: 0.0,
 			minLongitude: 0.0,
 			maxLatitude: 50.0,
-			maxLongitude: -185.5
+			maxLongitude: -185.5,
 		);
 	}
 
@@ -186,16 +189,16 @@ final class BoundsTest extends TestCase
 	public function test_bounds_rejects_invalid_max_longitude_too_high(): void
 	{
 		// Arrange & Act & Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('-180.0');
 		$this->expectExceptionMessage('180.0');
 		$this->expectExceptionMessage('185.5');
-		
+
 		new Bounds(
 			minLatitude: 0.0,
 			minLongitude: 0.0,
 			maxLatitude: 50.0,
-			maxLongitude: 185.5
+			maxLongitude: 185.5,
 		);
 	}
 
@@ -206,17 +209,17 @@ final class BoundsTest extends TestCase
 	public function test_bounds_rejects_min_latitude_greater_than_max(): void
 	{
 		// Arrange & Act & Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Minimum latitude');
 		$this->expectExceptionMessage('maximum latitude');
 		$this->expectExceptionMessage('50.0');
 		$this->expectExceptionMessage('40.0');
-		
+
 		new Bounds(
 			minLatitude: 50.0,
 			minLongitude: 0.0,
 			maxLatitude: 40.0,
-			maxLongitude: 10.0
+			maxLongitude: 10.0,
 		);
 	}
 
@@ -227,17 +230,17 @@ final class BoundsTest extends TestCase
 	public function test_bounds_rejects_min_longitude_greater_than_max(): void
 	{
 		// Arrange & Act & Assert
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Minimum longitude');
 		$this->expectExceptionMessage('maximum longitude');
 		$this->expectExceptionMessage('20.0');
 		$this->expectExceptionMessage('10.0');
-		
+
 		new Bounds(
 			minLatitude: 0.0,
 			minLongitude: 20.0,
 			maxLatitude: 50.0,
-			maxLongitude: 10.0
+			maxLongitude: 10.0,
 		);
 	}
 
@@ -252,9 +255,9 @@ final class BoundsTest extends TestCase
 			minLatitude: -90.0,
 			minLongitude: -180.0,
 			maxLatitude: 90.0,
-			maxLongitude: 179.999999
+			maxLongitude: 179.999999,
 		);
-		
+
 		// Assert
 		$this->assertEquals(-90.0, $bounds->minLatitude);
 		$this->assertEquals(-180.0, $bounds->minLongitude);
@@ -273,9 +276,9 @@ final class BoundsTest extends TestCase
 			minLatitude: 0.0,
 			minLongitude: 0.0,
 			maxLatitude: 0.0,
-			maxLongitude: 0.0
+			maxLongitude: 0.0,
 		);
-		
+
 		// Assert
 		$this->assertEquals(0.0, $bounds->minLatitude);
 		$this->assertEquals(0.0, $bounds->minLongitude);
@@ -294,9 +297,9 @@ final class BoundsTest extends TestCase
 			minLatitude: -45.5,
 			minLongitude: -120.3,
 			maxLatitude: -30.2,
-			maxLongitude: -100.1
+			maxLongitude: -100.1,
 		);
-		
+
 		// Assert
 		$this->assertEquals(-45.5, $bounds->minLatitude);
 		$this->assertEquals(-120.3, $bounds->minLongitude);
@@ -315,9 +318,9 @@ final class BoundsTest extends TestCase
 			minLatitude: -10.0,
 			minLongitude: -10.0,
 			maxLatitude: 10.0,
-			maxLongitude: 10.0
+			maxLongitude: 10.0,
 		);
-		
+
 		// Assert
 		$this->assertEquals(-10.0, $bounds->minLatitude);
 		$this->assertEquals(-10.0, $bounds->minLongitude);
@@ -336,9 +339,9 @@ final class BoundsTest extends TestCase
 			minLatitude: 50.0,
 			minLongitude: 10.0,
 			maxLatitude: 50.0,
-			maxLongitude: 10.0
+			maxLongitude: 10.0,
 		);
-		
+
 		// Assert
 		$this->assertEquals(50.0, $bounds->minLatitude);
 		$this->assertEquals(10.0, $bounds->minLongitude);
@@ -357,12 +360,12 @@ final class BoundsTest extends TestCase
 			minLatitude: 49.072489,
 			minLongitude: 18.814543,
 			maxLatitude: 49.090543,
-			maxLongitude: 18.886939
+			maxLongitude: 18.886939,
 		);
-		
+
 		// Act
 		$array = $bounds->toArray();
-		
+
 		// Assert
 		$this->assertIsArray($array);
 		$this->assertArrayHasKey('minlat', $array);
@@ -375,8 +378,6 @@ final class BoundsTest extends TestCase
 		$this->assertEquals(18.886939, $array['maxlon']);
 	}
 
-
-
 	/**
 	 * Test Bounds serialization to XML.
 	 * Requirements: 2.5
@@ -388,16 +389,16 @@ final class BoundsTest extends TestCase
 			minLatitude: 49.072489,
 			minLongitude: 18.814543,
 			maxLatitude: 49.090543,
-			maxLongitude: 18.886939
+			maxLongitude: 18.886939,
 		);
-		
-		$document = new \DOMDocument('1.0', 'UTF-8');
-		
+
+		$document = new DOMDocument('1.0', 'UTF-8');
+
 		// Act
 		$xmlElement = BoundsParser::toXML($bounds, $document);
 		$document->appendChild($xmlElement);
 		$xml = $document->saveXML();
-		
+
 		// Assert
 		$this->assertStringContainsString('<bounds', $xml);
 		$this->assertStringContainsString('minlat="49.072489"', $xml);
@@ -405,8 +406,6 @@ final class BoundsTest extends TestCase
 		$this->assertStringContainsString('maxlat="49.090543"', $xml);
 		$this->assertStringContainsString('maxlon="18.886939"', $xml);
 	}
-
-
 
 	/**
 	 * Test Bounds with very precise coordinates.
@@ -419,9 +418,9 @@ final class BoundsTest extends TestCase
 			minLatitude: 49.072489123456,
 			minLongitude: 18.814543987654,
 			maxLatitude: 49.090543456789,
-			maxLongitude: 18.886939321098
+			maxLongitude: 18.886939321098,
 		);
-		
+
 		// Assert
 		$this->assertEquals(49.072489123456, $bounds->minLatitude);
 		$this->assertEquals(18.814543987654, $bounds->minLongitude);
@@ -440,9 +439,9 @@ final class BoundsTest extends TestCase
 			minLatitude: 49.072489,
 			minLongitude: 18.814543,
 			maxLatitude: 49.090543,
-			maxLongitude: 18.886939
+			maxLongitude: 18.886939,
 		);
-		
+
 		// Assert
 		$this->assertInstanceOf(\phpGPX\Models\Summarizable::class, $bounds);
 	}
@@ -458,12 +457,12 @@ final class BoundsTest extends TestCase
 			minLatitude: 49.072489,
 			minLongitude: 18.814543,
 			maxLatitude: 49.090543,
-			maxLongitude: 18.886939
+			maxLongitude: 18.886939,
 		);
-		
+
 		// Act
 		$array = $bounds->toArray();
-		
+
 		// Assert
 		$this->assertCount(4, $array);
 		$this->assertArrayHasKey('minlat', $array);
@@ -483,9 +482,9 @@ final class BoundsTest extends TestCase
 			minLatitude: -90.0,
 			minLongitude: -180.0,
 			maxLatitude: 90.0,
-			maxLongitude: 179.999999
+			maxLongitude: 179.999999,
 		);
-		
+
 		// Assert
 		$this->assertEquals(-90.0, $bounds->minLatitude);
 		$this->assertEquals(-180.0, $bounds->minLongitude);
@@ -504,16 +503,16 @@ final class BoundsTest extends TestCase
 			minLatitude: 49.072489123,
 			minLongitude: 18.814543987,
 			maxLatitude: 49.090543456,
-			maxLongitude: 18.886939321
+			maxLongitude: 18.886939321,
 		);
-		
-		$document = new \DOMDocument('1.0', 'UTF-8');
-		
+
+		$document = new DOMDocument('1.0', 'UTF-8');
+
 		// Act
 		$xmlElement = BoundsParser::toXML($bounds, $document);
 		$document->appendChild($xmlElement);
 		$xml = $document->saveXML();
-		
+
 		// Assert - Check that precision is maintained (at least 6 decimal places)
 		$this->assertStringContainsString('49.072489', $xml);
 		$this->assertStringContainsString('18.814543', $xml);
@@ -523,10 +522,10 @@ final class BoundsTest extends TestCase
 
 	/**
 	 * Property test: Bounds requires all four coordinates.
-	 * 
+	 *
 	 * **Feature: gpx-schema-compliance, Property 5: Bounds requires all four coordinates**
 	 * **Validates: Requirements 2.1, 2.2**
-	 * 
+	 *
 	 * For any valid coordinate values, Bounds construction should succeed when all four
 	 * coordinates are provided and fail with TypeError when any are missing.
 	 */
@@ -538,16 +537,16 @@ final class BoundsTest extends TestCase
 				Generators::choose(-90, 90),   // minlat
 				Generators::choose(-180, 179), // minlon
 				Generators::choose(-90, 90),   // maxlat
-				Generators::choose(-180, 179)  // maxlon
+				Generators::choose(-180, 179),  // maxlon
 			)
 			->withMaxSize(100)
-			->then(function ($minLat, $minLon, $maxLat, $maxLon) {
+			->then(function ($minLat, $minLon, $maxLat, $maxLon): void {
 				// Convert to floats
 				$minLat = (float) $minLat;
 				$minLon = (float) $minLon;
 				$maxLat = (float) $maxLat;
 				$maxLon = (float) $maxLon;
-				
+
 				// Ensure logical consistency
 				if ($minLat > $maxLat) {
 					[$minLat, $maxLat] = [$maxLat, $minLat];
@@ -555,10 +554,10 @@ final class BoundsTest extends TestCase
 				if ($minLon > $maxLon) {
 					[$minLon, $maxLon] = [$maxLon, $minLon];
 				}
-				
+
 				// Should succeed with all four coordinates
 				$bounds = new Bounds($minLat, $minLon, $maxLat, $maxLon);
-				
+
 				$this->assertInstanceOf(Bounds::class, $bounds);
 				$this->assertEquals($minLat, $bounds->minLatitude);
 				$this->assertEquals($minLon, $bounds->minLongitude);
@@ -569,10 +568,10 @@ final class BoundsTest extends TestCase
 
 	/**
 	 * Property test: Bounds logical consistency - latitude.
-	 * 
+	 *
 	 * **Feature: gpx-schema-compliance, Property 7: Bounds logical consistency - latitude**
 	 * **Validates: Requirements 2.6**
-	 * 
+	 *
 	 * For any latitude values where minlat > maxlat, Bounds construction should throw
 	 * InvalidArgumentException with a message indicating the constraint violation.
 	 */
@@ -582,19 +581,19 @@ final class BoundsTest extends TestCase
 			->withRand('mt_rand')
 			->forAll(
 				Generators::choose(-90, 90),  // minlat
-				Generators::choose(-90, 90)   // maxlat
+				Generators::choose(-90, 90),   // maxlat
 			)
 			->withMaxSize(100)
-			->then(function ($minLat, $maxLat) {
+			->then(function ($minLat, $maxLat): void {
 				$minLat = (float) $minLat;
 				$maxLat = (float) $maxLat;
-				
+
 				if ($minLat > $maxLat) {
 					// Should throw exception
 					try {
 						new Bounds($minLat, 0.0, $maxLat, 10.0);
 						$this->fail('Expected InvalidArgumentException for minlat > maxlat');
-					} catch (\InvalidArgumentException $e) {
+					} catch (InvalidArgumentException $e) {
 						$this->assertStringContainsString('Minimum latitude', $e->getMessage());
 						$this->assertStringContainsString('maximum latitude', $e->getMessage());
 						$this->assertStringContainsString((string) $minLat, $e->getMessage());
@@ -611,10 +610,10 @@ final class BoundsTest extends TestCase
 
 	/**
 	 * Property test: Bounds logical consistency - longitude.
-	 * 
+	 *
 	 * **Feature: gpx-schema-compliance, Property 8: Bounds logical consistency - longitude**
 	 * **Validates: Requirements 2.7**
-	 * 
+	 *
 	 * For any longitude values where minlon > maxlon, Bounds construction should throw
 	 * InvalidArgumentException with a message indicating the constraint violation.
 	 */
@@ -624,19 +623,19 @@ final class BoundsTest extends TestCase
 			->withRand('mt_rand')
 			->forAll(
 				Generators::choose(-180, 179),  // minlon
-				Generators::choose(-180, 179)   // maxlon
+				Generators::choose(-180, 179),   // maxlon
 			)
 			->withMaxSize(100)
-			->then(function ($minLon, $maxLon) {
+			->then(function ($minLon, $maxLon): void {
 				$minLon = (float) $minLon;
 				$maxLon = (float) $maxLon;
-				
+
 				if ($minLon > $maxLon) {
 					// Should throw exception
 					try {
 						new Bounds(0.0, $minLon, 50.0, $maxLon);
 						$this->fail('Expected InvalidArgumentException for minlon > maxlon');
-					} catch (\InvalidArgumentException $e) {
+					} catch (InvalidArgumentException $e) {
 						$this->assertStringContainsString('Minimum longitude', $e->getMessage());
 						$this->assertStringContainsString('maximum longitude', $e->getMessage());
 						$this->assertStringContainsString((string) $minLon, $e->getMessage());
@@ -653,10 +652,10 @@ final class BoundsTest extends TestCase
 
 	/**
 	 * Property test: Bounds validation error messages.
-	 * 
+	 *
 	 * **Feature: gpx-schema-compliance, Property 26: Bounds validation error messages**
 	 * **Validates: Requirements 9.3**
-	 * 
+	 *
 	 * For any invalid Bounds construction, the error message should clearly indicate
 	 * which constraint was violated (range or logical consistency).
 	 */
@@ -666,31 +665,31 @@ final class BoundsTest extends TestCase
 			->withRand('mt_rand')
 			->forAll(
 				Generators::choose(-200, 200),  // latitude value
-				Generators::choose(-300, 300)   // longitude value
+				Generators::choose(-300, 300),   // longitude value
 			)
 			->withMaxSize(100)
-			->then(function ($lat, $lon) {
+			->then(function ($lat, $lon): void {
 				$lat = (float) $lat;
 				$lon = (float) $lon;
-				
+
 				// Test invalid latitude
 				if ($lat < -90.0 || $lat > 90.0) {
 					try {
 						new Bounds($lat, 0.0, 50.0, 10.0);
 						$this->fail('Expected InvalidArgumentException for invalid latitude');
-					} catch (\InvalidArgumentException $e) {
+					} catch (InvalidArgumentException $e) {
 						// Should mention the valid range
 						$this->assertStringContainsString('-90.0', $e->getMessage());
 						$this->assertStringContainsString('90.0', $e->getMessage());
 					}
 				}
-				
+
 				// Test invalid longitude
 				if ($lon < -180.0 || $lon >= 180.0) {
 					try {
 						new Bounds(0.0, $lon, 50.0, 10.0);
 						$this->fail('Expected InvalidArgumentException for invalid longitude');
-					} catch (\InvalidArgumentException $e) {
+					} catch (InvalidArgumentException $e) {
 						// Should mention the valid range
 						$this->assertStringContainsString('-180.0', $e->getMessage());
 						$this->assertStringContainsString('180.0', $e->getMessage());

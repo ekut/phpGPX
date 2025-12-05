@@ -1,20 +1,24 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @author miqwit
  */
 
 namespace phpGPX\Tests\Unit\Parsers;
 
+use DateTime;
+use DOMDocument;
+use DOMElement;
 use phpGPX\Enums\PointType;
 use phpGPX\Helpers\DateTimeHelper;
 use phpGPX\Models\Point;
-use phpGPX\Parsers\SegmentParser;
 use phpGPX\Parsers\PointParser;
-use phpGPX\phpGPX;
 
 class PointParserTest extends AbstractParserTest
 {
 	protected $testModelClass = Point::class;
+
 	protected $testParserClass = PointParser::class;
 
 	/**
@@ -22,11 +26,9 @@ class PointParserTest extends AbstractParserTest
 	 */
 	protected $testModelInstance;
 
-	public static function createTestInstance() : Point
+	public static function createTestInstance(): Point
 	{
-		$point = new Point(Point::TRACKPOINT);
-		$point->latitude = 46.571948;
-		$point->longitude = 8.414757;
+		$point = new Point(Point::TRACKPOINT, 46.571948, 8.414757);
 		$point->elevation = 2419;
 		$point->time = DateTimeHelper::parseDateTime("2017-08-13T07:10:41.000Z");
 
@@ -37,11 +39,9 @@ class PointParserTest extends AbstractParserTest
 		float $latitude,
 		float $longitude,
 		float $elevation,
-		string $timeAsString) : Point
-	{
-		$point = new Point(Point::TRACKPOINT);
-		$point->latitude = $latitude;
-		$point->longitude = $longitude;
+		string $timeAsString,
+	): Point {
+		$point = new Point(Point::TRACKPOINT, $latitude, $longitude);
 		$point->elevation = $elevation;
 		$point->time = DateTimeHelper::parseDateTime($timeAsString);
 
@@ -49,13 +49,13 @@ class PointParserTest extends AbstractParserTest
 	}
 
 	protected function setUp(): void
-    {
+	{
 		parent::setUp();
 
 		$this->testModelInstance = self::createTestInstance();
 	}
 
-	public function testParse()
+	public function testParse(): void
 	{
 		$point = PointParser::parse($this->testXmlFile->trkpt);
 
@@ -141,7 +141,7 @@ class PointParserTest extends AbstractParserTest
 		$this->assertEquals(46.571948, $point->latitude);
 		$this->assertEquals(8.414757, $point->longitude);
 		$this->assertEquals(2419.5, $point->elevation);
-		$this->assertInstanceOf(\DateTime::class, $point->time);
+		$this->assertInstanceOf(DateTime::class, $point->time);
 		$this->assertEquals('2017-08-13T07:10:41+00:00', $point->time->format('c'));
 	}
 
@@ -267,7 +267,7 @@ class PointParserTest extends AbstractParserTest
 		$this->assertEquals(35.6762, $point->latitude);
 		$this->assertEquals(139.6503, $point->longitude);
 		$this->assertNull($point->elevation);
-		$this->assertInstanceOf(\DateTime::class, $point->time);
+		$this->assertInstanceOf(DateTime::class, $point->time);
 	}
 
 	/**
@@ -297,9 +297,8 @@ class PointParserTest extends AbstractParserTest
 
 		$point = PointParser::parse($xml);
 
-		$this->assertInstanceOf(Point::class, $point);
-		$this->assertNull($point->latitude); // Missing latitude is null
-		$this->assertEquals(10.0, $point->longitude);
+		// Parser should return null for invalid points (missing required latitude)
+		$this->assertNull($point, "Parser should return null when latitude is missing");
 	}
 
 	/**
@@ -314,9 +313,8 @@ class PointParserTest extends AbstractParserTest
 
 		$point = PointParser::parse($xml);
 
-		$this->assertInstanceOf(Point::class, $point);
-		$this->assertEquals(50.0, $point->latitude);
-		$this->assertNull($point->longitude); // Missing longitude is null
+		// Parser should return null for invalid points (missing required longitude)
+		$this->assertNull($point, "Parser should return null when longitude is missing");
 	}
 
 	/**
@@ -360,14 +358,14 @@ class PointParserTest extends AbstractParserTest
 	public function test_parse_point_with_extreme_coordinates(): void
 	{
 		$xml = simplexml_load_string('<?xml version="1.0"?>
-			<trkpt lat="90.0" lon="180.0"></trkpt>
+			<trkpt lat="90.0" lon="179.9"></trkpt>
 		');
 
 		$point = PointParser::parse($xml);
 
 		$this->assertInstanceOf(Point::class, $point);
 		$this->assertEquals(90.0, $point->latitude);
-		$this->assertEquals(180.0, $point->longitude);
+		$this->assertEquals(179.9, $point->longitude);
 	}
 
 	/**
@@ -391,10 +389,10 @@ class PointParserTest extends AbstractParserTest
 	/**
 	 * Returns output of ::toXML method of tested parser.
 	 * @depends testParse
-	 * @param \DOMDocument $document
-	 * @return \DOMElement
+	 * @param DOMDocument $document
+	 * @return DOMElement
 	 */
-	protected function convertToXML(\DOMDocument $document)
+	protected function convertToXML(DOMDocument $document)
 	{
 		return PointParser::toXML($this->testModelInstance, $document);
 	}

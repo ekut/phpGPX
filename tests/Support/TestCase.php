@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace phpGPX\Tests\Support;
 
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
+use RuntimeException;
 
 /**
  * Base test case class with helper methods for fixtures and assertions.
@@ -27,22 +28,22 @@ abstract class TestCase extends PHPUnitTestCase
 	 *
 	 * @param string $filename The fixture filename
 	 * @return string The contents of the fixture file
-	 * @throws \RuntimeException If the fixture file cannot be read
+	 * @throws RuntimeException If the fixture file cannot be read
 	 */
 	protected function loadFixture(string $filename): string
 	{
 		$path = $this->getFixturePath($filename);
-		
+
 		if (!file_exists($path)) {
-			throw new \RuntimeException("Fixture file not found: {$path}");
+			throw new RuntimeException("Fixture file not found: {$path}");
 		}
-		
+
 		$contents = file_get_contents($path);
-		
+
 		if ($contents === false) {
-			throw new \RuntimeException("Failed to read fixture file: {$path}");
+			throw new RuntimeException("Failed to read fixture file: {$path}");
 		}
-		
+
 		return $contents;
 	}
 
@@ -60,12 +61,12 @@ abstract class TestCase extends PHPUnitTestCase
 		$errors = libxml_get_errors();
 		libxml_clear_errors();
 		libxml_use_internal_errors($previousErrorHandling);
-		
+
 		$this->assertNotFalse($doc, 'XML is not well-formed: ' . $this->formatXmlErrors($errors));
-		
+
 		// Check that it has the GPX root element
 		$this->assertEquals('gpx', $doc->getName(), 'Root element must be <gpx>');
-		
+
 		// Check that it has the required namespace
 		$namespaces = $doc->getNamespaces(true);
 		$this->assertArrayHasKey('', $namespaces, 'GPX namespace is missing');
@@ -85,7 +86,7 @@ abstract class TestCase extends PHPUnitTestCase
 		float $expected,
 		float $actual,
 		float $delta = 0.0001,
-		string $message = ''
+		string $message = '',
 	): void {
 		$this->assertEqualsWithDelta($expected, $actual, $delta, $message);
 	}
@@ -101,16 +102,16 @@ abstract class TestCase extends PHPUnitTestCase
 		if (empty($errors)) {
 			return '';
 		}
-		
+
 		$messages = [];
 		foreach ($errors as $error) {
 			$messages[] = sprintf(
 				'Line %d: %s',
 				$error->line,
-				trim($error->message)
+				trim($error->message),
 			);
 		}
-		
+
 		return implode('; ', $messages);
 	}
 }

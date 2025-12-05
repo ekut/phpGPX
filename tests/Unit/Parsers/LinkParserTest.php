@@ -1,16 +1,21 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
  */
 
 namespace phpGPX\Tests\Unit\Parsers;
 
+use DOMDocument;
+use DOMElement;
 use phpGPX\Models\Link;
 use phpGPX\Parsers\LinkParser;
 
 class LinkParserTest extends AbstractParserTest
 {
 	protected $testModelClass = Link::class;
+
 	protected $testParserClass = LinkParser::class;
 
 	/**
@@ -23,8 +28,7 @@ class LinkParserTest extends AbstractParserTest
 	 */
 	public static function createTestInstance()
 	{
-		$link = new Link();
-		$link->href = "https://jakubdubec.me";
+		$link = new Link("https://jakubdubec.me");
 		$link->text = "Portfolio";
 		$link->type = "text/html";
 
@@ -32,13 +36,13 @@ class LinkParserTest extends AbstractParserTest
 	}
 
 	protected function setUp(): void
-    {
+	{
 		parent::setUp();
 
 		$this->testModelInstance = self::createTestInstance();
 	}
 
-	public function testParse()
+	public function testParse(): void
 	{
 		$links = LinkParser::parse($this->testXmlFile->link);
 
@@ -53,13 +57,12 @@ class LinkParserTest extends AbstractParserTest
 		$this->assertEquals($this->testModelInstance->toArray(), $link->toArray());
 	}
 
-
 	/**
 	 * Returns output of ::toXML method of tested parser.
-	 * @param \DOMDocument $document
-	 * @return \DOMElement
+	 * @param DOMDocument $document
+	 * @return DOMElement
 	 */
-	protected function convertToXML(\DOMDocument $document)
+	protected function convertToXML(DOMDocument $document)
 	{
 		return LinkParser::toXML($this->testModelInstance, $document);
 	}

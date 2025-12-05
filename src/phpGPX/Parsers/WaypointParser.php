@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created            10/02/2017 15:44
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
@@ -6,18 +8,19 @@
 
 namespace phpGPX\Parsers;
 
+use SimpleXMLElement;
+
 /**
  * Class WaypointParser
  * @package phpGPX\Parsers
  */
 abstract class WaypointParser
 {
-
 	/**
-	 * @param \SimpleXMLElement $nodes - a non empty list of wpt elements
+	 * @param SimpleXMLElement $nodes - a non empty list of wpt elements
 	 * @return array
 	 */
-	public static function parse(\SimpleXMLElement $nodes)
+	public static function parse(SimpleXMLElement $nodes)
 	{
 		$points = [];
 

@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace phpGPX\Tests\Unit\Parsers;
 
+use DOMDocument;
+use DOMElement;
 use phpGPX\Models\Extensions;
 use phpGPX\Models\Extensions\TrackPointExtension;
 use phpGPX\Parsers\ExtensionParser;
@@ -9,6 +13,7 @@ use phpGPX\Parsers\ExtensionParser;
 class ExtensionParserTest extends AbstractParserTest
 {
 	protected $testModelClass = Extension::class;
+
 	protected $testParserClass = ExtensionParser::class;
 
 	/**
@@ -34,13 +39,13 @@ class ExtensionParserTest extends AbstractParserTest
 	}
 
 	protected function setUp(): void
-    {
+	{
 		parent::setUp();
 
 		$this->testModelInstance = self::createTestInstance();
 	}
 
-	public function testParse()
+	public function testParse(): void
 	{
 		$extensions = ExtensionParser::parse($this->testXmlFile->extensions);
 
@@ -50,20 +55,19 @@ class ExtensionParserTest extends AbstractParserTest
 		$this->assertEquals($this->testModelInstance->toArray(), $extensions->toArray());
 	}
 
-
 	/**
 	 * Returns output of ::toXML method of tested parser.
-	 * @param \DOMDocument $document
-	 * @return \DOMElement
+	 * @param DOMDocument $document
+	 * @return DOMElement
 	 */
-	protected function convertToXML(\DOMDocument $document)
+	protected function convertToXML(DOMDocument $document)
 	{
 		return ExtensionParser::toXML($this->testModelInstance, $document);
 	}
 
-	public function testToXML()
+	public function testToXML(): void
 	{
-		$document = new \DOMDocument("1.0", 'UTF-8');
+		$document = new DOMDocument("1.0", 'UTF-8');
 
 		$root = $document->createElement("document");
 		$root->appendChild($this->convertToXML($document));
@@ -113,7 +117,7 @@ class ExtensionParserTest extends AbstractParserTest
 		$this->assertInstanceOf(Extensions::class, $extensions);
 		$this->assertNotNull($extensions->trackPointExtension);
 		$this->assertInstanceOf(TrackPointExtension::class, $extensions->trackPointExtension);
-		
+
 		$tpe = $extensions->trackPointExtension;
 		$this->assertEquals(22.5, $tpe->aTemp);
 		$this->assertEquals(18.0, $tpe->wTemp);
@@ -167,7 +171,7 @@ class ExtensionParserTest extends AbstractParserTest
 
 		$this->assertInstanceOf(Extensions::class, $extensions);
 		$this->assertNotNull($extensions->trackPointExtension);
-		
+
 		$tpe = $extensions->trackPointExtension;
 		$this->assertEquals(160.0, $tpe->hr);
 		$this->assertEquals(90.0, $tpe->cad);
@@ -266,7 +270,7 @@ class ExtensionParserTest extends AbstractParserTest
 
 		$this->assertInstanceOf(Extensions::class, $extensions);
 		$this->assertNotNull($extensions->trackPointExtension);
-		
+
 		$tpe = $extensions->trackPointExtension;
 		$this->assertEquals(0.0, $tpe->aTemp);
 		$this->assertEquals(0.0, $tpe->hr);

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created            15/02/2017 18:29
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
@@ -6,9 +8,12 @@
 
 namespace phpGPX\Parsers;
 
+use DOMDocument;
+use DOMElement;
 use phpGPX\Models\Extensions;
 use phpGPX\Models\Extensions\TrackPointExtension;
 use phpGPX\Parsers\Extensions\TrackPointExtensionParser;
+use SimpleXMLElement;
 
 /**
  * Class ExtensionParser
@@ -21,7 +26,7 @@ abstract class ExtensionParser
 	public static $usedNamespaces = [];
 
 	/**
-	 * @param \SimpleXMLElement $nodes
+	 * @param SimpleXMLElement $nodes
 	 * @return Extensions
 	 */
 	public static function parse($nodes)
@@ -49,11 +54,10 @@ abstract class ExtensionParser
 		return $extensions;
 	}
 
-
 	/**
-  * @return \DOMElement|null
+  * @return DOMElement|null
   */
- public static function toXML(Extensions $extensions, \DOMDocument &$document)
+	public static function toXML(Extensions $extensions, DOMDocument &$document)
 	{
 		$node =  $document->createElement(self::$tagName);
 

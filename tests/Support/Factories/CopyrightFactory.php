@@ -22,7 +22,7 @@ class CopyrightFactory
 		$author = $overrides['author'] ?? 'Test Author';
 		$year = $overrides['year'] ?? null;
 		$license = $overrides['license'] ?? null;
-		
+
 		return new Copyright($author, $year, $license);
 	}
 

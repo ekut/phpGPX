@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created            15/02/2017 18:44
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
@@ -6,14 +8,17 @@
 
 namespace phpGPX\Parsers;
 
+use DOMDocument;
+use DOMElement;
 use phpGPX\Models\Link;
+use SimpleXMLElement;
 
 abstract class LinkParser
 {
 	private static $tagName = 'link';
 
 	/**
-	 * @param \SimpleXMLElement[] $nodes
+	 * @param SimpleXMLElement[] $nodes
 	 * @return Link[]
 	 */
 	public static function parse($nodes = [])
@@ -21,25 +26,26 @@ abstract class LinkParser
 		$links = [];
 		foreach ($nodes as $node) {
 			$href = isset($node['href']) ? (string) $node['href'] : '';
-			
+
 			// Skip links without href (required by GPX 1.1 spec)
 			if (trim($href) === '') {
 				continue;
 			}
-			
+
 			$text = property_exists($node, 'text') && $node->text !== null ? (string) $node->text : null;
 			$type = property_exists($node, 'type') && $node->type !== null ? (string) $node->type : null;
 
 			$links[] = new Link($href, $text, $type);
 		}
+
 		return $links;
 	}
 
 	/**
   * @param Link[] $links
-  * @return \DOMElement[]
+  * @return DOMElement[]
   */
- public static function toXMLArray(array $links, \DOMDocument &$document)
+	public static function toXMLArray(array $links, DOMDocument &$document)
 	{
 		$result = [];
 
@@ -51,9 +57,9 @@ abstract class LinkParser
 	}
 
 	/**
-  * @return \DOMElement
+  * @return DOMElement
   */
- public static function toXML(Link $link, \DOMDocument &$document)
+	public static function toXML(Link $link, DOMDocument &$document)
 	{
 		$node =  $document->createElement(self::$tagName);
 

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1" creator="phpGPX Track Sample" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <trk>
+    <name>Sample Track</name>
+    <desc>A sample track demonstrating GPX 1.1 compliance</desc>
+    <trkseg>
+      <trkpt lat="54.932862108889" lon="9.8606242161401">
+        <ele>42.5</ele>
+        <time>2024-01-15T10:00:00+00:00</time>
+      </trkpt>
+      <trkpt lat="54.933862108889" lon="9.8616242161401">
+        <ele>43.2</ele>
+        <time>2024-01-15T10:01:00+00:00</time>
+      </trkpt>
+      <trkpt lat="54.934862108889" lon="9.8626242161401">
+        <ele>44.1</ele>
+        <time>2024-01-15T10:02:00+00:00</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>

@@ -20,25 +20,25 @@ class GpxFileFactory
 	public static function create(array $overrides = []): GpxFile
 	{
 		$creator = $overrides['creator'] ?? 'phpGPX Test Suite';
-		
+
 		$gpxFile = new GpxFile($creator);
-		
+
 		if (isset($overrides['metadata'])) {
 			$gpxFile->metadata = $overrides['metadata'];
 		}
-		
+
 		if (isset($overrides['waypoints'])) {
 			$gpxFile->waypoints = $overrides['waypoints'];
 		}
-		
+
 		if (isset($overrides['routes'])) {
 			$gpxFile->routes = $overrides['routes'];
 		}
-		
+
 		if (isset($overrides['tracks'])) {
 			$gpxFile->tracks = $overrides['tracks'];
 		}
-		
+
 		return $gpxFile;
 	}
 
@@ -50,6 +50,7 @@ class GpxFileFactory
 	public static function createWithMetadata(): GpxFile
 	{
 		$metadata = MetadataFactory::create();
+
 		return self::create(['metadata' => $metadata]);
 	}
 
@@ -62,6 +63,7 @@ class GpxFileFactory
 	public static function createWithWaypoints(int $count = 3): GpxFile
 	{
 		$waypoints = PointFactory::createSequence($count);
+
 		return self::create(['waypoints' => $waypoints]);
 	}
 
@@ -77,6 +79,7 @@ class GpxFileFactory
 		for ($i = 0; $i < $count; $i++) {
 			$tracks[] = TrackFactory::createWithPoints(5);
 		}
+
 		return self::create(['tracks' => $tracks]);
 	}
 }
