@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace phpGPX\Tests\Integration;
 
 use DateTime;
+use phpGPX\Enums\FileFormat;
 use phpGPX\Models\GpxFile;
 use phpGPX\Models\Point;
 use phpGPX\Models\Segment;
@@ -116,7 +117,7 @@ final class StatsCalculationTest extends TestCase
 
 		// Act - Save and reload to trigger stats calculation
 		$tempFile = tempnam(sys_get_temp_dir(), 'gpx_stats_test_');
-		$gpxFile->save($tempFile, phpGPX::XML_FORMAT);
+		$gpxFile->save($tempFile, FileFormat::XML);
 
 		$gpx = new phpGPX();
 		$loadedFile = $gpx->load($tempFile);
@@ -219,7 +220,7 @@ final class StatsCalculationTest extends TestCase
 		// Act - Save and reload with stats calculation
 		phpGPX::$CALCULATE_STATS = true;
 		$tempFile = tempnam(sys_get_temp_dir(), 'gpx_multi_segment_stats_');
-		$gpxFile->save($tempFile, phpGPX::XML_FORMAT);
+		$gpxFile->save($tempFile, FileFormat::XML);
 
 		$gpx = new phpGPX();
 		$loadedFile = $gpx->load($tempFile);
@@ -288,7 +289,7 @@ final class StatsCalculationTest extends TestCase
 		// Act - Save and reload
 		phpGPX::$CALCULATE_STATS = true;
 		$tempFile = tempnam(sys_get_temp_dir(), 'gpx_no_time_stats_');
-		$gpxFile->save($tempFile, phpGPX::XML_FORMAT);
+		$gpxFile->save($tempFile, FileFormat::XML);
 
 		$gpx = new phpGPX();
 		$loadedFile = $gpx->load($tempFile);
@@ -389,7 +390,7 @@ final class StatsCalculationTest extends TestCase
 		// Act - Save and reload
 		phpGPX::$CALCULATE_STATS = true;
 		$tempFile = tempnam(sys_get_temp_dir(), 'gpx_empty_stats_');
-		$gpxFile->save($tempFile, phpGPX::XML_FORMAT);
+		$gpxFile->save($tempFile, FileFormat::XML);
 
 		$gpx = new phpGPX();
 		$loadedFile = $gpx->load($tempFile);
@@ -437,7 +438,7 @@ final class StatsCalculationTest extends TestCase
 		// Act - Save and reload
 		phpGPX::$CALCULATE_STATS = true;
 		$tempFile = tempnam(sys_get_temp_dir(), 'gpx_single_point_stats_');
-		$gpxFile->save($tempFile, phpGPX::XML_FORMAT);
+		$gpxFile->save($tempFile, FileFormat::XML);
 
 		$gpx = new phpGPX();
 		$loadedFile = $gpx->load($tempFile);

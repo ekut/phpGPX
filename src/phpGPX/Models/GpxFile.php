@@ -10,6 +10,7 @@ namespace phpGPX\Models;
 
 use DOMDocument;
 use InvalidArgumentException;
+use phpGPX\Enums\FileFormat;
 use phpGPX\Helpers\GpxValidator;
 use phpGPX\Helpers\SerializationHelper;
 use phpGPX\Parsers\ExtensionParser;
@@ -18,7 +19,6 @@ use phpGPX\Parsers\PointParser;
 use phpGPX\Parsers\RouteParser;
 use phpGPX\Parsers\TrackParser;
 use phpGPX\phpGPX;
-use RuntimeException;
 
 /**
  * Class GpxFile
@@ -172,20 +172,13 @@ class GpxFile implements Summarizable
 	/**
 	 * Save data to file according to selected format.
 	 * @param string $path
-	 * @param string $format
+	 * @param FileFormat $format
 	 */
-	public function save($path, $format): void
+	public function save(string $path, FileFormat $format): void
 	{
-		switch ($format) {
-			case phpGPX::XML_FORMAT:
-				$document = $this->toXML();
-				$document->save($path);
-				break;
-			case phpGPX::JSON_FORMAT:
-				file_put_contents($path, $this->toJSON());
-				break;
-			default:
-				throw new RuntimeException("Unsupported file format!");
+		match ($format) {
+			FileFormat::XML => $this->toXML()->save($path),
+			FileFormat::JSON => file_put_contents($path, $this->toJSON()),
 		};
 	}
 }

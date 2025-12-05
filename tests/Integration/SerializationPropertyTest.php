@@ -6,6 +6,7 @@ namespace phpGPX\Tests\Integration;
 
 use Eris\Generators;
 use Eris\TestTrait;
+use phpGPX\Enums\FileFormat;
 use phpGPX\Enums\PointType;
 use phpGPX\Models\Bounds;
 use phpGPX\Models\Copyright;
@@ -65,7 +66,7 @@ final class SerializationPropertyTest extends TestCase
 
 				// Serialize to XML
 				$tempFile = tempnam(sys_get_temp_dir(), 'gpx_prop_test_');
-				$gpxFile->save($tempFile, phpGPX::XML_FORMAT);
+				$gpxFile->save($tempFile, FileFormat::XML);
 
 				// Read and parse XML
 				$xmlContent = file_get_contents($tempFile);
@@ -160,7 +161,7 @@ final class SerializationPropertyTest extends TestCase
 
 				// Serialize to XML
 				$tempFile = tempnam(sys_get_temp_dir(), 'gpx_prop_test_');
-				$gpxFile->save($tempFile, phpGPX::XML_FORMAT);
+				$gpxFile->save($tempFile, FileFormat::XML);
 
 				// Read and parse XML
 				$xmlContent = file_get_contents($tempFile);
@@ -248,7 +249,7 @@ final class SerializationPropertyTest extends TestCase
 
 				// Serialize to XML
 				$tempFile = tempnam(sys_get_temp_dir(), 'gpx_prop_test_');
-				$gpxFile->save($tempFile, phpGPX::XML_FORMAT);
+				$gpxFile->save($tempFile, FileFormat::XML);
 
 				// Read and parse XML
 				$xmlContent = file_get_contents($tempFile);
@@ -309,7 +310,7 @@ final class SerializationPropertyTest extends TestCase
 
 				// Serialize to XML
 				$tempFile = tempnam(sys_get_temp_dir(), 'gpx_prop_test_');
-				$gpxFile->save($tempFile, phpGPX::XML_FORMAT);
+				$gpxFile->save($tempFile, FileFormat::XML);
 
 				// Read and parse XML
 				$xmlContent = file_get_contents($tempFile);
@@ -374,7 +375,7 @@ final class SerializationPropertyTest extends TestCase
 
 				// Serialize to XML
 				$tempFile = tempnam(sys_get_temp_dir(), 'gpx_prop_test_');
-				$gpxFile->save($tempFile, phpGPX::XML_FORMAT);
+				$gpxFile->save($tempFile, FileFormat::XML);
 
 				// Read and parse XML
 				$xmlContent = file_get_contents($tempFile);
@@ -438,7 +439,7 @@ final class SerializationPropertyTest extends TestCase
 
 				// Serialize to XML
 				$tempFile = tempnam(sys_get_temp_dir(), 'gpx_prop_test_');
-				$gpxFile->save($tempFile, phpGPX::XML_FORMAT);
+				$gpxFile->save($tempFile, FileFormat::XML);
 
 				// Read and parse XML
 				$xmlContent = file_get_contents($tempFile);
@@ -485,7 +486,7 @@ final class SerializationPropertyTest extends TestCase
 
 				// Serialize to XML
 				$tempFile = tempnam(sys_get_temp_dir(), 'gpx_prop_test_');
-				$gpxFile->save($tempFile, phpGPX::XML_FORMAT);
+				$gpxFile->save($tempFile, FileFormat::XML);
 
 				// Read and parse XML
 				$xmlContent = file_get_contents($tempFile);

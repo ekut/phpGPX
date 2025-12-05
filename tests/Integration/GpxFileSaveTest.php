@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace phpGPX\Tests\Integration;
 
 use DateTime;
+use phpGPX\Enums\FileFormat;
 use phpGPX\Models\GpxFile;
 use phpGPX\Models\Metadata;
 use phpGPX\Models\Point;
@@ -65,7 +66,7 @@ final class GpxFileSaveTest extends TestCase
 
 		// Act - Save to temporary file
 		$tempFile = tempnam(sys_get_temp_dir(), 'gpx_test_');
-		$gpxFile->save($tempFile, phpGPX::XML_FORMAT);
+		$gpxFile->save($tempFile, FileFormat::XML);
 
 		// Assert - File exists and contains valid XML
 		$this->assertFileExists($tempFile, 'Saved GPX file should exist');
@@ -100,7 +101,7 @@ final class GpxFileSaveTest extends TestCase
 
 		// Act - Save to temporary file
 		$tempFile = tempnam(sys_get_temp_dir(), 'gpx_format_test_');
-		$gpxFile->save($tempFile, phpGPX::XML_FORMAT);
+		$gpxFile->save($tempFile, FileFormat::XML);
 
 		// Assert - Load and validate XML structure
 		$xmlContent = file_get_contents($tempFile);
@@ -168,7 +169,7 @@ final class GpxFileSaveTest extends TestCase
 
 		// Act - Save to temporary file
 		$tempFile = tempnam(sys_get_temp_dir(), 'gpx_parse_test_');
-		$gpxFile->save($tempFile, phpGPX::XML_FORMAT);
+		$gpxFile->save($tempFile, FileFormat::XML);
 
 		// Assert - Parse the saved file using phpGPX (simulating external parser)
 		$gpx = new phpGPX();
@@ -236,7 +237,7 @@ final class GpxFileSaveTest extends TestCase
 
 		// Act - Save and reload
 		$tempFile = tempnam(sys_get_temp_dir(), 'gpx_route_test_');
-		$gpxFile->save($tempFile, phpGPX::XML_FORMAT);
+		$gpxFile->save($tempFile, FileFormat::XML);
 
 		$gpx = new phpGPX();
 		$parsedFile = $gpx->load($tempFile);
@@ -287,7 +288,7 @@ final class GpxFileSaveTest extends TestCase
 
 		// Act - Save and reload
 		$tempFile = tempnam(sys_get_temp_dir(), 'gpx_complete_test_');
-		$gpxFile->save($tempFile, phpGPX::XML_FORMAT);
+		$gpxFile->save($tempFile, FileFormat::XML);
 
 		$gpx = new phpGPX();
 		$parsedFile = $gpx->load($tempFile);
@@ -321,7 +322,7 @@ final class GpxFileSaveTest extends TestCase
 
 		// Act - Save
 		$tempFile = tempnam(sys_get_temp_dir(), 'gpx_minimal_test_');
-		$gpxFile->save($tempFile, phpGPX::XML_FORMAT);
+		$gpxFile->save($tempFile, FileFormat::XML);
 
 		// Assert - File is valid
 		$xmlContent = file_get_contents($tempFile);
@@ -353,7 +354,7 @@ final class GpxFileSaveTest extends TestCase
 
 		// Act - Save to JSON
 		$tempFile = tempnam(sys_get_temp_dir(), 'gpx_json_test_');
-		$gpxFile->save($tempFile, phpGPX::JSON_FORMAT);
+		$gpxFile->save($tempFile, FileFormat::JSON);
 
 		// Assert - File exists and contains valid JSON
 		$this->assertFileExists($tempFile);
@@ -393,7 +394,7 @@ final class GpxFileSaveTest extends TestCase
 
 		// Act
 		$tempFile = tempnam(sys_get_temp_dir(), 'gpx_pretty_test_');
-		$gpxFile->save($tempFile, phpGPX::XML_FORMAT);
+		$gpxFile->save($tempFile, FileFormat::XML);
 
 		// Assert - XML should be formatted with newlines and indentation
 		$xmlContent = file_get_contents($tempFile);
@@ -434,7 +435,7 @@ final class GpxFileSaveTest extends TestCase
 
 		// Act - Save and reload
 		$tempFile = tempnam(sys_get_temp_dir(), 'gpx_precision_test_');
-		$gpxFile->save($tempFile, phpGPX::XML_FORMAT);
+		$gpxFile->save($tempFile, FileFormat::XML);
 
 		$gpx = new phpGPX();
 		$parsedFile = $gpx->load($tempFile);

@@ -8,6 +8,7 @@ use DOMDocument;
 use Eris\Generators;
 use Eris\TestTrait;
 use InvalidArgumentException;
+use phpGPX\Enums\FileFormat;
 use phpGPX\Models\GpxFile;
 use phpGPX\Models\Metadata;
 use phpGPX\Models\Point;
@@ -17,7 +18,6 @@ use phpGPX\Tests\Support\Factories\MetadataFactory;
 use phpGPX\Tests\Support\Factories\PointFactory;
 use phpGPX\Tests\Support\Factories\TrackFactory;
 use phpGPX\Tests\Support\TestCase;
-use RuntimeException;
 use TypeError;
 
 /**
@@ -448,7 +448,7 @@ final class GpxFileTest extends TestCase
 		$tempFile = sys_get_temp_dir() . '/test_gpx_' . uniqid() . '.gpx';
 
 		// Act
-		$gpxFile->save($tempFile, phpGPX::XML_FORMAT);
+		$gpxFile->save($tempFile, FileFormat::XML);
 
 		// Assert
 		$this->assertFileExists($tempFile);
@@ -470,7 +470,7 @@ final class GpxFileTest extends TestCase
 		$tempFile = sys_get_temp_dir() . '/test_gpx_' . uniqid() . '.json';
 
 		// Act
-		$gpxFile->save($tempFile, phpGPX::JSON_FORMAT);
+		$gpxFile->save($tempFile, FileFormat::JSON);
 
 		// Assert
 		$this->assertFileExists($tempFile);
@@ -482,20 +482,6 @@ final class GpxFileTest extends TestCase
 
 		// Cleanup
 		unlink($tempFile);
-	}
-
-	public function test_gpx_file_save_throws_exception_for_unsupported_format(): void
-	{
-		// Arrange
-		$gpxFile = new GpxFile('Test Creator');
-		$tempFile = sys_get_temp_dir() . '/test_gpx_' . uniqid() . '.txt';
-
-		// Assert
-		$this->expectException(RuntimeException::class);
-		$this->expectExceptionMessage('Unsupported file format!');
-
-		// Act
-		$gpxFile->save($tempFile, 'INVALID_FORMAT');
 	}
 
 	/**

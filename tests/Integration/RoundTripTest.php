@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace phpGPX\Tests\Integration;
 
+use phpGPX\Enums\FileFormat;
 use phpGPX\Models\GpxFile;
 use phpGPX\Models\Point;
 use phpGPX\phpGPX;
@@ -35,7 +36,7 @@ final class RoundTripTest extends TestCase
 
 		// Save to temporary file
 		$tempFile = tempnam(sys_get_temp_dir(), 'gpx_roundtrip_test_');
-		$loadedFile->save($tempFile, phpGPX::XML_FORMAT);
+		$loadedFile->save($tempFile, FileFormat::XML);
 
 		// Load the saved file
 		$reloadedFile = $gpx->load($tempFile);
@@ -172,7 +173,7 @@ final class RoundTripTest extends TestCase
 
 		// Save to temporary file
 		$tempFile = tempnam(sys_get_temp_dir(), 'gpx_modify_test_');
-		$loadedFile->save($tempFile, phpGPX::XML_FORMAT);
+		$loadedFile->save($tempFile, FileFormat::XML);
 
 		// Load the saved file
 		$reloadedFile = $gpx->load($tempFile);
@@ -210,7 +211,7 @@ final class RoundTripTest extends TestCase
 		$loadedFile = $gpx->load($originalFilePath);
 
 		$tempFile = tempnam(sys_get_temp_dir(), 'gpx_extensions_test_');
-		$loadedFile->save($tempFile, phpGPX::XML_FORMAT);
+		$loadedFile->save($tempFile, FileFormat::XML);
 
 		$reloadedFile = $gpx->load($tempFile);
 
@@ -258,7 +259,7 @@ final class RoundTripTest extends TestCase
 
 		// Act - Save and reload
 		$tempFile = tempnam(sys_get_temp_dir(), 'gpx_multi_track_test_');
-		$gpxFile->save($tempFile, phpGPX::XML_FORMAT);
+		$gpxFile->save($tempFile, FileFormat::XML);
 
 		$gpx = new phpGPX();
 		$reloadedFile = $gpx->load($tempFile);
@@ -312,7 +313,7 @@ final class RoundTripTest extends TestCase
 
 		// Act - Save and reload
 		$tempFile = tempnam(sys_get_temp_dir(), 'gpx_precision_test_');
-		$gpxFile->save($tempFile, phpGPX::XML_FORMAT);
+		$gpxFile->save($tempFile, FileFormat::XML);
 
 		$gpx = new phpGPX();
 		$reloadedFile = $gpx->load($tempFile);
@@ -342,7 +343,7 @@ final class RoundTripTest extends TestCase
 		$loadedFile = $gpx->load($originalFilePath);
 
 		$tempFile = tempnam(sys_get_temp_dir(), 'gpx_metadata_test_');
-		$loadedFile->save($tempFile, phpGPX::XML_FORMAT);
+		$loadedFile->save($tempFile, FileFormat::XML);
 
 		$reloadedFile = $gpx->load($tempFile);
 

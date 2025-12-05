@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace phpGPX;
 
+use phpGPX\Enums\FileFormat;
 use phpGPX\Models\GpxFile;
 use phpGPX\Parsers\MetadataParser;
 use phpGPX\Parsers\RouteParser;
@@ -20,7 +21,14 @@ use phpGPX\Parsers\WaypointParser;
  */
 class phpGPX
 {
+	/**
+	 * @deprecated Use FileFormat::JSON instead
+	 */
 	public const JSON_FORMAT = 'json';
+	
+	/**
+	 * @deprecated Use FileFormat::XML instead
+	 */
 	public const XML_FORMAT = 'xml';
 
 	public const PACKAGE_NAME = 'phpGPX';
