@@ -110,17 +110,17 @@ abstract class PointParser
 		foreach (self::$attributeMapper as $key => $attribute) {
 			switch ($key) {
 				case 'time':
-					$point->time = isset($node->time) ? DateTimeHelper::parseDateTime($node->time) : null;
+					$point->time = property_exists($node, 'time') && $node->time !== null ? DateTimeHelper::parseDateTime($node->time) : null;
 					break;
 				case 'extensions':
-					$point->extensions = isset($node->extensions) ? ExtensionParser::parse($node->extensions) : null;
+					$point->extensions = property_exists($node, 'extensions') && $node->extensions !== null ? ExtensionParser::parse($node->extensions) : null;
 					break;
 				case 'link':
-					$point->links = isset($node->link) ? LinkParser::parse($node->link) : [];
+					$point->links = property_exists($node, 'link') && $node->link !== null ? LinkParser::parse($node->link) : [];
 					break;
 				default:
 					if (!in_array($attribute['type'], ['object', 'array'])) {
-						$point->{$attribute['name']} = isset($node->$key) ? $node->$key : null;
+						$point->{$attribute['name']} = $node->$key ?? null;
 						if (!is_null($point->{$attribute['name']})) {
 							settype($point->{$attribute['name']}, $attribute['type']);
 						}
@@ -133,11 +133,9 @@ abstract class PointParser
 	}
 
 	/**
-	 * @param Point $point
-	 * @param \DOMDocument $document
-	 * @return \DOMElement
-	 */
-	public static function toXML(Point $point, \DOMDocument &$document)
+  * @return \DOMElement
+  */
+ public static function toXML(Point $point, \DOMDocument &$document)
 	{
 		$node = $document->createElement(array_search($point->getPointType(), self::$typeMapper));
 
@@ -161,7 +159,6 @@ abstract class PointParser
 						$elementText = $document->createTextNode((string) $point->{$attribute['name']});
 						$child->appendChild($elementText);
 						break;
-						break;
 				}
 
 				if (is_array($child)) {
@@ -178,11 +175,9 @@ abstract class PointParser
 	}
 
 	/**
-	 * @param array $points
-	 * @param \DOMDocument $document
-	 * @return \DOMElement[]
-	 */
-	public static function toXMLArray(array $points, \DOMDocument &$document)
+  * @return \DOMElement[]
+  */
+ public static function toXMLArray(array $points, \DOMDocument &$document)
 	{
 		$result = [];
 

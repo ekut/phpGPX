@@ -106,10 +106,9 @@ class TrackPointExtension extends AbstractExtension
 	}
 
 	/**
-	 * Serialize object to array
-	 * @return array
-	 */
-	public function toArray()
+  * Serialize object to array
+  */
+ public function toArray(): array
 	{
 		return [
 			'aTemp' => SerializationHelper::floatOrNull($this->aTemp),

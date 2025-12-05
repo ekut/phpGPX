@@ -52,11 +52,9 @@ abstract class SegmentParser
 	}
 
 	/**
-	 * @param Segment $segment
-	 * @param \DOMDocument $document
-	 * @return \DOMElement
-	 */
-	public static function toXML(Segment $segment, \DOMDocument &$document)
+  * @return \DOMElement
+  */
+ public static function toXML(Segment $segment, \DOMDocument &$document)
 	{
 		$node = $document->createElement(self::$tagName);
 
@@ -72,11 +70,9 @@ abstract class SegmentParser
 	}
 
 	/**
-	 * @param array $segments
-	 * @param \DOMDocument $document
-	 * @return \DOMElement[]
-	 */
-	public static function toXMLArray(array $segments, \DOMDocument $document)
+  * @return \DOMElement[]
+  */
+ public static function toXMLArray(array $segments, \DOMDocument $document)
 	{
 		$result = [];
 

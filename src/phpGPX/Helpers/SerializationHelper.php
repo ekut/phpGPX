@@ -61,9 +61,8 @@ abstract class SerializationHelper
 			}
 			$object = null;
 			return $result;
-		} else {
-			return $object != null ? $object->toArray() : null;
 		}
+  return $object != null ? $object->toArray() : null;
 	}
 
 	public static function filterNotNull(array $array)
@@ -76,10 +75,8 @@ abstract class SerializationHelper
 			$item = self::filterNotNull($item);
 		}
 
-		$array = array_filter($array, function ($item) {
+		return array_filter($array, function ($item): bool {
 			return $item !== null && (!is_array($item) || count($item));
 		});
-
-		return $array;
 	}
 }

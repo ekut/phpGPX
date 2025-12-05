@@ -25,19 +25,19 @@ class GpxFile implements Summarizable
 	 * A list of waypoints.
 	 * @var Point[]
 	 */
-	public $waypoints;
+	public $waypoints = [];
 
 	/**
 	 * A list of routes.
 	 * @var Route[]
 	 */
-	public $routes;
+	public $routes = [];
 
 	/**
 	 * A list of tracks.
 	 * @var Track[]
 	 */
-	public $tracks;
+	public $tracks = [];
 
 	/**
 	 * Metadata about the file.
@@ -56,19 +56,6 @@ class GpxFile implements Summarizable
 	 * @var string|null
 	 */
 	public $creator;
-
-	/**
-	 * GpxFile constructor.
-	 */
-	public function __construct()
-	{
-		$this->waypoints = [];
-		$this->routes = [];
-		$this->tracks = [];
-		$this->metadata = null;
-		$this->extensions = null;
-		$this->creator = null;
-	}
 
 
 	/**
@@ -106,7 +93,7 @@ class GpxFile implements Summarizable
 
 		$gpx = $document->createElementNS("http://www.topografix.com/GPX/1/1", "gpx");
 		$gpx->setAttribute("version", "1.1");
-		$gpx->setAttribute("creator", $this->creator ? $this->creator : phpGPX::getSignature());
+		$gpx->setAttribute("creator", $this->creator ?: phpGPX::getSignature());
 
 		ExtensionParser::$usedNamespaces = [];
 
@@ -167,7 +154,7 @@ class GpxFile implements Summarizable
 	 * @param string $path
 	 * @param string $format
 	 */
-	public function save($path, $format)
+	public function save($path, $format): void
 	{
 		switch ($format) {
 			case phpGPX::XML_FORMAT:

@@ -17,10 +17,9 @@ abstract class CopyrightParser
 	public static $tagName = 'copyright';
 
 	/**
-	 * @param \SimpleXMLElement $node
-	 * @return Copyright|null
-	 */
-	public static function parse(\SimpleXMLElement $node)
+  * @return Copyright|null
+  */
+ public static function parse(\SimpleXMLElement $node)
 	{
 		if ($node->getName() != self::$tagName) {
 			return null;
@@ -29,18 +28,16 @@ abstract class CopyrightParser
 		$copyright = new Copyright();
 
 		$copyright->author = isset($node['author']) ? (string) $node['author'] : null;
-		$copyright->year = isset($node->year) ? (string) $node->year : null;
-		$copyright->license = isset($node->license) ? (string) $node->license : null;
+		$copyright->year = property_exists($node, 'year') && $node->year !== null ? (string) $node->year : null;
+		$copyright->license = property_exists($node, 'license') && $node->license !== null ? (string) $node->license : null;
 
 		return $copyright;
 	}
 
 	/**
-	 * @param Copyright $copyright
-	 * @param \DOMDocument $document
-	 * @return \DOMElement
-	 */
-	public static function toXML(Copyright $copyright, \DOMDocument &$document)
+  * @return \DOMElement
+  */
+ public static function toXML(Copyright $copyright, \DOMDocument &$document)
 	{
 		$node = $document->createElement(self::$tagName);
 

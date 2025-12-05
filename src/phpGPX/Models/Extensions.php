@@ -29,10 +29,9 @@ class Extensions implements Summarizable
 	public $unsupported = [];
 
 	/**
-	 * Serialize object to array
-	 * @return array
-	 */
-	public function toArray()
+  * Serialize object to array
+  */
+ public function toArray(): array
 	{
 		return [
 				'trackpoint' => SerializationHelper::serialize($this->trackPointExtension),

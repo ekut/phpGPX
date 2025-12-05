@@ -83,7 +83,7 @@ class phpGPX
 	 * the maximum elevation difference between considered points in meters
 	 * @var int|null
 	 */
-	public static $ELEVATION_SMOOTHING_SPIKES_THRESHOLD = null;
+	public static $ELEVATION_SMOOTHING_SPIKES_THRESHOLD;
 
 	/**
 	 * Apply distance calculation smoothing? If true, the threshold in
@@ -112,11 +112,10 @@ class phpGPX
 	}
 
 	/**
-	 * Parse GPX data string.
-	 * @param $xml
-	 * @return GpxFile
-	 */
-	public static function parse($xml)
+  * Parse GPX data string.
+  * @param $xml
+  */
+ public static function parse($xml): \phpGPX\Models\GpxFile
 	{
 		$xml = simplexml_load_string($xml);
 
@@ -141,10 +140,9 @@ class phpGPX
 	}
 
 	/**
-	 * Create library signature from name and version.
-	 * @return string
-	 */
-	public static function getSignature()
+  * Create library signature from name and version.
+  */
+ public static function getSignature(): string
 	{
 		return sprintf("%s/%s", self::PACKAGE_NAME, self::VERSION);
 	}

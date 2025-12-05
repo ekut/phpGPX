@@ -57,10 +57,9 @@ abstract class TrackParser
 	];
 
 	/**
-	 * @param \SimpleXMLElement $nodes
-	 * @return Track[]
-	 */
-	public static function parse(\SimpleXMLElement $nodes)
+  * @return Track[]
+  */
+ public static function parse(\SimpleXMLElement $nodes)
 	{
 		$tracks = [];
 
@@ -70,17 +69,17 @@ abstract class TrackParser
 			foreach (self::$attributeMapper as $key => $attribute) {
 				switch ($key) {
 					case 'link':
-						$track->links = isset($node->link) ? LinkParser::parse($node->link) : [];
+						$track->links = property_exists($node, 'link') && $node->link !== null ? LinkParser::parse($node->link) : [];
 						break;
 					case 'extensions':
-						$track->extensions = isset($node->extensions) ? ExtensionParser::parse($node->extensions) : null;
+						$track->extensions = property_exists($node, 'extensions') && $node->extensions !== null ? ExtensionParser::parse($node->extensions) : null;
 						break;
 					case 'trkseg':
-						$track->segments = isset($node->trkseg) ? SegmentParser::parse($node->trkseg) : [];
+						$track->segments = property_exists($node, 'trkseg') && $node->trkseg !== null ? SegmentParser::parse($node->trkseg) : [];
 						break;
 					default:
 						if (!in_array($attribute['type'], ['object', 'array'])) {
-							$track->{$attribute['name']} = isset($node->$key) ? $node->$key : null;
+							$track->{$attribute['name']} = $node->$key ?? null;
 							if (!is_null($track->{$attribute['name']})) {
 								settype($track->{$attribute['name']}, $attribute['type']);
 							}
@@ -100,11 +99,9 @@ abstract class TrackParser
 	}
 
 	/**
-	 * @param Track $track
-	 * @param \DOMDocument $document
-	 * @return \DOMElement
-	 */
-	public static function toXML(Track $track, \DOMDocument &$document)
+  * @return \DOMElement
+  */
+ public static function toXML(Track $track, \DOMDocument &$document)
 	{
 		$node = $document->createElement(self::$tagName);
 
@@ -141,11 +138,9 @@ abstract class TrackParser
 	}
 
 	/**
-	 * @param array $tracks
-	 * @param \DOMDocument $document
-	 * @return \DOMElement[]
-	 */
-	public static function toXMLArray(array $tracks, \DOMDocument &$document)
+  * @return \DOMElement[]
+  */
+ public static function toXMLArray(array $tracks, \DOMDocument &$document)
 	{
 		$result = [];
 

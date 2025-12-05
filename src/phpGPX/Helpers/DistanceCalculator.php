@@ -43,7 +43,7 @@ class DistanceCalculator
 	 * @param Point[]|array $points
 	 * @return float
 	 */
-	private function calculate($strategy)
+	private function calculate(array $strategy)
 	{
 		$distance = 0;
 

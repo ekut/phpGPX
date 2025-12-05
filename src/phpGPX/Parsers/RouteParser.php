@@ -70,15 +70,15 @@ abstract class RouteParser
 			foreach (self::$attributeMapper as $key => $attribute) {
 				switch ($key) {
 					case 'link':
-						$route->links = isset($node->link) ? LinkParser::parse($node->link) : [];
+						$route->links = property_exists($node, 'link') && $node->link !== null ? LinkParser::parse($node->link) : [];
 						break;
 					case 'extensions':
-						$route->extensions = isset($node->extensions) ? ExtensionParser::parse($node->extensions) : null;
+						$route->extensions = property_exists($node, 'extensions') && $node->extensions !== null ? ExtensionParser::parse($node->extensions) : null;
 						break;
 					case 'rtept':
 						$route->points = [];
 
-						if (isset($node->rtept)) {
+						if (property_exists($node, 'rtept') && $node->rtept !== null) {
 							foreach ($node->rtept as $point) {
 								$route->points[] = PointParser::parse($point);
 							}
@@ -86,7 +86,7 @@ abstract class RouteParser
 						break;
 					default:
 						if (!in_array($attribute['type'], ['object', 'array'])) {
-							$route->{$attribute['name']} = isset($node->$key) ? $node->$key : null;
+							$route->{$attribute['name']} = $node->$key ?? null;
 							if (!is_null($route->{$attribute['name']})) {
 								settype($route->{$attribute['name']}, $attribute['type']);
 							}
@@ -106,11 +106,9 @@ abstract class RouteParser
 	}
 
 	/**
-	 * @param Route $route
-	 * @param \DOMDocument $document
-	 * @return \DOMElement
-	 */
-	public static function toXML(Route $route, \DOMDocument &$document)
+  * @return \DOMElement
+  */
+ public static function toXML(Route $route, \DOMDocument &$document)
 	{
 		$node = $document->createElement(self::$tagName);
 
@@ -147,11 +145,9 @@ abstract class RouteParser
 	}
 
 	/**
-	 * @param array $routes
-	 * @param \DOMDocument $document
-	 * @return \DOMElement[]
-	 */
-	public static function toXMLArray(array $routes, \DOMDocument &$document)
+  * @return \DOMElement[]
+  */
+ public static function toXMLArray(array $routes, \DOMDocument &$document)
 	{
 		$result = [];
 

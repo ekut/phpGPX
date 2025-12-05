@@ -51,11 +51,9 @@ abstract class ExtensionParser
 
 
 	/**
-	 * @param Extensions $extensions
-	 * @param \DOMDocument $document
-	 * @return \DOMElement|null
-	 */
-	public static function toXML(Extensions $extensions, \DOMDocument &$document)
+  * @return \DOMElement|null
+  */
+ public static function toXML(Extensions $extensions, \DOMDocument &$document)
 	{
 		$node =  $document->createElement(self::$tagName);
 

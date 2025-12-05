@@ -25,21 +25,11 @@ class Email implements Summarizable
 	 */
 	public $domain;
 
-	/**
-	 * Email constructor.
-	 */
-	public function __construct()
-	{
-		$this->id = null;
-		$this->domain = null;
-	}
-
 
 	/**
-	 * Serialize object to array
-	 * @return array
-	 */
-	public function toArray()
+  * Serialize object to array
+  */
+ public function toArray(): array
 	{
 		return [
 			'id' => (string) $this->id,

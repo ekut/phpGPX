@@ -16,16 +16,12 @@ class DateTimeHelper
 {
 
 	/**
-	 * @param Point $point1
-	 * @param Point $point2
-	 * @return bool|int
+	 * Compare two points by their timestamp for sorting.
+	 * Returns negative if point1 < point2, zero if equal, positive if point1 > point2.
 	 */
-	public static function comparePointsByTimestamp(Point $point1, Point $point2)
+	public static function comparePointsByTimestamp(Point $point1, Point $point2): int
 	{
-		if ($point1->time == $point2->time) {
-			return 0;
-		}
-		return $point1->time > $point2->time;
+		return $point1->time <=> $point2->time;
 	}
 
 	/**
@@ -47,11 +43,10 @@ class DateTimeHelper
 	}
 
 	/**
-	 * @param $value
-	 * @param string $timezone
-	 * @return \DateTime
-	 */
-	public static function parseDateTime($value, $timezone = 'Europe/London')
+  * @param $value
+  * @param string $timezone
+  */
+ public static function parseDateTime($value, $timezone = 'Europe/London'): \DateTime
 	{
 		$timezone = new \DateTimeZone($timezone);
 		$datetime = new \DateTime($value, $timezone);

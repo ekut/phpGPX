@@ -17,33 +17,28 @@ abstract class BoundsParser
 	private static $tagName = 'bounds';
 
 	/**
-	 * Parse data from XML.
-	 * @param \SimpleXMLElement $node
-	 * @return Bounds|null
-	 */
-	public static function parse(\SimpleXMLElement $node)
+  * Parse data from XML.
+  * @return Bounds|null
+  */
+ public static function parse(\SimpleXMLElement $node)
 	{
 		if ($node->getName() != self::$tagName) {
 			return null;
 		}
 
-		$bounds = new Bounds(
+		return new Bounds(
 			isset($node['minlat']) ? (float) $node['minlat'] : null,
 			isset($node['minlon']) ? (float) $node['minlon'] : null,
 			isset($node['maxlat']) ? (float) $node['maxlat'] : null,
 			isset($node['maxlon']) ? (float) $node['maxlon'] : null
 		);
-
-		return $bounds;
 	}
 
 	/**
-	 * Create XML representation.
-	 * @param Bounds $bounds
-	 * @param \DOMDocument $document
-	 * @return \DOMElement
-	 */
-	public static function toXML(Bounds $bounds, \DOMDocument &$document)
+  * Create XML representation.
+  * @return \DOMElement
+  */
+ public static function toXML(Bounds $bounds, \DOMDocument &$document)
 	{
 		$node =  $document->createElement(self::$tagName);
 

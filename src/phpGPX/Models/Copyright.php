@@ -35,22 +35,11 @@ class Copyright implements Summarizable
 	 */
 	public $license;
 
-	/**
-	 * Copyright constructor.
-	 */
-	public function __construct()
-	{
-		$this->author = null;
-		$this->year = null;
-		$this->license = null;
-	}
-
 
 	/**
-	 * Serialize object to array
-	 * @return array
-	 */
-	public function toArray()
+  * Serialize object to array
+  */
+ public function toArray(): array
 	{
 		return [
 			'author' => $this->author,

@@ -46,7 +46,7 @@ abstract class Collection implements Summarizable, StatsCalculator
 	 * An original GPX 1.1 attribute.
 	 * @var Link[]
 	 */
-	public $links;
+	public $links = [];
 
 	/**
 	 * GPS route/track number.
@@ -74,21 +74,6 @@ abstract class Collection implements Summarizable, StatsCalculator
 	 * @var Stats|null
 	 */
 	public $stats;
-
-	/**
-	 * Collection constructor.
-	 */
-	public function __construct()
-	{
-		$this->name = null;
-		$this->comment = null;
-		$this->description = null;
-		$this->source = null;
-		$this->links = [];
-		$this->number = null;
-		$this->type = null;
-		$this->extensions = null;
-	}
 
 
 	/**

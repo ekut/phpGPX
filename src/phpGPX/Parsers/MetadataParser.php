@@ -57,36 +57,35 @@ abstract class MetadataParser
 	];
 
 	/**
-	 * @param \SimpleXMLElement $node
-	 * @return Metadata
-	 */
-	public static function parse(\SimpleXMLElement $node)
+  * @return Metadata
+  */
+ public static function parse(\SimpleXMLElement $node)
 	{
 		$metadata = new Metadata();
 
 		foreach (self::$attributeMapper as $key => $attribute) {
 			switch ($key) {
 				case 'author':
-					$metadata->author = isset($node->author) ? PersonParser::parse($node->author) : null;
+					$metadata->author = property_exists($node, 'author') && $node->author !== null ? PersonParser::parse($node->author) : null;
 					break;
 				case 'copyright':
-					$metadata->copyright = isset($node->copyright) ? CopyrightParser::parse($node->copyright) : null;
+					$metadata->copyright = property_exists($node, 'copyright') && $node->copyright !== null ? CopyrightParser::parse($node->copyright) : null;
 					break;
 				case 'link':
-					$metadata->links = isset($node->link) ? LinkParser::parse($node->link) : null;
+					$metadata->links = property_exists($node, 'link') && $node->link !== null ? LinkParser::parse($node->link) : null;
 					break;
 				case 'time':
-					$metadata->time = isset($node->time) ? DateTimeHelper::parseDateTime($node->time) : null;
+					$metadata->time = property_exists($node, 'time') && $node->time !== null ? DateTimeHelper::parseDateTime($node->time) : null;
 					break;
 				case 'bounds':
-					$metadata->bounds = isset($node->bounds) ? BoundsParser::parse($node->bounds) : null;
+					$metadata->bounds = property_exists($node, 'bounds') && $node->bounds !== null ? BoundsParser::parse($node->bounds) : null;
 					break;
 				case 'extensions':
-					$metadata->extensions = isset($node->extensions) ? ExtensionParser::parse($node->extensions) : null;
+					$metadata->extensions = property_exists($node, 'extensions') && $node->extensions !== null ? ExtensionParser::parse($node->extensions) : null;
 					break;
 				default:
 					if (!in_array($attribute['type'], ['object', 'array'])) {
-						$metadata->{$attribute['name']} = isset($node->$key) ? $node->$key : null;
+						$metadata->{$attribute['name']} = $node->$key ?? null;
 						if (!is_null($metadata->{$attribute['name']})) {
 							settype($metadata->{$attribute['name']}, $attribute['type']);
 						}

@@ -26,7 +26,7 @@ class Segment implements Summarizable, StatsCalculator
 	 * Array of segment points
 	 * @var Point[]
 	 */
-	public $points;
+	public $points = [];
 
 	/**
 	 * You can add extend GPX by adding your own elements from another schema here.
@@ -39,22 +39,11 @@ class Segment implements Summarizable, StatsCalculator
 	 */
 	public $stats;
 
-	/**
-	 * Segment constructor.
-	 */
-	public function __construct()
-	{
-		$this->points = [];
-		$this->extensions = null;
-		$this->stats = null;
-	}
-
 
 	/**
-	 * Serialize object to array
-	 * @return array
-	 */
-	public function toArray()
+  * Serialize object to array
+  */
+ public function toArray(): array
 	{
 		return [
 			'points' => SerializationHelper::serialize($this->points),
@@ -72,10 +61,9 @@ class Segment implements Summarizable, StatsCalculator
 	}
 
 	/**
-	 * Recalculate stats objects.
-	 * @return void
-	 */
-	public function recalculateStats()
+  * Recalculate stats objects.
+  */
+ public function recalculateStats(): void
 	{
 		if (empty($this->stats)) {
 			$this->stats = new Stats();
@@ -98,7 +86,7 @@ class Segment implements Summarizable, StatsCalculator
 		$this->stats->minAltitude = $firstPoint->elevation;
 		$this->stats->minAltitudeCoords = ["lat" => $firstPoint->latitude, "lng" => $firstPoint->longitude];
 
-		list($this->stats->cumulativeElevationGain, $this->stats->cumulativeElevationLoss) =
+		[$this->stats->cumulativeElevationGain, $this->stats->cumulativeElevationLoss] =
 			ElevationGainLossCalculator::calculate($this->getPoints());
 
 		$calculator = new DistanceCalculator($this->getPoints());
@@ -117,7 +105,7 @@ class Segment implements Summarizable, StatsCalculator
 			}
 		}
 
-		if (isset($firstPoint->time) && isset($lastPoint->time) && $firstPoint->time instanceof \DateTime && $lastPoint->time instanceof \DateTime) {
+		if ($firstPoint->time !== null && $lastPoint->time !== null && $firstPoint->time instanceof \DateTime && $lastPoint->time instanceof \DateTime) {
 			$this->stats->duration = $lastPoint->time->getTimestamp() - $firstPoint->time->getTimestamp();
 
 			if ($this->stats->duration != 0) {
@@ -129,7 +117,7 @@ class Segment implements Summarizable, StatsCalculator
 			}
 		}
 
-		list($northWest, $southEast) = BoundsCalculator::calculate($this->getPoints());
+		[$northWest, $southEast] = BoundsCalculator::calculate($this->getPoints());
 		$this->stats->bounds = [$northWest, $southEast];
 	}
 }

@@ -99,7 +99,7 @@ class Point implements Summarizable
 	 * Original GPX 1.1 attribute.
 	 * @var Link[]
 	 */
-	public $links;
+	public $links = [];
 
 	/**
 	 * Text of GPS symbol name. For interchange with other programs, use the exact spelling of the symbol as displayed on the GPS.
@@ -200,29 +200,6 @@ class Point implements Summarizable
 	 */
 	public function __construct($pointType)
 	{
-		$this->latitude = null;
-		$this->longitude = null;
-		$this->elevation = null;
-		$this->time = null;
-		$this->magVar = null;
-		$this->geoidHeight = null;
-		$this->name = null;
-		$this->comment = null;
-		$this->description = null;
-		$this->source = null;
-		$this->links = [];
-		$this->symbol = null;
-		$this->type = null;
-		$this->fix = null;
-		$this->satellitesNumber = null;
-		$this->hdop = null;
-		$this->vdop = null;
-		$this->pdop = null;
-		$this->ageOfGpsData = null;
-		$this->dgpsid = null;
-		$this->difference = null;
-		$this->distance = null;
-		$this->extensions = null;
 		$this->pointType = $pointType;
 	}
 
@@ -236,10 +213,9 @@ class Point implements Summarizable
 	}
 
 	/**
-	 * Serialize object to array
-	 * @return array
-	 */
-	public function toArray()
+  * Serialize object to array
+  */
+ public function toArray(): array
 	{
 		return [
 			'lat' => (float) $this->latitude,

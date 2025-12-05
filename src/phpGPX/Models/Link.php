@@ -33,22 +33,11 @@ class Link implements Summarizable
 	 */
 	public $type;
 
-	/**
-	 * Link constructor.
-	 */
-	public function __construct()
-	{
-		$this->href = null;
-		$this->text = null;
-		$this->type = null;
-	}
-
 
 	/**
-	 * Serialize object to array
-	 * @return array
-	 */
-	public function toArray()
+  * Serialize object to array
+  */
+ public function toArray(): array
 	{
 		return [
 			'href' => (string) $this->href,

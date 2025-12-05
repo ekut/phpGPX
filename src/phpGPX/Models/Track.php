@@ -22,17 +22,7 @@ class Track extends Collection
 	 * Array of Track segments
 	 * @var Segment[]
 	 */
-	public $segments;
-
-	/**
-	 * Track constructor.
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->segments = [];
-	}
-
+	public $segments = [];
 
 	/**
 	 * Return all points in collection.
@@ -48,17 +38,16 @@ class Track extends Collection
 		}
 
 		if (phpGPX::$SORT_BY_TIMESTAMP && !empty($points) && $points[0]->time !== null) {
-			usort($points, array('phpGPX\Helpers\DateTimeHelper', 'comparePointsByTimestamp'));
+			usort($points, ['phpGPX\Helpers\DateTimeHelper', 'comparePointsByTimestamp']);
 		}
 
 		return $points;
 	}
 
 	/**
-	 * Serialize object to array
-	 * @return array
-	 */
-	public function toArray()
+  * Serialize object to array
+  */
+ public function toArray(): array
 	{
 		return [
 			'name' => SerializationHelper::stringOrNull($this->name),
@@ -75,10 +64,9 @@ class Track extends Collection
 	}
 
 	/**
-	 * Recalculate stats objects.
-	 * @return void
-	 */
-	public function recalculateStats()
+  * Recalculate stats objects.
+  */
+ public function recalculateStats(): void
 	{
 		if (empty($this->stats)) {
 			$this->stats = new Stats();
@@ -111,7 +99,7 @@ class Track extends Collection
 			return;
 		}
 
-		$lastSegment = end($this->segments);
+		end($this->segments);
 		$lastPoint = end(end($this->segments)->points);
 
 		$this->stats->startedAt = $firstPoint->time;
@@ -156,7 +144,7 @@ class Track extends Collection
 			}
 		}
 
-		list($northWest, $southEast) = BoundsCalculator::calculate($this->getPoints());
+		[$northWest, $southEast] = BoundsCalculator::calculate($this->getPoints());
 		$this->stats->bounds = [$northWest, $southEast];
 	}
 }

@@ -32,79 +32,79 @@ class Stats implements Summarizable
 	 * Average speed in meters per second (m/s)
 	 * @var float
 	 */
-	public $averageSpeed = null;
+	public $averageSpeed;
 
 	/**
 	 * Average pace in seconds per kilometer (s/km)
 	 * @var float
 	 */
-	public $averagePace = null;
+	public $averagePace;
 
 	/**
 	 * Minimal altitude in meters (m)
 	 * @var int
 	 */
-	public $minAltitude = null;
+	public $minAltitude;
 
 	/**
 	 * Minimal altitude coordinate
 	 * @var [float,float]
 	 */
-	public $minAltitudeCoords = null;
+	public $minAltitudeCoords;
 
 	/**
 	 * Maximal altitude in meters (m)
 	 * @var int
 	 */
-	public $maxAltitude = null;
+	public $maxAltitude;
 
 	/**
 	 * Maximal altitude coordinate
 	 * @var [float,float]
 	 */
-	public $maxAltitudeCoords = null;
+	public $maxAltitudeCoords;
 
 	/**
 	 * Cumulative elevation gain in meters (m)
 	 * @var int
 	 */
-	public $cumulativeElevationGain = null;
+	public $cumulativeElevationGain;
 
 	/**
 	 * Cumulative elevation loss in meters (m)
 	 * @var int
 	 */
-	public $cumulativeElevationLoss = null;
+	public $cumulativeElevationLoss;
 
 	/**
 	 * Started time
 	 * @var \DateTime
 	 */
-	public $startedAt = null;
+	public $startedAt;
 
 	/**
 	 * startedAt coordinate
 	 * @var [float,float]
 	 */
-	public $startedAtCoords = null;
+	public $startedAtCoords;
 
 	/**
 	 * Ending time
 	 * @var \DateTime
 	 */
-	public $finishedAt = null;
+	public $finishedAt;
 
 	/**
 	 * finishedAt coordinate
 	 * @var [float,float]
 	 */
-	public $finishedAtCoords = null;
+	public $finishedAtCoords;
 
 	/**
 	 * Duration is seconds
 	 * @var int
 	 */
-	public $duration = null;
+	public $duration;
 
 	/**
 	 * An array of two points representing
@@ -112,12 +112,12 @@ class Stats implements Summarizable
 	 * southeastern points of a segment
 	 * @var array
 	 */
-	public $bounds = array();
+	public $bounds = [];
 
 	/**
 	 * Reset all stats
 	 */
-	public function reset()
+	public function reset(): void
 	{
 		$this->distance = null;
 		$this->realDistance = null;
@@ -137,10 +137,9 @@ class Stats implements Summarizable
 	}
 
 	/**
-	 * Serialize object to array
-	 * @return array
-	 */
-	public function toArray()
+  * Serialize object to array
+  */
+ public function toArray(): array
 	{
 		return [
 			'distance' => (float)$this->distance,

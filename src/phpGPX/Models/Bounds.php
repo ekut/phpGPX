@@ -33,12 +33,6 @@ class Bounds implements Summarizable
 	 */
 	public $maxLongitude;
 
-    /**
-     * @param ?float $minLatitude
-     * @param ?float $minLongitude
-     * @param ?float $maxLatitude
-     * @param ?float $maxLongitude
-     */
     public function __construct(?float $minLatitude, ?float $minLongitude, ?float $maxLatitude, ?float $maxLongitude)
     {
         $this->minLatitude = $minLatitude;
@@ -49,10 +43,9 @@ class Bounds implements Summarizable
 
 
     /**
-	 * Serialize object to array
-	 * @return array
-	 */
-	public function toArray(): array
+  * Serialize object to array
+  */
+ public function toArray(): array
     {
 		return [
 			'minlat' => $this->minLatitude,

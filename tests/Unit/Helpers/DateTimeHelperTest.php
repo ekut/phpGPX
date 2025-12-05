@@ -19,7 +19,7 @@ class DateTimeHelperTest extends TestCase
 	// comparePointsByTimestamp tests
 	// ========================================
 
-	public function test_compare_points_by_timestamp_first_point_later_returns_true(): void
+	public function test_compare_points_by_timestamp_first_point_later_returns_positive(): void
 	{
 		// Arrange
 		$point1 = new Point(Point::WAYPOINT);
@@ -32,10 +32,10 @@ class DateTimeHelperTest extends TestCase
 		$result = DateTimeHelper::comparePointsByTimestamp($point1, $point2);
 
 		// Assert
-		$this->assertTrue($result);
+		$this->assertGreaterThan(0, $result);
 	}
 
-	public function test_compare_points_by_timestamp_first_point_earlier_returns_false(): void
+	public function test_compare_points_by_timestamp_first_point_earlier_returns_negative(): void
 	{
 		// Arrange
 		$point1 = new Point(Point::WAYPOINT);
@@ -48,7 +48,7 @@ class DateTimeHelperTest extends TestCase
 		$result = DateTimeHelper::comparePointsByTimestamp($point1, $point2);
 
 		// Assert
-		$this->assertFalse($result);
+		$this->assertLessThan(0, $result);
 	}
 
 	public function test_compare_points_by_timestamp_equal_times_returns_zero(): void

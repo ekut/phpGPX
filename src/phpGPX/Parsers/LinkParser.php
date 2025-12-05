@@ -22,8 +22,8 @@ abstract class LinkParser
 		foreach ($nodes as $node) {
 			$link = new Link();
 			$link->href = isset($node['href']) ? (string) $node['href'] : null;
-			$link->text = isset($node->text) ? (string) $node->text : null;
-			$link->type = isset($node->type) ? (string) $node->type : null;
+			$link->text = property_exists($node, 'text') && $node->text !== null ? (string) $node->text : null;
+			$link->type = property_exists($node, 'type') && $node->type !== null ? (string) $node->type : null;
 
 			$links[] = $link;
 		}
@@ -31,11 +31,10 @@ abstract class LinkParser
 	}
 
 	/**
-	 * @param Link[] $links
-	 * @param \DOMDocument $document
-	 * @return \DOMElement[]
-	 */
-	public static function toXMLArray(array $links, \DOMDocument &$document)
+  * @param Link[] $links
+  * @return \DOMElement[]
+  */
+ public static function toXMLArray(array $links, \DOMDocument &$document)
 	{
 		$result = [];
 
@@ -47,11 +46,9 @@ abstract class LinkParser
 	}
 
 	/**
-	 * @param Link $link
-	 * @param \DOMDocument $document
-	 * @return \DOMElement
-	 */
-	public static function toXML(Link $link, \DOMDocument &$document)
+  * @return \DOMElement
+  */
+ public static function toXML(Link $link, \DOMDocument &$document)
 	{
 		$node =  $document->createElement(self::$tagName);
 

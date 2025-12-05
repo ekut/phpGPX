@@ -25,17 +25,7 @@ class Route extends Collection
 	 * An original GPX 1.1 attribute.
 	 * @var Point[]
 	 */
-	public $points;
-
-	/**
-	 * Route constructor.
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->points = [];
-	}
-
+	public $points = [];
 
 	/**
 	 * Return all points in collection.
@@ -48,18 +38,17 @@ class Route extends Collection
 
 		$points = array_merge($points, $this->points);
 
-		if (phpGPX::$SORT_BY_TIMESTAMP && !empty($points) && $points[0]->time !== null) {
-			usort($points, array('phpGPX\Helpers\DateTimeHelper', 'comparePointsByTimestamp'));
+		if (phpGPX::$SORT_BY_TIMESTAMP && $points !== [] && $points[0]->time !== null) {
+			usort($points, ['phpGPX\Helpers\DateTimeHelper', 'comparePointsByTimestamp']);
 		}
 
 		return $points;
 	}
 
 	/**
-	 * Serialize object to array
-	 * @return array
-	 */
-	public function toArray()
+  * Serialize object to array
+  */
+ public function toArray(): array
 	{
 		return [
 			'name' => SerializationHelper::stringOrNull($this->name),
@@ -76,10 +65,9 @@ class Route extends Collection
 	}
 
 	/**
-	 * Recalculate stats objects.
-	 * @return void
-	 */
-	public function recalculateStats()
+  * Recalculate stats objects.
+  */
+ public function recalculateStats(): void
 	{
 		if (empty($this->stats)) {
 			$this->stats = new Stats();
@@ -103,7 +91,7 @@ class Route extends Collection
 		$this->stats->minAltitude = $firstPoint->elevation;
 		$this->stats->minAltitudeCoords = ["lat" => $firstPoint->latitude, "lng" => $firstPoint->longitude];
 
-		list($this->stats->cumulativeElevationGain, $this->stats->cumulativeElevationLoss) =
+		[$this->stats->cumulativeElevationGain, $this->stats->cumulativeElevationLoss] =
 			ElevationGainLossCalculator::calculate($this->getPoints());
 
 		$calculator = new DistanceCalculator($this->getPoints());

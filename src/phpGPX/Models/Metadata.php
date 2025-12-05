@@ -50,7 +50,7 @@ class Metadata implements Summarizable
 	 * Original GPX 1.1 attribute.
 	 * @var Link[]|null
 	 */
-	public $links;
+	public $links = [];
 
 	/**
 	 * Date of GPX creation
@@ -77,28 +77,11 @@ class Metadata implements Summarizable
 	 */
 	public $extensions;
 
-	/**
-	 * Metadata constructor.
-	 */
-	public function __construct()
-	{
-		$this->name = null;
-		$this->description = null;
-		$this->author = null;
-		$this->copyright = null;
-		$this->links = [];
-		$this->time = null;
-		$this->keywords = null;
-		$this->bounds = null;
-		$this->extensions = null;
-	}
-
 
 	/**
-	 * Serialize object to array
-	 * @return array
-	 */
-	public function toArray()
+  * Serialize object to array
+  */
+ public function toArray(): array
 	{
 		return [
 			'name' => SerializationHelper::stringOrNull($this->name),

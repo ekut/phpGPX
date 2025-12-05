@@ -37,22 +37,11 @@ class Person implements Summarizable
 	 */
 	public $links;
 
-	/**
-	 * Person constructor.
-	 */
-	public function __construct()
-	{
-		$this->name = null;
-		$this->email = null;
-		$this->links = null;
-	}
-
 
 	/**
-	 * Serialize object to array
-	 * @return array
-	 */
-	public function toArray()
+  * Serialize object to array
+  */
+ public function toArray(): array
 	{
 		return [
 			'name' => (string) $this->name,

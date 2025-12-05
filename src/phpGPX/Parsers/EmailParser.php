@@ -17,10 +17,9 @@ abstract class EmailParser
 	private static $tagName = 'email';
 
 	/**
-	 * @param \SimpleXMLElement $node
-	 * @return Email
-	 */
-	public static function parse(\SimpleXMLElement $node)
+  * @return Email
+  */
+ public static function parse(\SimpleXMLElement $node)
 	{
 		$email = new Email();
 
@@ -32,11 +31,9 @@ abstract class EmailParser
 
 
 	/**
-	 * @param Email $email
-	 * @param \DOMDocument $document
-	 * @return \DOMElement
-	 */
-	public static function toXML(Email $email, \DOMDocument &$document)
+  * @return \DOMElement
+  */
+ public static function toXML(Email $email, \DOMDocument &$document)
 	{
 		$node =  $document->createElement(self::$tagName);
 
