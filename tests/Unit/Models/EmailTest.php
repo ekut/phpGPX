@@ -56,9 +56,9 @@ final class EmailTest extends TestCase
 		// Arrange & Act
 		$email = new Email();
 		
-		// Assert
-		$this->assertNull($email->id);
-		$this->assertNull($email->domain);
+		// Assert - with constructor promotion, defaults are empty strings
+		$this->assertSame('', $email->id);
+		$this->assertSame('', $email->domain);
 	}
 
 	/**

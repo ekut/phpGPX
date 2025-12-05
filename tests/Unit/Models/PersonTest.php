@@ -80,7 +80,8 @@ final class PersonTest extends TestCase
 		
 		// Assert
 		$this->assertNull($person->email);
-		$this->assertNull($person->links);
+		// With constructor promotion, links has empty array default
+		$this->assertSame([], $person->links);
 	}
 
 	/**
@@ -95,7 +96,8 @@ final class PersonTest extends TestCase
 		// Assert
 		$this->assertNull($person->name);
 		$this->assertNull($person->email);
-		$this->assertNull($person->links);
+		// With constructor promotion, links has empty array default
+		$this->assertSame([], $person->links);
 	}
 
 	/**
@@ -146,7 +148,8 @@ final class PersonTest extends TestCase
 		
 		// Assert
 		$this->assertNull($array['email']);
-		$this->assertNull($array['links']);
+		// With constructor promotion, links has empty array default which serializes to empty array
+		$this->assertSame([], $array['links']);
 	}
 
 	/**

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Created            14/02/2017 18:17
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
@@ -14,33 +17,25 @@ namespace phpGPX\Models;
  */
 class Link implements Summarizable
 {
-
 	/**
 	 * URL of hyperlink.
-	 * @var string
-	 */
-	public $href;
-
-	/**
 	 * Text of hyperlink.
-	 * @var string|null
-	 */
-	public $text;
-
-	/**
 	 * Mime type of content (image/jpeg)
-	 * @var string|null
 	 */
-	public $type;
-
+	public function __construct(
+		public string $href = '',
+		public ?string $text = null,
+		public ?string $type = null
+	) {
+	}
 
 	/**
-  * Serialize object to array
-  */
- public function toArray(): array
+	 * Serialize object to array
+	 */
+	public function toArray(): array
 	{
 		return [
-			'href' => (string) $this->href,
+			'href' => $this->href,
 			'text' => $this->text,
 			'type' => $this->type
 		];

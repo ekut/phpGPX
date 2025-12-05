@@ -17,21 +17,19 @@ abstract class CopyrightParser
 	public static $tagName = 'copyright';
 
 	/**
-  * @return Copyright|null
-  */
- public static function parse(\SimpleXMLElement $node)
+	 * @return Copyright|null
+	 */
+	public static function parse(\SimpleXMLElement $node)
 	{
 		if ($node->getName() != self::$tagName) {
 			return null;
 		}
 
-		$copyright = new Copyright();
+		$author = isset($node['author']) ? (string) $node['author'] : '';
+		$year = property_exists($node, 'year') && $node->year !== null ? (string) $node->year : null;
+		$license = property_exists($node, 'license') && $node->license !== null ? (string) $node->license : null;
 
-		$copyright->author = isset($node['author']) ? (string) $node['author'] : null;
-		$copyright->year = property_exists($node, 'year') && $node->year !== null ? (string) $node->year : null;
-		$copyright->license = property_exists($node, 'license') && $node->license !== null ? (string) $node->license : null;
-
-		return $copyright;
+		return new Copyright($author, $year, $license);
 	}
 
 	/**

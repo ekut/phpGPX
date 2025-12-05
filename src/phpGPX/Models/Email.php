@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Created            16/02/2017 22:59
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
@@ -13,27 +16,24 @@ namespace phpGPX\Models;
  */
 class Email implements Summarizable
 {
-
 	/**
 	 * Id half of email address (jakub.dubec)
-	 * @var string
+	 * Domain half of email address (gmail.com)
 	 */
-	public $id;
-
-	/** Domain half of email address (gmail.com)
-	 * @var string
-	 */
-	public $domain;
-
+	public function __construct(
+		public string $id = '',
+		public string $domain = ''
+	) {
+	}
 
 	/**
-  * Serialize object to array
-  */
- public function toArray(): array
+	 * Serialize object to array
+	 */
+	public function toArray(): array
 	{
 		return [
-			'id' => (string) $this->id,
-			'domain' => (string) $this->domain
+			'id' => $this->id,
+			'domain' => $this->domain
 		];
 	}
 }

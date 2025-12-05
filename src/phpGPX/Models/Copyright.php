@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Created            16/02/2017 22:20
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
@@ -16,30 +19,22 @@ use phpGPX\Helpers\SerializationHelper;
  */
 class Copyright implements Summarizable
 {
-
 	/**
 	 * Copyright holder (TopoSoft, Inc.)
-	 * @var string
-	 */
-	public $author;
-
-	/**
 	 * Year of copyright.
-	 * @var string
-	 */
-	public $year;
-
-	/**
 	 * Link to external file containing license text.
-	 * @var string
 	 */
-	public $license;
-
+	public function __construct(
+		public string $author = '',
+		public ?string $year = null,
+		public ?string $license = null
+	) {
+	}
 
 	/**
-  * Serialize object to array
-  */
- public function toArray(): array
+	 * Serialize object to array
+	 */
+	public function toArray(): array
 	{
 		return [
 			'author' => $this->author,

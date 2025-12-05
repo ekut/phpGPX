@@ -72,6 +72,7 @@ class EmailParserTest extends AbstractParserTest
 
 		$this->assertNotEmpty($email);
 		$this->assertEquals('user', $email->id);
-		$this->assertNull($email->domain);
+		// With constructor defaults, missing domain becomes empty string
+		$this->assertSame('', $email->domain);
 	}
 }

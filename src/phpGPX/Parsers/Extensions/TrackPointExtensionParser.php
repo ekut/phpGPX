@@ -47,16 +47,22 @@ class TrackPointExtensionParser
 	];
 
 	/**
-  * @param \SimpleXMLElement $node
-  */
- public static function parse($node): \phpGPX\Models\Extensions\TrackPointExtension
+	 * @param \SimpleXMLElement $node
+	 */
+	public static function parse($node): \phpGPX\Models\Extensions\TrackPointExtension
 	{
 		$extension = new TrackPointExtension();
 
 		foreach (self::$attributeMapper as $key => $attribute) {
-			$extension->{$attribute['name']} = $node->$key ?? null;
-			if (!is_null($extension->{$attribute['name']})) {
-				settype($extension->{$attribute['name']}, $attribute['type']);
+			$value = $node->$key ?? null;
+			
+			if ($value !== null) {
+				// Cast to the appropriate type
+				if ($attribute['type'] === 'float') {
+					$extension->{$attribute['name']} = (float) $value;
+				} elseif ($attribute['type'] === 'int') {
+					$extension->{$attribute['name']} = (int) $value;
+				}
 			}
 
 			// Remove in v1.0

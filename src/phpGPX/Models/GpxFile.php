@@ -60,9 +60,8 @@ class GpxFile implements Summarizable
 
 	/**
 	 * Serialize object to array
-	 * @return array
 	 */
-	public function toArray()
+	public function toArray(): array
 	{
 		return SerializationHelper::filterNotNull([
 			'creator' => SerializationHelper::stringOrNull($this->creator),

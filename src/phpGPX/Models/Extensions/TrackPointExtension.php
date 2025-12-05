@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Created            26/08/16 17:05
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
@@ -16,86 +19,76 @@ use phpGPX\Helpers\SerializationHelper;
  */
 class TrackPointExtension extends AbstractExtension
 {
-	const EXTENSION_V1_NAMESPACE = 'http://www.garmin.com/xmlschemas/TrackPointExtension/v1';
-	const EXTENSION_V1_NAMESPACE_XSD = 'http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd';
+	public const EXTENSION_V1_NAMESPACE = 'http://www.garmin.com/xmlschemas/TrackPointExtension/v1';
+	public const EXTENSION_V1_NAMESPACE_XSD = 'http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd';
 
-	const EXTENSION_NAMESPACE = 'http://www.garmin.com/xmlschemas/TrackPointExtension/v2';
-	const EXTENSION_NAMESPACE_XSD = 'http://www.garmin.com/xmlschemas/TrackPointExtensionv2.xsd';
+	public const EXTENSION_NAMESPACE = 'http://www.garmin.com/xmlschemas/TrackPointExtension/v2';
+	public const EXTENSION_NAMESPACE_XSD = 'http://www.garmin.com/xmlschemas/TrackPointExtensionv2.xsd';
 
-	const EXTENSION_NAME = 'TrackPointExtension';
-	const EXTENSION_NAMESPACE_PREFIX = 'gpxtpx';
+	public const EXTENSION_NAME = 'TrackPointExtension';
+	public const EXTENSION_NAMESPACE_PREFIX = 'gpxtpx';
 
 	/**
 	 * Average temperature value measured in degrees Celsius.
-	 * @var float
 	 */
-	public $aTemp;
+	public ?float $aTemp = null;
 
 	/**
 	 * Average temperature value measured in degrees Celsius.
 	 * @deprecated use TrackPointExtension::$aTemp instead. Will be removed in v1.0
 	 * @see TrackPointExtension::$aTemp
-	 * @var float
 	 */
-	public $avgTemperature;
+	public ?float $avgTemperature = null;
 
 	/**
-	 * @var float
+	 * Water temperature value measured in degrees Celsius.
 	 */
-	public $wTemp;
+	public ?float $wTemp = null;
 
 	/**
 	 * Depth in meters.
-	 * @var float
 	 */
-	public $depth;
+	public ?float $depth = null;
 
 	/**
 	 * Heart rate in beats per minute.
 	 * @deprecated since v1.0RC3, use attribute TrackPointExtension::$hr instead, will be removed in v1.0
 	 * @see TrackPointExtension::$hr
-	 * @var float
 	 */
-	public $heartRate;
+	public ?float $heartRate = null;
 
 	/**
 	 * Heart rate in beats per minute.
 	 * @since v1.0RC3
-	 * @var float
 	 */
-	public $hr;
+	public ?float $hr = null;
 
 	/**
 	 * Cadence in revolutions per minute.
 	 * @deprecated since v1.0RC3, use attribute TrackPointExtension::$cad instead, will be removed in v1.0
 	 * @see TrackPointExtension::$cad
-	 * @var float
 	 */
-	public $cadence;
+	public ?float $cadence = null;
 
 	/**
 	 * Cadence in revolutions per minute.
-	 * @var float
 	 */
-	public $cad;
+	public ?float $cad = null;
 
 	/**
 	 * Speed in meters per second.
-	 * @var float
 	 */
-	public $speed;
+	public ?float $speed = null;
 
 	/**
 	 * Course. This type contains an angle measured in degrees in a clockwise direction from the true north line.
-	 * @var int
 	 */
-	public $course;
+	public ?int $course = null;
 
 	/**
 	 * Bearing. This type contains an angle measured in degrees in a clockwise direction from the true north line.
-	 * @var int
 	 */
-	public $bearing;
+	public ?int $bearing = null;
 
 	/**
 	 * TrackPointExtension constructor.
@@ -106,9 +99,9 @@ class TrackPointExtension extends AbstractExtension
 	}
 
 	/**
-  * Serialize object to array
-  */
- public function toArray(): array
+	 * Serialize object to array
+	 */
+	public function toArray(): array
 	{
 		return [
 			'aTemp' => SerializationHelper::floatOrNull($this->aTemp),

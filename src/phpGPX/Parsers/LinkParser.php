@@ -20,12 +20,11 @@ abstract class LinkParser
 	{
 		$links = [];
 		foreach ($nodes as $node) {
-			$link = new Link();
-			$link->href = isset($node['href']) ? (string) $node['href'] : null;
-			$link->text = property_exists($node, 'text') && $node->text !== null ? (string) $node->text : null;
-			$link->type = property_exists($node, 'type') && $node->type !== null ? (string) $node->type : null;
+			$href = isset($node['href']) ? (string) $node['href'] : '';
+			$text = property_exists($node, 'text') && $node->text !== null ? (string) $node->text : null;
+			$type = property_exists($node, 'type') && $node->type !== null ? (string) $node->type : null;
 
-			$links[] = $link;
+			$links[] = new Link($href, $text, $type);
 		}
 		return $links;
 	}

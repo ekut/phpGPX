@@ -103,6 +103,7 @@ class PersonParserTest extends AbstractParserTest
 		$this->assertNotEmpty($person);
 		$this->assertEquals('John Doe', $person->name);
 		$this->assertNull($person->email);
-		$this->assertNull($person->links);
+		// With constructor defaults, missing links becomes empty array
+		$this->assertSame([], $person->links);
 	}
 }

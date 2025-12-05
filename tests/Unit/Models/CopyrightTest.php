@@ -71,8 +71,8 @@ final class CopyrightTest extends TestCase
 		// Arrange & Act
 		$copyright = new Copyright();
 		
-		// Assert
-		$this->assertNull($copyright->author);
+		// Assert - with constructor promotion, author has empty string default
+		$this->assertSame('', $copyright->author);
 		$this->assertNull($copyright->year);
 		$this->assertNull($copyright->license);
 	}

@@ -71,8 +71,8 @@ final class LinkTest extends TestCase
 		// Arrange & Act
 		$link = new Link();
 		
-		// Assert
-		$this->assertNull($link->href);
+		// Assert - with constructor promotion, href has empty string default
+		$this->assertSame('', $link->href);
 		$this->assertNull($link->text);
 		$this->assertNull($link->type);
 	}

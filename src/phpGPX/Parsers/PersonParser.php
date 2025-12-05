@@ -17,17 +17,15 @@ abstract class PersonParser
 	public static $tagName = 'author';
 
 	/**
-  * @return Person
-  */
- public static function parse(\SimpleXMLElement $node)
+	 * @return Person
+	 */
+	public static function parse(\SimpleXMLElement $node)
 	{
-		$person = new Person();
+		$name = property_exists($node, 'name') && $node->name !== null ? ((string) $node->name) : null;
+		$email = property_exists($node, 'email') && $node->email !== null ? EmailParser::parse($node->email) : null;
+		$links = property_exists($node, 'link') && $node->link !== null ? LinkParser::parse($node->link) : [];
 
-		$person->name = property_exists($node, 'name') && $node->name !== null ? ((string) $node->name) : null;
-		$person->email = property_exists($node, 'email') && $node->email !== null ? EmailParser::parse($node->email) : null;
-		$person->links = property_exists($node, 'link') && $node->link !== null ? LinkParser::parse($node->link) : null;
-
-		return $person;
+		return new Person($name, $email, $links);
 	}
 
 	public static function toXML(Person $person, \DOMDocument &$document)

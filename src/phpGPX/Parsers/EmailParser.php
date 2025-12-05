@@ -17,16 +17,14 @@ abstract class EmailParser
 	private static $tagName = 'email';
 
 	/**
-  * @return Email
-  */
- public static function parse(\SimpleXMLElement $node)
+	 * @return Email
+	 */
+	public static function parse(\SimpleXMLElement $node)
 	{
-		$email = new Email();
+		$id = isset($node['id']) ? (string) $node['id'] : '';
+		$domain = isset($node['domain']) ? (string) $node['domain'] : '';
 
-		$email->id = isset($node['id']) ? (string) $node['id'] : null;
-		$email->domain = isset($node['domain']) ? (string) $node['domain'] : null;
-
-		return $email;
+		return new Email($id, $domain);
 	}
 
 
