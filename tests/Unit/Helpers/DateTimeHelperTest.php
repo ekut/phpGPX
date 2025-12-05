@@ -54,10 +54,10 @@ class DateTimeHelperTest extends TestCase
 	public function test_compare_points_by_timestamp_equal_times_returns_zero(): void
 	{
 		// Arrange
-		$point1 = new Point(Point::WAYPOINT);
+		$point1 = new Point(Point::WAYPOINT, 0.0, 0.0);
 		$point1->time = new \DateTime("2017-08-12T20:16:29+00:00", new \DateTimeZone("UTC"));
 
-		$point2 = new Point(Point::WAYPOINT);
+		$point2 = new Point(Point::WAYPOINT, 0.0, 0.0);
 		$point2->time = new \DateTime("2017-08-12T20:16:29+00:00", new \DateTimeZone("UTC"));
 
 		// Act
@@ -70,10 +70,10 @@ class DateTimeHelperTest extends TestCase
 	public function test_compare_points_by_timestamp_with_different_timezones(): void
 	{
 		// Arrange - same moment in time, different timezones
-		$point1 = new Point(Point::WAYPOINT);
+		$point1 = new Point(Point::WAYPOINT, 0.0, 0.0);
 		$point1->time = new \DateTime("2017-08-12T20:16:29+00:00", new \DateTimeZone("UTC"));
 
-		$point2 = new Point(Point::WAYPOINT);
+		$point2 = new Point(Point::WAYPOINT, 0.0, 0.0);
 		$point2->time = new \DateTime("2017-08-12T21:16:29+01:00", new \DateTimeZone("Europe/Paris"));
 
 		// Act
@@ -86,10 +86,10 @@ class DateTimeHelperTest extends TestCase
 	public function test_compare_points_by_timestamp_with_null_times(): void
 	{
 		// Arrange
-		$point1 = new Point(Point::WAYPOINT);
+		$point1 = new Point(Point::WAYPOINT, 0.0, 0.0);
 		$point1->time = null;
 
-		$point2 = new Point(Point::WAYPOINT);
+		$point2 = new Point(Point::WAYPOINT, 0.0, 0.0);
 		$point2->time = null;
 
 		// Act

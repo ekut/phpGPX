@@ -24,13 +24,8 @@ class GeoHelperTest extends TestCase
 	 */
 	public function testGetDistance()
 	{
-		$point1 = new Point(Point::WAYPOINT);
-		$point1->latitude = 48.1573923225717;
-		$point1->longitude = 17.0547121910204;
-
-		$point2 = new Point(Point::WAYPOINT);
-		$point2->latitude = 48.1644916381763;
-		$point2->longitude = 17.0591753907502;
+		$point1 = new Point(Point::WAYPOINT, 48.1573923225717, 17.0547121910204);
+		$point2 = new Point(Point::WAYPOINT, 48.1644916381763, 17.0591753907502);
 
 		$this->assertEqualsWithDelta(
 			856.97,
@@ -45,14 +40,10 @@ class GeoHelperTest extends TestCase
 	 */
 	public function testRealDistance()
 	{
-		$point1 = new Point(Point::WAYPOINT);
-		$point1->latitude = 48.1573923225717;
-		$point1->longitude = 17.0547121910204;
+		$point1 = new Point(Point::WAYPOINT, 48.1573923225717, 17.0547121910204);
 		$point1->elevation = 100;
 
-		$point2 = new Point(Point::WAYPOINT);
-		$point2->latitude = 48.1644916381763;
-		$point2->longitude = 17.0591753907502;
+		$point2 = new Point(Point::WAYPOINT, 48.1644916381763, 17.0591753907502);
 		$point2->elevation = 200;
 
 		$this->assertEqualsWithDelta(
@@ -77,37 +68,22 @@ class GeoHelperTest extends TestCase
 	public function test_getRawDistance_with_known_coordinate_pairs_returns_correct_values(): void
 	{
 		// Test 1: New York to Los Angeles (approximately 3936 km)
-		$newYork = new Point(Point::WAYPOINT);
-		$newYork->latitude = 40.7128;
-		$newYork->longitude = -74.0060;
-
-		$losAngeles = new Point(Point::WAYPOINT);
-		$losAngeles->latitude = 34.0522;
-		$losAngeles->longitude = -118.2437;
+		$newYork = new Point(Point::WAYPOINT, 40.7128, -74.0060);
+		$losAngeles = new Point(Point::WAYPOINT, 34.0522, -118.2437);
 
 		$distance = GeoHelper::getRawDistance($newYork, $losAngeles);
 		$this->assertEqualsWithDelta(3936000, $distance, 10000, "Distance NY to LA should be approximately 3936 km");
 
 		// Test 2: London to Paris (approximately 344 km)
-		$london = new Point(Point::WAYPOINT);
-		$london->latitude = 51.5074;
-		$london->longitude = -0.1278;
-
-		$paris = new Point(Point::WAYPOINT);
-		$paris->latitude = 48.8566;
-		$paris->longitude = 2.3522;
+		$london = new Point(Point::WAYPOINT, 51.5074, -0.1278);
+		$paris = new Point(Point::WAYPOINT, 48.8566, 2.3522);
 
 		$distance = GeoHelper::getRawDistance($london, $paris);
 		$this->assertEqualsWithDelta(344000, $distance, 5000, "Distance London to Paris should be approximately 344 km");
 
 		// Test 3: Sydney to Melbourne (approximately 714 km)
-		$sydney = new Point(Point::WAYPOINT);
-		$sydney->latitude = -33.8688;
-		$sydney->longitude = 151.2093;
-
-		$melbourne = new Point(Point::WAYPOINT);
-		$melbourne->latitude = -37.8136;
-		$melbourne->longitude = 144.9631;
+		$sydney = new Point(Point::WAYPOINT, -33.8688, 151.2093);
+		$melbourne = new Point(Point::WAYPOINT, -37.8136, 144.9631);
 
 		$distance = GeoHelper::getRawDistance($sydney, $melbourne);
 		$this->assertEqualsWithDelta(714000, $distance, 5000, "Distance Sydney to Melbourne should be approximately 714 km");
@@ -119,14 +95,10 @@ class GeoHelperTest extends TestCase
 	public function test_getRealDistance_with_elevation_differences_returns_correct_values(): void
 	{
 		// Test with significant elevation difference
-		$point1 = new Point(Point::WAYPOINT);
-		$point1->latitude = 45.0;
-		$point1->longitude = 10.0;
+		$point1 = new Point(Point::WAYPOINT, 45.0, 10.0);
 		$point1->elevation = 0;
 
-		$point2 = new Point(Point::WAYPOINT);
-		$point2->latitude = 45.0;
-		$point2->longitude = 10.01;
+		$point2 = new Point(Point::WAYPOINT, 45.0, 10.01);
 		$point2->elevation = 1000;
 
 		$rawDistance = GeoHelper::getRawDistance($point1, $point2);
@@ -145,9 +117,7 @@ class GeoHelperTest extends TestCase
 	 */
 	public function test_getRealDistance_with_null_elevation_treats_as_zero(): void
 	{
-		$point1 = new Point(Point::WAYPOINT);
-		$point1->latitude = 45.0;
-		$point1->longitude = 10.0;
+		$point1 = new Point(Point::WAYPOINT, 45.0, 10.0);
 		$point1->elevation = null;
 
 		$point2 = new Point(Point::WAYPOINT);

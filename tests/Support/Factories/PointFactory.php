@@ -12,6 +12,28 @@ use phpGPX\Models\Point;
 class PointFactory
 {
 	/**
+	 * Generate a random valid latitude value.
+	 * 
+	 * @return float A latitude value between -90.0 and 90.0 (inclusive)
+	 */
+	public static function randomLatitude(): float
+	{
+		// Generate latitude between -90.0 and 90.0
+		return mt_rand(-90000, 90000) / 1000.0;
+	}
+
+	/**
+	 * Generate a random valid longitude value.
+	 * 
+	 * @return float A longitude value between -180.0 (inclusive) and 180.0 (exclusive)
+	 */
+	public static function randomLongitude(): float
+	{
+		// Generate longitude between -180.0 and 179.999
+		return mt_rand(-180000, 179999) / 1000.0;
+	}
+
+	/**
 	 * Create a Point with default or custom values.
 	 *
 	 * @param array $overrides Array of property values to override defaults
