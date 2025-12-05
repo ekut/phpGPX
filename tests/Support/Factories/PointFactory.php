@@ -20,9 +20,10 @@ class PointFactory
 	public static function create(array $overrides = []): Point
 	{
 		$pointType = $overrides['pointType'] ?? Point::TRACKPOINT;
-		$point = new Point($pointType);
-		$point->latitude = $overrides['latitude'] ?? 54.9328621088893;
-		$point->longitude = $overrides['longitude'] ?? 9.860624216140083;
+		$latitude = $overrides['latitude'] ?? 54.9328621088893;
+		$longitude = $overrides['longitude'] ?? 9.860624216140083;
+		
+		$point = new Point($pointType, $latitude, $longitude);
 		$point->elevation = $overrides['elevation'] ?? null;
 		$point->time = $overrides['time'] ?? null;
 		$point->name = $overrides['name'] ?? null;

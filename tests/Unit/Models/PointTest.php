@@ -21,14 +21,12 @@ final class PointTest extends TestCase
 	use TestTrait;
 	/**
 	 * Test Point creation with valid coordinates.
-	 * Requirements: 2.2
+	 * Requirements: 1.1, 1.2
 	 */
 	public function test_point_can_be_created_with_valid_coordinates(): void
 	{
 		// Arrange & Act
-		$point = new Point(Point::TRACKPOINT);
-		$point->latitude = 54.9328621088893;
-		$point->longitude = 9.860624216140083;
+		$point = new Point(Point::TRACKPOINT, 54.9328621088893, 9.860624216140083);
 		
 		// Assert
 		$this->assertInstanceOf(Point::class, $point);
@@ -38,15 +36,310 @@ final class PointTest extends TestCase
 	}
 
 	/**
+	 * Test Point construction with invalid latitude (too low).
+	 * Requirements: 1.4, 9.1, 9.4
+	 */
+	public function test_point_rejects_latitude_below_minimum(): void
+	{
+		// Arrange & Assert
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('-90.0');
+		$this->expectExceptionMessage('90.0');
+		$this->expectExceptionMessage('-95.5');
+		
+		// Act
+		new Point(Point::WAYPOINT, -95.5, 0.0);
+	}
+
+	/**
+	 * Test Point construction with invalid latitude (too high).
+	 * Requirements: 1.4, 9.1, 9.4
+	 */
+	public function test_point_rejects_latitude_above_maximum(): void
+	{
+		// Arrange & Assert
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('-90.0');
+		$this->expectExceptionMessage('90.0');
+		$this->expectExceptionMessage('95.5');
+		
+		// Act
+		new Point(Point::WAYPOINT, 95.5, 0.0);
+	}
+
+	/**
+	 * Test Point construction with invalid longitude (too low).
+	 * Requirements: 1.5, 9.2, 9.4
+	 */
+	public function test_point_rejects_longitude_below_minimum(): void
+	{
+		// Arrange & Assert
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('-180.0');
+		$this->expectExceptionMessage('180.0');
+		$this->expectExceptionMessage('-185.5');
+		
+		// Act
+		new Point(Point::WAYPOINT, 0.0, -185.5);
+	}
+
+	/**
+	 * Test Point construction with invalid longitude (at or above maximum).
+	 * Requirements: 1.5, 9.2, 9.4
+	 */
+	public function test_point_rejects_longitude_at_or_above_maximum(): void
+	{
+		// Arrange & Assert
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('-180.0');
+		$this->expectExceptionMessage('180.0');
+		$this->expectExceptionMessage('180.0');
+		
+		// Act
+		new Point(Point::WAYPOINT, 0.0, 180.0);
+	}
+
+	/**
+	 * Test Point accepts boundary latitude values.
+	 * Requirements: 1.4
+	 */
+	public function test_point_accepts_boundary_latitude_values(): void
+	{
+		// Act - Maximum latitude
+		$pointMax = new Point(Point::WAYPOINT, 90.0, 0.0);
+		
+		// Assert
+		$this->assertEquals(90.0, $pointMax->latitude);
+		
+		// Act - Minimum latitude
+		$pointMin = new Point(Point::WAYPOINT, -90.0, 0.0);
+		
+		// Assert
+		$this->assertEquals(-90.0, $pointMin->latitude);
+	}
+
+	/**
+	 * Test Point accepts boundary longitude values.
+	 * Requirements: 1.5
+	 */
+	public function test_point_accepts_boundary_longitude_values(): void
+	{
+		// Act - Just below maximum longitude (179.999...)
+		$pointMax = new Point(Point::WAYPOINT, 0.0, 179.999999);
+		
+		// Assert
+		$this->assertEquals(179.999999, $pointMax->longitude);
+		
+		// Act - Minimum longitude
+		$pointMin = new Point(Point::WAYPOINT, 0.0, -180.0);
+		
+		// Assert
+		$this->assertEquals(-180.0, $pointMin->longitude);
+	}
+
+	/**
+	 * Test setMagVar with valid value.
+	 * Requirements: 8.1
+	 */
+	public function test_set_mag_var_accepts_valid_value(): void
+	{
+		// Arrange
+		$point = new Point(Point::WAYPOINT, 50.0, 10.0);
+		
+		// Act
+		$point->setMagVar(45.5);
+		
+		// Assert
+		$this->assertEquals(45.5, $point->magVar);
+	}
+
+	/**
+	 * Test setMagVar with boundary values.
+	 * Requirements: 8.1
+	 */
+	public function test_set_mag_var_accepts_boundary_values(): void
+	{
+		// Arrange
+		$point = new Point(Point::WAYPOINT, 50.0, 10.0);
+		
+		// Act & Assert - Minimum (0.0)
+		$point->setMagVar(0.0);
+		$this->assertEquals(0.0, $point->magVar);
+		
+		// Act & Assert - Just below maximum (359.999...)
+		$point->setMagVar(359.999999);
+		$this->assertEquals(359.999999, $point->magVar);
+	}
+
+	/**
+	 * Test setMagVar rejects negative value.
+	 * Requirements: 8.1, 9.4
+	 */
+	public function test_set_mag_var_rejects_negative_value(): void
+	{
+		// Arrange
+		$point = new Point(Point::WAYPOINT, 50.0, 10.0);
+		
+		// Assert
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('0.0');
+		$this->expectExceptionMessage('360.0');
+		$this->expectExceptionMessage('-5.0');
+		
+		// Act
+		$point->setMagVar(-5.0);
+	}
+
+	/**
+	 * Test setMagVar rejects value at or above 360.
+	 * Requirements: 8.1, 9.4
+	 */
+	public function test_set_mag_var_rejects_value_at_or_above_360(): void
+	{
+		// Arrange
+		$point = new Point(Point::WAYPOINT, 50.0, 10.0);
+		
+		// Assert
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('0.0');
+		$this->expectExceptionMessage('360.0');
+		$this->expectExceptionMessage('360.0');
+		
+		// Act
+		$point->setMagVar(360.0);
+	}
+
+	/**
+	 * Test setDgpsId with valid value.
+	 * Requirements: 7.1
+	 */
+	public function test_set_dgps_id_accepts_valid_value(): void
+	{
+		// Arrange
+		$point = new Point(Point::WAYPOINT, 50.0, 10.0);
+		
+		// Act
+		$point->setDgpsId(512);
+		
+		// Assert
+		$this->assertEquals(512, $point->dgpsid);
+	}
+
+	/**
+	 * Test setDgpsId with boundary values.
+	 * Requirements: 7.1
+	 */
+	public function test_set_dgps_id_accepts_boundary_values(): void
+	{
+		// Arrange
+		$point = new Point(Point::WAYPOINT, 50.0, 10.0);
+		
+		// Act & Assert - Minimum (0)
+		$point->setDgpsId(0);
+		$this->assertEquals(0, $point->dgpsid);
+		
+		// Act & Assert - Maximum (1023)
+		$point->setDgpsId(1023);
+		$this->assertEquals(1023, $point->dgpsid);
+	}
+
+	/**
+	 * Test setDgpsId rejects negative value.
+	 * Requirements: 7.1, 9.4
+	 */
+	public function test_set_dgps_id_rejects_negative_value(): void
+	{
+		// Arrange
+		$point = new Point(Point::WAYPOINT, 50.0, 10.0);
+		
+		// Assert
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('0');
+		$this->expectExceptionMessage('1023');
+		$this->expectExceptionMessage('-5');
+		
+		// Act
+		$point->setDgpsId(-5);
+	}
+
+	/**
+	 * Test setDgpsId rejects value above 1023.
+	 * Requirements: 7.1, 9.4
+	 */
+	public function test_set_dgps_id_rejects_value_above_maximum(): void
+	{
+		// Arrange
+		$point = new Point(Point::WAYPOINT, 50.0, 10.0);
+		
+		// Assert
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('0');
+		$this->expectExceptionMessage('1023');
+		$this->expectExceptionMessage('1024');
+		
+		// Act
+		$point->setDgpsId(1024);
+	}
+
+	/**
+	 * Test setSat with valid value.
+	 * Requirements: 7A.1
+	 */
+	public function test_set_sat_accepts_valid_value(): void
+	{
+		// Arrange
+		$point = new Point(Point::WAYPOINT, 50.0, 10.0);
+		
+		// Act
+		$point->setSat(8);
+		
+		// Assert
+		$this->assertEquals(8, $point->satellitesNumber);
+	}
+
+	/**
+	 * Test setSat with boundary value (zero).
+	 * Requirements: 7A.1
+	 */
+	public function test_set_sat_accepts_zero(): void
+	{
+		// Arrange
+		$point = new Point(Point::WAYPOINT, 50.0, 10.0);
+		
+		// Act
+		$point->setSat(0);
+		
+		// Assert
+		$this->assertEquals(0, $point->satellitesNumber);
+	}
+
+	/**
+	 * Test setSat rejects negative value.
+	 * Requirements: 7A.1, 9.4
+	 */
+	public function test_set_sat_rejects_negative_value(): void
+	{
+		// Arrange
+		$point = new Point(Point::WAYPOINT, 50.0, 10.0);
+		
+		// Assert
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Satellite count');
+		$this->expectExceptionMessage('non-negative');
+		$this->expectExceptionMessage('-5');
+		
+		// Act
+		$point->setSat(-5);
+	}
+
+	/**
 	 * Test Point creation with waypoint type.
-	 * Requirements: 2.2
+	 * Requirements: 1.1, 1.2
 	 */
 	public function test_point_can_be_created_as_waypoint(): void
 	{
 		// Arrange & Act
-		$point = new Point(Point::WAYPOINT);
-		$point->latitude = 50.0;
-		$point->longitude = 10.0;
+		$point = new Point(Point::WAYPOINT, 50.0, 10.0);
 		
 		// Assert
 		$this->assertSame(PointType::WAYPOINT, $point->getPointType());
@@ -54,14 +347,12 @@ final class PointTest extends TestCase
 
 	/**
 	 * Test Point creation with route point type.
-	 * Requirements: 2.2
+	 * Requirements: 1.1, 1.2
 	 */
 	public function test_point_can_be_created_as_routepoint(): void
 	{
 		// Arrange & Act
-		$point = new Point(Point::ROUTEPOINT);
-		$point->latitude = 50.0;
-		$point->longitude = 10.0;
+		$point = new Point(Point::ROUTEPOINT, 50.0, 10.0);
 		
 		// Assert
 		$this->assertSame(PointType::ROUTEPOINT, $point->getPointType());
@@ -99,14 +390,12 @@ final class PointTest extends TestCase
 
 	/**
 	 * Test Point with all optional properties.
-	 * Requirements: 2.2
+	 * Requirements: 1.1, 1.2
 	 */
 	public function test_point_stores_all_optional_properties(): void
 	{
 		// Arrange & Act
-		$point = new Point(Point::WAYPOINT);
-		$point->latitude = 54.9328621088893;
-		$point->longitude = 9.860624216140083;
+		$point = new Point(Point::WAYPOINT, 54.9328621088893, 9.860624216140083);
 		$point->elevation = 100.5;
 		$point->time = new \DateTime('2024-01-15 10:30:00', new \DateTimeZone('UTC'));
 		$point->name = 'Test Waypoint';
@@ -115,10 +404,10 @@ final class PointTest extends TestCase
 		$point->source = 'GPS Device';
 		$point->symbol = 'Flag';
 		$point->type = 'Summit';
-		$point->magVar = 5.5;
+		$point->setMagVar(5.5);
 		$point->geoidHeight = 50.0;
 		$point->fix = '3d';
-		$point->satellitesNumber = 8;
+		$point->setSat(8);
 		$point->hdop = 1.2;
 		$point->vdop = 1.5;
 		$point->pdop = 2.0;
@@ -141,14 +430,12 @@ final class PointTest extends TestCase
 
 	/**
 	 * Test Point serialization to array.
-	 * Requirements: 2.7
+	 * Requirements: 1.3
 	 */
 	public function test_point_serializes_to_array_correctly(): void
 	{
 		// Arrange
-		$point = new Point(Point::TRACKPOINT);
-		$point->latitude = 54.9328621088893;
-		$point->longitude = 9.860624216140083;
+		$point = new Point(Point::TRACKPOINT, 54.9328621088893, 9.860624216140083);
 		$point->elevation = 42.5;
 		$point->name = 'Test Point';
 		
@@ -165,14 +452,12 @@ final class PointTest extends TestCase
 
 	/**
 	 * Test Point serialization to array with null values.
-	 * Requirements: 2.7
+	 * Requirements: 1.3
 	 */
 	public function test_point_serializes_null_values_correctly(): void
 	{
 		// Arrange
-		$point = new Point(Point::WAYPOINT);
-		$point->latitude = 50.0;
-		$point->longitude = 10.0;
+		$point = new Point(Point::WAYPOINT, 50.0, 10.0);
 		
 		// Act
 		$array = $point->toArray();
@@ -185,14 +470,12 @@ final class PointTest extends TestCase
 
 	/**
 	 * Test Point serialization to XML.
-	 * Requirements: 2.5
+	 * Requirements: 1.3
 	 */
 	public function test_point_serializes_to_xml_correctly(): void
 	{
 		// Arrange
-		$point = new Point(Point::TRACKPOINT);
-		$point->latitude = 54.9328621088893;
-		$point->longitude = 9.860624216140083;
+		$point = new Point(Point::TRACKPOINT, 54.9328621088893, 9.860624216140083);
 		$point->elevation = 42.5;
 		$point->name = 'Test Point';
 		
@@ -213,14 +496,12 @@ final class PointTest extends TestCase
 
 	/**
 	 * Test waypoint serialization to XML.
-	 * Requirements: 2.5
+	 * Requirements: 1.3
 	 */
 	public function test_waypoint_serializes_to_xml_with_correct_element_name(): void
 	{
 		// Arrange
-		$point = new Point(Point::WAYPOINT);
-		$point->latitude = 50.0;
-		$point->longitude = 10.0;
+		$point = new Point(Point::WAYPOINT, 50.0, 10.0);
 		
 		$document = new \DOMDocument('1.0', 'UTF-8');
 		
@@ -236,14 +517,12 @@ final class PointTest extends TestCase
 
 	/**
 	 * Test route point serialization to XML.
-	 * Requirements: 2.5
+	 * Requirements: 1.3
 	 */
 	public function test_routepoint_serializes_to_xml_with_correct_element_name(): void
 	{
 		// Arrange
-		$point = new Point(Point::ROUTEPOINT);
-		$point->latitude = 50.0;
-		$point->longitude = 10.0;
+		$point = new Point(Point::ROUTEPOINT, 50.0, 10.0);
 		
 		$document = new \DOMDocument('1.0', 'UTF-8');
 		
@@ -254,52 +533,6 @@ final class PointTest extends TestCase
 		
 		// Assert
 		$this->assertStringContainsString('rtept', $xml);
-	}
-
-	/**
-	 * Test Point with boundary latitude values.
-	 * Requirements: 2.2
-	 */
-	public function test_point_accepts_boundary_latitude_values(): void
-	{
-		// Arrange & Act - Maximum latitude
-		$pointMax = new Point(Point::WAYPOINT);
-		$pointMax->latitude = 90.0;
-		$pointMax->longitude = 0.0;
-		
-		// Assert
-		$this->assertEquals(90.0, $pointMax->latitude);
-		
-		// Arrange & Act - Minimum latitude
-		$pointMin = new Point(Point::WAYPOINT);
-		$pointMin->latitude = -90.0;
-		$pointMin->longitude = 0.0;
-		
-		// Assert
-		$this->assertEquals(-90.0, $pointMin->latitude);
-	}
-
-	/**
-	 * Test Point with boundary longitude values.
-	 * Requirements: 2.2
-	 */
-	public function test_point_accepts_boundary_longitude_values(): void
-	{
-		// Arrange & Act - Maximum longitude
-		$pointMax = new Point(Point::WAYPOINT);
-		$pointMax->latitude = 0.0;
-		$pointMax->longitude = 180.0;
-		
-		// Assert
-		$this->assertEquals(180.0, $pointMax->longitude);
-		
-		// Arrange & Act - Minimum longitude
-		$pointMin = new Point(Point::WAYPOINT);
-		$pointMin->latitude = 0.0;
-		$pointMin->longitude = -180.0;
-		
-		// Assert
-		$this->assertEquals(-180.0, $pointMin->longitude);
 	}
 
 	/**
@@ -383,16 +616,16 @@ final class PointTest extends TestCase
 
 	/**
 	 * Test Point initialization has null values for optional properties.
-	 * Requirements: 2.2
+	 * Requirements: 1.1, 1.2
 	 */
 	public function test_point_initialization_has_null_values(): void
 	{
 		// Arrange & Act
-		$point = new Point(Point::TRACKPOINT);
+		$point = new Point(Point::TRACKPOINT, 50.0, 10.0);
 		
-		// Assert - all optional properties should be null
-		$this->assertNull($point->latitude);
-		$this->assertNull($point->longitude);
+		// Assert - latitude and longitude are required, all other properties should be null
+		$this->assertEquals(50.0, $point->latitude);
+		$this->assertEquals(10.0, $point->longitude);
 		$this->assertNull($point->elevation);
 		$this->assertNull($point->time);
 		$this->assertNull($point->name);
@@ -424,15 +657,13 @@ final class PointTest extends TestCase
 
 	/**
 	 * Test Point serialization to XML includes all properties.
-	 * Requirements: 2.5
+	 * Requirements: 1.3
 	 */
 	public function test_point_xml_serialization_includes_all_properties(): void
 	{
 		// Arrange
 		$time = new \DateTime('2024-01-15T10:30:00Z');
-		$point = new Point(Point::TRACKPOINT);
-		$point->latitude = 54.9328621088893;
-		$point->longitude = 9.860624216140083;
+		$point = new Point(Point::TRACKPOINT, 54.9328621088893, 9.860624216140083);
 		$point->elevation = 42.5;
 		$point->time = $time;
 		$point->name = 'Test Point';
@@ -461,7 +692,7 @@ final class PointTest extends TestCase
 	 * Property test: Model property storage.
 	 * 
 	 * **Feature: test-coverage, Property 5: Model property storage**
-	 * **Validates: Requirements 2.2**
+	 * **Validates: Requirements 1.1, 1.2**
 	 * 
 	 * This test verifies that for any valid model data, creating a Point instance
 	 * and retrieving its properties returns the exact values that were provided.
@@ -471,8 +702,8 @@ final class PointTest extends TestCase
 		$this
 			->withRand('mt_rand')
 			->forAll(
-				Generators::choose(-90, 90),    // latitude
-				Generators::choose(-180, 180),  // longitude
+				Generators::choose(-90, 89),    // latitude (avoid 90 to ensure we can add decimals)
+				Generators::choose(-180, 179),  // longitude (avoid 180 which is exclusive)
 				Generators::choose(-1000, 9000), // elevation (from Dead Sea to Everest)
 				Generators::elements([Point::WAYPOINT, Point::TRACKPOINT, Point::ROUTEPOINT]), // point type
 				Generators::string(),           // name
@@ -489,21 +720,19 @@ final class PointTest extends TestCase
 				
 				// Ensure within valid ranges
 				$latitude = min(90.0, max(-90.0, $latitude));
-				$longitude = min(180.0, max(-180.0, $longitude));
+				$longitude = min(179.999999, max(-180.0, $longitude));
 				
 				// Create a timestamp
 				$time = new \DateTime('2024-01-15 10:30:00', new \DateTimeZone('UTC'));
 				
-				// Create point and set properties
-				$point = new Point($pointType);
-				$point->latitude = $latitude;
-				$point->longitude = $longitude;
+				// Create point with required coordinates
+				$point = new Point($pointType, $latitude, $longitude);
 				$point->elevation = $elevation;
 				$point->time = $time;
 				$point->name = $name;
 				$point->description = $description;
 				$point->comment = $comment;
-				$point->satellitesNumber = $satellites;
+				$point->setSat($satellites);
 				
 				// Verify all properties are stored correctly
 				$this->assertEquals($latitude, $point->latitude, "Latitude should be stored correctly");
@@ -520,59 +749,363 @@ final class PointTest extends TestCase
 	}
 
 	/**
-	 * Property test: Invalid coordinates rejected.
+	 * Property test: Latitude range validation.
 	 * 
-	 * **Feature: test-coverage, Property 8: Invalid coordinates rejected**
-	 * **Validates: Requirements 5.1**
+	 * **Feature: gpx-schema-compliance, Property 3: Latitude range validation**
+	 * **Validates: Requirements 1.4, 2.4, 2.5**
 	 * 
-	 * COMMENTED OUT: This test is currently disabled because the Point model does not implement
-	 * coordinate validation. According to Requirements 5.1, the system SHALL reject all invalid
-	 * latitude and longitude values (latitude outside [-90, 90] or longitude outside [-180, 180]).
-	 * 
-	 * TODO: After Phase 4 (PHP 8.4 Migration) or Phase 5 (Architecture Refactoring), implement
-	 * coordinate validation in the Point model:
-	 * - Add validation in Point constructor or when setting latitude/longitude properties
-	 * - Throw InvalidArgumentException with descriptive message for invalid coordinates
-	 * - Then uncomment this test to verify the validation works correctly
-	 * 
-	 * The test itself is correct and follows the specification. The issue is in the production code.
+	 * This test verifies that for any latitude value outside the range [-90.0, 90.0],
+	 * the Point Model SHALL throw an InvalidArgumentException.
 	 */
-	/*
-	public function test_property_invalid_coordinates_rejected(): void
+	public function test_property_latitude_range_validation(): void
 	{
 		$this
 			->withRand('mt_rand')
 			->forAll(
-				Generators::choose(-200, 200),  // Generate values outside valid range
-				Generators::choose(-400, 400)   // Generate values outside valid range
+				Generators::choose(-200, 200)  // Generate values that may be outside valid range
 			)
 			->withMaxSize(100)
-			->then(function ($lat, $lon) {
-				// Convert to float
-				$lat = (float) $lat;
-				$lon = (float) $lon;
+			->then(function ($latBase) {
+				// Convert to float with decimal precision
+				$lat = (float) $latBase + (mt_rand(0, 999999) / 1000000);
 				
-				// Check if coordinates are invalid
-				$isLatitudeInvalid = $lat < -90.0 || $lat > 90.0;
-				$isLongitudeInvalid = $lon < -180.0 || $lon > 180.0;
+				// Check if latitude is invalid
+				$isInvalid = $lat < -90.0 || $lat > 90.0;
 				
-				if ($isLatitudeInvalid || $isLongitudeInvalid) {
-					// Invalid coordinates should be rejected
-					$this->expectException(\InvalidArgumentException::class);
-					
-					$point = new Point(Point::WAYPOINT);
-					$point->latitude = $lat;
-					$point->longitude = $lon;
+				if ($isInvalid) {
+					// Invalid latitude should be rejected
+					try {
+						new Point(Point::WAYPOINT, $lat, 0.0);
+						$this->fail('Expected InvalidArgumentException for latitude ' . $lat);
+					} catch (\InvalidArgumentException $e) {
+						// Verify error message contains range and invalid value
+						$this->assertStringContainsString('-90.0', $e->getMessage());
+						$this->assertStringContainsString('90.0', $e->getMessage());
+						$this->assertStringContainsString((string) $lat, $e->getMessage());
+					}
 				} else {
-					// Valid coordinates should be accepted
-					$point = new Point(Point::WAYPOINT);
-					$point->latitude = $lat;
-					$point->longitude = $lon;
-					
+					// Valid latitude should be accepted
+					$point = new Point(Point::WAYPOINT, $lat, 0.0);
 					$this->assertEquals($lat, $point->latitude);
+				}
+			});
+	}
+
+	/**
+	 * Property test: Longitude range validation.
+	 * 
+	 * **Feature: gpx-schema-compliance, Property 4: Longitude range validation**
+	 * **Validates: Requirements 1.5, 2.4, 2.5**
+	 * 
+	 * This test verifies that for any longitude value outside the range [-180.0, 180.0),
+	 * the Point Model SHALL throw an InvalidArgumentException.
+	 */
+	public function test_property_longitude_range_validation(): void
+	{
+		$this
+			->withRand('mt_rand')
+			->forAll(
+				Generators::choose(-400, 400)  // Generate values that may be outside valid range
+			)
+			->withMaxSize(100)
+			->then(function ($lonBase) {
+				// Convert to float with decimal precision
+				$lon = (float) $lonBase + (mt_rand(0, 999999) / 1000000);
+				
+				// Check if longitude is invalid (note: 180.0 is exclusive)
+				$isInvalid = $lon < -180.0 || $lon >= 180.0;
+				
+				if ($isInvalid) {
+					// Invalid longitude should be rejected
+					try {
+						new Point(Point::WAYPOINT, 0.0, $lon);
+						$this->fail('Expected InvalidArgumentException for longitude ' . $lon);
+					} catch (\InvalidArgumentException $e) {
+						// Verify error message contains range and invalid value
+						$this->assertStringContainsString('-180.0', $e->getMessage());
+						$this->assertStringContainsString('180.0', $e->getMessage());
+						$this->assertStringContainsString((string) $lon, $e->getMessage());
+					}
+				} else {
+					// Valid longitude should be accepted
+					$point = new Point(Point::WAYPOINT, 0.0, $lon);
 					$this->assertEquals($lon, $point->longitude);
 				}
 			});
 	}
-	*/
+
+	/**
+	 * Property test: DGPS station ID validation.
+	 * 
+	 * **Feature: gpx-schema-compliance, Property 21: DGPS station ID validation**
+	 * **Validates: Requirements 7.1, 7A.1, 8.1**
+	 * 
+	 * This test verifies that for any DGPS station ID outside the range [0, 1023],
+	 * the Point Model SHALL throw an InvalidArgumentException.
+	 */
+	public function test_property_dgps_station_id_validation(): void
+	{
+		$this
+			->withRand('mt_rand')
+			->forAll(
+				Generators::choose(-100, 1200)  // Generate values that may be outside valid range
+			)
+			->withMaxSize(100)
+			->then(function ($dgpsId) {
+				$point = new Point(Point::WAYPOINT, 50.0, 10.0);
+				
+				// Check if DGPS ID is invalid
+				$isInvalid = $dgpsId < 0 || $dgpsId > 1023;
+				
+				if ($isInvalid) {
+					// Invalid DGPS ID should be rejected
+					try {
+						$point->setDgpsId($dgpsId);
+						$this->fail('Expected InvalidArgumentException for DGPS ID ' . $dgpsId);
+					} catch (\InvalidArgumentException $e) {
+						// Verify error message contains range and invalid value
+						$this->assertStringContainsString('0', $e->getMessage());
+						$this->assertStringContainsString('1023', $e->getMessage());
+						$this->assertStringContainsString((string) $dgpsId, $e->getMessage());
+					}
+				} else {
+					// Valid DGPS ID should be accepted
+					$point->setDgpsId($dgpsId);
+					$this->assertEquals($dgpsId, $point->dgpsid);
+				}
+			});
+	}
+
+	/**
+	 * Property test: Satellite count validation.
+	 * 
+	 * **Feature: gpx-schema-compliance, Property 22: Satellite count validation**
+	 * **Validates: Requirements 7.1, 7A.1, 8.1**
+	 * 
+	 * This test verifies that for any negative satellite count,
+	 * the Point Model SHALL throw an InvalidArgumentException.
+	 */
+	public function test_property_satellite_count_validation(): void
+	{
+		$this
+			->withRand('mt_rand')
+			->forAll(
+				Generators::choose(-100, 50)  // Generate values that may be negative
+			)
+			->withMaxSize(100)
+			->then(function ($sat) {
+				$point = new Point(Point::WAYPOINT, 50.0, 10.0);
+				
+				// Check if satellite count is invalid
+				$isInvalid = $sat < 0;
+				
+				if ($isInvalid) {
+					// Negative satellite count should be rejected
+					try {
+						$point->setSat($sat);
+						$this->fail('Expected InvalidArgumentException for satellite count ' . $sat);
+					} catch (\InvalidArgumentException $e) {
+						// Verify error message contains "non-negative" and invalid value
+						$this->assertStringContainsString('non-negative', $e->getMessage());
+						$this->assertStringContainsString((string) $sat, $e->getMessage());
+					}
+				} else {
+					// Valid satellite count should be accepted
+					$point->setSat($sat);
+					$this->assertEquals($sat, $point->satellitesNumber);
+				}
+			});
+	}
+
+	/**
+	 * Property test: Magnetic variation validation.
+	 * 
+	 * **Feature: gpx-schema-compliance, Property 23: Magnetic variation validation**
+	 * **Validates: Requirements 7.1, 7A.1, 8.1**
+	 * 
+	 * This test verifies that for any magnetic variation value outside the range [0.0, 360.0),
+	 * the Point Model SHALL throw an InvalidArgumentException.
+	 */
+	public function test_property_magnetic_variation_validation(): void
+	{
+		$this
+			->withRand('mt_rand')
+			->forAll(
+				Generators::choose(-100, 400)  // Generate values that may be outside valid range
+			)
+			->withMaxSize(100)
+			->then(function ($magVarBase) {
+				// Convert to float with decimal precision
+				$magVar = (float) $magVarBase + (mt_rand(0, 999999) / 1000000);
+				
+				$point = new Point(Point::WAYPOINT, 50.0, 10.0);
+				
+				// Check if magnetic variation is invalid (note: 360.0 is exclusive)
+				$isInvalid = $magVar < 0.0 || $magVar >= 360.0;
+				
+				if ($isInvalid) {
+					// Invalid magnetic variation should be rejected
+					try {
+						$point->setMagVar($magVar);
+						$this->fail('Expected InvalidArgumentException for magnetic variation ' . $magVar);
+					} catch (\InvalidArgumentException $e) {
+						// Verify error message contains range and invalid value
+						$this->assertStringContainsString('0.0', $e->getMessage());
+						$this->assertStringContainsString('360.0', $e->getMessage());
+						$this->assertStringContainsString((string) $magVar, $e->getMessage());
+					}
+				} else {
+					// Valid magnetic variation should be accepted
+					$point->setMagVar($magVar);
+					$this->assertEquals($magVar, $point->magVar);
+				}
+			});
+	}
+
+	/**
+	 * Property test: Latitude validation error messages.
+	 * 
+	 * **Feature: gpx-schema-compliance, Property 24: Latitude validation error messages**
+	 * **Validates: Requirements 9.1, 9.2, 9.4**
+	 * 
+	 * This test verifies that for any latitude validation failure, the exception message
+	 * SHALL include the text "-90.0" and "90.0" indicating the valid range.
+	 */
+	public function test_property_latitude_validation_error_messages(): void
+	{
+		$this
+			->withRand('mt_rand')
+			->forAll(
+				Generators::choose(-200, -91),  // Invalid: too small
+				Generators::choose(91, 200)      // Invalid: too large
+			)
+			->withMaxSize(100)
+			->then(function ($invalidLow, $invalidHigh) {
+				// Test invalid low latitude
+				try {
+					new Point(Point::WAYPOINT, (float)$invalidLow, 0.0);
+					$this->fail('Expected InvalidArgumentException for latitude ' . $invalidLow);
+				} catch (\InvalidArgumentException $e) {
+					$this->assertStringContainsString('-90.0', $e->getMessage());
+					$this->assertStringContainsString('90.0', $e->getMessage());
+					$this->assertStringContainsString((string)(float)$invalidLow, $e->getMessage());
+				}
+				
+				// Test invalid high latitude
+				try {
+					new Point(Point::WAYPOINT, (float)$invalidHigh, 0.0);
+					$this->fail('Expected InvalidArgumentException for latitude ' . $invalidHigh);
+				} catch (\InvalidArgumentException $e) {
+					$this->assertStringContainsString('-90.0', $e->getMessage());
+					$this->assertStringContainsString('90.0', $e->getMessage());
+					$this->assertStringContainsString((string)(float)$invalidHigh, $e->getMessage());
+				}
+			});
+	}
+
+	/**
+	 * Property test: Longitude validation error messages.
+	 * 
+	 * **Feature: gpx-schema-compliance, Property 25: Longitude validation error messages**
+	 * **Validates: Requirements 9.1, 9.2, 9.4**
+	 * 
+	 * This test verifies that for any longitude validation failure, the exception message
+	 * SHALL include the text "-180.0" and "180.0" indicating the valid range.
+	 */
+	public function test_property_longitude_validation_error_messages(): void
+	{
+		$this
+			->withRand('mt_rand')
+			->forAll(
+				Generators::choose(-400, -181),  // Invalid: too small
+				Generators::choose(180, 400)      // Invalid: too large (180.0 is exclusive)
+			)
+			->withMaxSize(100)
+			->then(function ($invalidLow, $invalidHigh) {
+				// Test invalid low longitude
+				try {
+					new Point(Point::WAYPOINT, 0.0, (float)$invalidLow);
+					$this->fail('Expected InvalidArgumentException for longitude ' . $invalidLow);
+				} catch (\InvalidArgumentException $e) {
+					$this->assertStringContainsString('-180.0', $e->getMessage());
+					$this->assertStringContainsString('180.0', $e->getMessage());
+					$this->assertStringContainsString((string)(float)$invalidLow, $e->getMessage());
+				}
+				
+				// Test invalid high longitude
+				try {
+					new Point(Point::WAYPOINT, 0.0, (float)$invalidHigh);
+					$this->fail('Expected InvalidArgumentException for longitude ' . $invalidHigh);
+				} catch (\InvalidArgumentException $e) {
+					$this->assertStringContainsString('-180.0', $e->getMessage());
+					$this->assertStringContainsString('180.0', $e->getMessage());
+					$this->assertStringContainsString((string)(float)$invalidHigh, $e->getMessage());
+				}
+			});
+	}
+
+	/**
+	 * Property test: Validation error messages include invalid value.
+	 * 
+	 * **Feature: gpx-schema-compliance, Property 27: Validation error messages include invalid value**
+	 * **Validates: Requirements 9.1, 9.2, 9.4**
+	 * 
+	 * This test verifies that for any validation failure, the exception message
+	 * SHALL include the invalid value that was provided.
+	 */
+	public function test_property_validation_error_messages_include_invalid_value(): void
+	{
+		$this
+			->withRand('mt_rand')
+			->forAll(
+				Generators::choose(-200, 200),   // Latitude that may be invalid
+				Generators::choose(-400, 400),   // Longitude that may be invalid
+				Generators::choose(-100, 1200),  // DGPS ID that may be invalid
+				Generators::choose(-100, 50)     // Satellite count that may be invalid
+			)
+			->withMaxSize(100)
+			->then(function ($lat, $lon, $dgpsId, $sat) {
+				// Test latitude validation error message
+				if ($lat < -90 || $lat > 90) {
+					try {
+						new Point(Point::WAYPOINT, (float)$lat, 0.0);
+						$this->fail('Expected InvalidArgumentException for latitude ' . $lat);
+					} catch (\InvalidArgumentException $e) {
+						$this->assertStringContainsString((string)(float)$lat, $e->getMessage());
+					}
+				}
+				
+				// Test longitude validation error message
+				if ($lon < -180 || $lon >= 180) {
+					try {
+						new Point(Point::WAYPOINT, 0.0, (float)$lon);
+						$this->fail('Expected InvalidArgumentException for longitude ' . $lon);
+					} catch (\InvalidArgumentException $e) {
+						$this->assertStringContainsString((string)(float)$lon, $e->getMessage());
+					}
+				}
+				
+				// Test DGPS ID validation error message
+				if ($dgpsId < 0 || $dgpsId > 1023) {
+					$point = new Point(Point::WAYPOINT, 50.0, 10.0);
+					try {
+						$point->setDgpsId($dgpsId);
+						$this->fail('Expected InvalidArgumentException for DGPS ID ' . $dgpsId);
+					} catch (\InvalidArgumentException $e) {
+						$this->assertStringContainsString((string)$dgpsId, $e->getMessage());
+					}
+				}
+				
+				// Test satellite count validation error message
+				if ($sat < 0) {
+					$point = new Point(Point::WAYPOINT, 50.0, 10.0);
+					try {
+						$point->setSat($sat);
+						$this->fail('Expected InvalidArgumentException for satellite count ' . $sat);
+					} catch (\InvalidArgumentException $e) {
+						$this->assertStringContainsString((string)$sat, $e->getMessage());
+					}
+				}
+			});
+	}
 }
