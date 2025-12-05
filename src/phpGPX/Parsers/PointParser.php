@@ -102,11 +102,15 @@ abstract class PointParser
 			return null;
 		}
 
-		$point = new Point(self::$typeMapper[$node->getName()]);
+		// Latitude and longitude are required in GPX 1.1 spec
+		if (!isset($node['lat']) || !isset($node['lon'])) {
+			return null; // Invalid point without coordinates
+		}
 
-		// Latitude and longitude are required in GPX spec, but handle missing values gracefully
-		$point->latitude = isset($node['lat']) ? ((float) $node['lat']) : null;
-		$point->longitude = isset($node['lon']) ? ((float) $node['lon']) : null;
+		$latitude = (float) $node['lat'];
+		$longitude = (float) $node['lon'];
+
+		$point = new Point(self::$typeMapper[$node->getName()], $latitude, $longitude);
 
 		foreach (self::$attributeMapper as $key => $attribute) {
 			switch ($key) {

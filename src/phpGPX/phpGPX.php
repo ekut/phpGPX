@@ -119,10 +119,10 @@ class phpGPX
 	{
 		$xml = simplexml_load_string($xml);
 
-		$gpx = new GpxFile();
-
-		// Parse creator
-		$gpx->creator = isset($xml['creator']) ? (string)$xml['creator'] : null;
+		// Parse creator (required by GPX 1.1 schema)
+		$creator = isset($xml['creator']) ? (string)$xml['creator'] : self::getSignature();
+		
+		$gpx = new GpxFile($creator);
 
 		// Parse metadata
 		$gpx->metadata = isset($xml->metadata) ? MetadataParser::parse($xml->metadata) : null;

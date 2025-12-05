@@ -243,8 +243,7 @@ final class RoundTripTest extends TestCase
 	public function test_round_trip_with_multiple_tracks_and_segments(): void
 	{
 		// Arrange - Create GPX with multiple tracks and segments
-		$gpxFile = new GpxFile();
-		$gpxFile->creator = 'phpGPX Round-Trip Test';
+		$gpxFile = new GpxFile('phpGPX Round-Trip Test');
 		$gpxFile->metadata = MetadataFactory::create(['name' => 'Multi-Track Test']);
 		
 		// Add first track with 2 segments
@@ -290,7 +289,7 @@ final class RoundTripTest extends TestCase
 	public function test_round_trip_preserves_coordinate_precision(): void
 	{
 		// Arrange - Create GPX with high-precision coordinates
-		$gpxFile = new GpxFile();
+		$gpxFile = new GpxFile('phpGPX Precision Test');
 		$gpxFile->metadata = MetadataFactory::create(['name' => 'Precision Test']);
 		
 		$track = TrackFactory::create();

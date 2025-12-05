@@ -6,6 +6,7 @@
 
 namespace phpGPX\Models;
 
+use phpGPX\Helpers\GpxValidator;
 use phpGPX\Helpers\SerializationHelper;
 use phpGPX\Parsers\ExtensionParser;
 use phpGPX\Parsers\MetadataParser;
@@ -55,9 +56,22 @@ class GpxFile implements Summarizable
 
 	/**
 	 * Creator of GPX file.
-	 * @var string|null
+	 * Required by GPX 1.1 schema.
+	 * @var string
 	 */
 	public $creator;
+
+	/**
+	 * Create a new GpxFile instance.
+	 * 
+	 * @param string $creator The creator of the GPX file (required by GPX 1.1 schema)
+	 * @throws \InvalidArgumentException If creator is empty or whitespace-only
+	 */
+	public function __construct(string $creator)
+	{
+		GpxValidator::validateNonEmptyString($creator, 'GPX creator');
+		$this->creator = $creator;
+	}
 
 
 	/**
@@ -94,7 +108,7 @@ class GpxFile implements Summarizable
 
 		$gpx = $document->createElementNS("http://www.topografix.com/GPX/1/1", "gpx");
 		$gpx->setAttribute("version", "1.1");
-		$gpx->setAttribute("creator", $this->creator ?: phpGPX::getSignature());
+		$gpx->setAttribute("creator", $this->creator);
 
 		ExtensionParser::$usedNamespaces = [];
 

@@ -24,6 +24,11 @@ abstract class EmailParser
 		$id = isset($node['id']) ? (string) $node['id'] : '';
 		$domain = isset($node['domain']) ? (string) $node['domain'] : '';
 
+		// Both id and domain are required by GPX 1.1 spec
+		if (trim($id) === '' || trim($domain) === '') {
+			return null;
+		}
+
 		return new Email($id, $domain);
 	}
 

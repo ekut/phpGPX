@@ -49,7 +49,7 @@ $sample_data = [
 $link = new Link("https://sibyx.github.io/phpgpx", 'phpGPX Docs');
 
 // GpxFile contains data and handles serialization of objects
-$gpx_file 						= new GpxFile();
+$gpx_file 						= new GpxFile('My Application v1.0');
 
 // Creating sample Metadata object
 $gpx_file->metadata 			= new Metadata();

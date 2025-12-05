@@ -26,6 +26,12 @@ abstract class CopyrightParser
 		}
 
 		$author = isset($node['author']) ? (string) $node['author'] : '';
+		
+		// Author is required by GPX 1.1 spec
+		if (trim($author) === '') {
+			return null;
+		}
+		
 		$year = property_exists($node, 'year') && $node->year !== null ? (string) $node->year : null;
 		$license = property_exists($node, 'license') && $node->license !== null ? (string) $node->license : null;
 

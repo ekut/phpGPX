@@ -78,7 +78,7 @@ class PersonParserTest extends AbstractParserTest
 	 */
 	public function testEmptyLinks()
 	{
-		$gpx_file = new GpxFile();
+		$gpx_file = new GpxFile('Test Creator');
 
 		$gpx_file->metadata = new Metadata();
 		$gpx_file->metadata->author = new Person();

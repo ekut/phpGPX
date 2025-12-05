@@ -28,8 +28,7 @@ final class GpxFileSaveTest extends TestCase
 	public function test_create_gpx_file_from_scratch_and_save_to_xml(): void
 	{
 		// Arrange - Create a GPX file from scratch
-		$gpxFile = new GpxFile();
-		$gpxFile->creator = 'phpGPX Test Suite';
+		$gpxFile = new GpxFile('phpGPX Test Suite');
 		
 		// Add metadata
 		$gpxFile->metadata = MetadataFactory::create([
@@ -92,8 +91,7 @@ final class GpxFileSaveTest extends TestCase
 	public function test_saved_xml_is_valid_gpx_1_1_format(): void
 	{
 		// Arrange - Create a simple GPX file
-		$gpxFile = new GpxFile();
-		$gpxFile->creator = 'phpGPX Test';
+		$gpxFile = new GpxFile('phpGPX Test');
 		$gpxFile->metadata = MetadataFactory::create(['name' => 'Format Test']);
 		
 		$track = TrackFactory::createWithPoints(2);
@@ -142,8 +140,7 @@ final class GpxFileSaveTest extends TestCase
 	public function test_saved_xml_can_be_parsed_by_external_validators(): void
 	{
 		// Arrange - Create a comprehensive GPX file
-		$gpxFile = new GpxFile();
-		$gpxFile->creator = 'phpGPX Test Suite';
+		$gpxFile = new GpxFile('phpGPX Test Suite');
 		
 		// Add metadata with various fields
 		$metadata = MetadataFactory::create([
@@ -210,8 +207,7 @@ final class GpxFileSaveTest extends TestCase
 	public function test_save_gpx_file_with_routes(): void
 	{
 		// Arrange - Create GPX file with routes
-		$gpxFile = new GpxFile();
-		$gpxFile->creator = 'phpGPX Test';
+		$gpxFile = new GpxFile('phpGPX Test');
 		$gpxFile->metadata = MetadataFactory::create(['name' => 'Route Test']);
 		
 		// Create a route with points
@@ -265,8 +261,7 @@ final class GpxFileSaveTest extends TestCase
 	public function test_save_gpx_file_with_all_element_types(): void
 	{
 		// Arrange - Create comprehensive GPX file
-		$gpxFile = new GpxFile();
-		$gpxFile->creator = 'phpGPX Complete Test';
+		$gpxFile = new GpxFile('phpGPX Complete Test');
 		$gpxFile->metadata = MetadataFactory::create([
 			'name' => 'Complete GPX',
 			'description' => 'Contains tracks, routes, and waypoints',
@@ -317,9 +312,8 @@ final class GpxFileSaveTest extends TestCase
 	 */
 	public function test_save_minimal_gpx_file(): void
 	{
-		// Arrange - Create minimal GPX file
-		$gpxFile = new GpxFile();
-		// Don't set creator - should use default
+		// Arrange - Create minimal GPX file with required creator
+		$gpxFile = new GpxFile('Minimal Test Creator');
 		
 		// Add minimal track
 		$track = TrackFactory::createWithPoints(1);
@@ -333,11 +327,10 @@ final class GpxFileSaveTest extends TestCase
 		$xmlContent = file_get_contents($tempFile);
 		$this->assertValidGpxXml($xmlContent);
 		
-		// Assert - Has default creator
+		// Assert - Has creator
 		$xml = simplexml_load_string($xmlContent);
 		$creator = (string)$xml['creator'];
-		$this->assertNotEmpty($creator, 'Should have default creator');
-		$this->assertStringContainsString('phpGPX', $creator, 'Default creator should contain phpGPX');
+		$this->assertEquals('Minimal Test Creator', $creator);
 		
 		// Cleanup
 		unlink($tempFile);
@@ -351,8 +344,7 @@ final class GpxFileSaveTest extends TestCase
 	public function test_save_gpx_file_to_json_format(): void
 	{
 		// Arrange
-		$gpxFile = new GpxFile();
-		$gpxFile->creator = 'phpGPX JSON Test';
+		$gpxFile = new GpxFile('phpGPX JSON Test');
 		$gpxFile->metadata = MetadataFactory::create(['name' => 'JSON Test']);
 		
 		$track = TrackFactory::createWithPoints(2);
@@ -394,7 +386,7 @@ final class GpxFileSaveTest extends TestCase
 		// Arrange
 		phpGPX::$PRETTY_PRINT = true;
 		
-		$gpxFile = new GpxFile();
+		$gpxFile = new GpxFile('phpGPX Pretty Print Test');
 		$gpxFile->metadata = MetadataFactory::create(['name' => 'Pretty Print Test']);
 		$track = TrackFactory::createWithPoints(2);
 		$gpxFile->tracks[] = $track;
@@ -423,7 +415,7 @@ final class GpxFileSaveTest extends TestCase
 	public function test_save_gpx_file_preserves_coordinate_precision(): void
 	{
 		// Arrange - Create points with high precision coordinates
-		$gpxFile = new GpxFile();
+		$gpxFile = new GpxFile('phpGPX Precision Test');
 		$gpxFile->metadata = MetadataFactory::create(['name' => 'Precision Test']);
 		
 		$track = TrackFactory::create();

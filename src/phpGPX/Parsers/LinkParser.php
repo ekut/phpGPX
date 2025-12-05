@@ -21,6 +21,12 @@ abstract class LinkParser
 		$links = [];
 		foreach ($nodes as $node) {
 			$href = isset($node['href']) ? (string) $node['href'] : '';
+			
+			// Skip links without href (required by GPX 1.1 spec)
+			if (trim($href) === '') {
+				continue;
+			}
+			
 			$text = property_exists($node, 'text') && $node->text !== null ? (string) $node->text : null;
 			$type = property_exists($node, 'type') && $node->type !== null ? (string) $node->type : null;
 

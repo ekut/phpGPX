@@ -22,10 +22,10 @@ class DateTimeHelperTest extends TestCase
 	public function test_compare_points_by_timestamp_first_point_later_returns_positive(): void
 	{
 		// Arrange
-		$point1 = new Point(Point::WAYPOINT);
+		$point1 = new Point(Point::WAYPOINT, 0.0, 0.0);
 		$point1->time = new \DateTime("2017-08-12T20:16:29+00:00", new \DateTimeZone("UTC"));
 
-		$point2 = new Point(Point::WAYPOINT);
+		$point2 = new Point(Point::WAYPOINT, 0.0, 0.0);
 		$point2->time = new \DateTime("2017-08-12T20:15:19+00:00", new \DateTimeZone("UTC"));
 
 		// Act
@@ -38,10 +38,10 @@ class DateTimeHelperTest extends TestCase
 	public function test_compare_points_by_timestamp_first_point_earlier_returns_negative(): void
 	{
 		// Arrange
-		$point1 = new Point(Point::WAYPOINT);
+		$point1 = new Point(Point::WAYPOINT, 0.0, 0.0);
 		$point1->time = new \DateTime("2017-08-12T20:15:19+00:00", new \DateTimeZone("UTC"));
 
-		$point2 = new Point(Point::WAYPOINT);
+		$point2 = new Point(Point::WAYPOINT, 0.0, 0.0);
 		$point2->time = new \DateTime("2017-08-12T20:16:29+00:00", new \DateTimeZone("UTC"));
 
 		// Act

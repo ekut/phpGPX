@@ -55,34 +55,32 @@ class EmailParserTest extends AbstractParserTest
 	}
 
 	/**
-	 * Test parsing email with missing domain attribute throws exception
+	 * Test parsing email with missing domain attribute returns null
 	 * Requirements: 5.2
 	 */
-	public function test_parse_email_with_missing_domain_throws_exception(): void
+	public function test_parse_email_with_missing_domain_returns_null(): void
 	{
 		$minimalXml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
 			<email id="user"/>
 		');
 
-		$this->expectException(\InvalidArgumentException::class);
-		$this->expectExceptionMessage('Email domain attribute');
-
-		EmailParser::parse($minimalXml);
+		$result = EmailParser::parse($minimalXml);
+		
+		$this->assertNull($result, 'Parser should return null for email with missing domain');
 	}
 
 	/**
-	 * Test parsing email with missing id attribute throws exception
+	 * Test parsing email with missing id attribute returns null
 	 * Requirements: 5.2
 	 */
-	public function test_parse_email_with_missing_id_throws_exception(): void
+	public function test_parse_email_with_missing_id_returns_null(): void
 	{
 		$minimalXml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
 			<email domain="example.com"/>
 		');
 
-		$this->expectException(\InvalidArgumentException::class);
-		$this->expectExceptionMessage('Email id attribute');
-
-		EmailParser::parse($minimalXml);
+		$result = EmailParser::parse($minimalXml);
+		
+		$this->assertNull($result, 'Parser should return null for email with missing id');
 	}
 }

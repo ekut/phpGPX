@@ -81,8 +81,7 @@ final class StatsCalculationTest extends TestCase
 	public function test_statistics_match_expected_values_for_known_track(): void
 	{
 		// Arrange - Create a track with known values
-		$gpxFile = new GpxFile();
-		$gpxFile->creator = 'phpGPX Stats Test';
+		$gpxFile = new GpxFile('phpGPX Stats Test');
 		$gpxFile->metadata = MetadataFactory::create(['name' => 'Known Track Test']);
 		
 		$track = new Track();
@@ -178,7 +177,7 @@ final class StatsCalculationTest extends TestCase
 	public function test_statistics_calculation_with_multiple_segments(): void
 	{
 		// Arrange - Create track with 2 segments
-		$gpxFile = new GpxFile();
+		$gpxFile = new GpxFile('phpGPX Stats Test');
 		$gpxFile->metadata = MetadataFactory::create(['name' => 'Multi-Segment Stats Test']);
 		
 		$track = new Track();
@@ -266,7 +265,7 @@ final class StatsCalculationTest extends TestCase
 	public function test_statistics_calculation_without_time_data(): void
 	{
 		// Arrange - Create track without time data
-		$gpxFile = new GpxFile();
+		$gpxFile = new GpxFile('phpGPX Stats Test');
 		$gpxFile->metadata = MetadataFactory::create(['name' => 'No Time Data Test']);
 		
 		$track = new Track();
@@ -382,7 +381,7 @@ final class StatsCalculationTest extends TestCase
 	public function test_statistics_calculation_with_empty_track(): void
 	{
 		// Arrange - Create track with no points
-		$gpxFile = new GpxFile();
+		$gpxFile = new GpxFile('phpGPX Stats Test');
 		$gpxFile->metadata = MetadataFactory::create(['name' => 'Empty Track Test']);
 		
 		$track = new Track();
@@ -424,7 +423,7 @@ final class StatsCalculationTest extends TestCase
 	public function test_statistics_calculation_with_single_point(): void
 	{
 		// Arrange - Create track with single point
-		$gpxFile = new GpxFile();
+		$gpxFile = new GpxFile('phpGPX Stats Test');
 		$gpxFile->metadata = MetadataFactory::create(['name' => 'Single Point Test']);
 		
 		$track = new Track();

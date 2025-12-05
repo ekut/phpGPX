@@ -24,17 +24,9 @@ class BoundsCalculatorTest extends TestCase
 	public function test_calculate_bounds_with_simple_point_set_returns_correct_boundaries(): void
 	{
 		// Create points forming a rectangle
-		$point1 = new Point(Point::WAYPOINT);
-		$point1->latitude = 10.0;
-		$point1->longitude = 20.0;
-
-		$point2 = new Point(Point::WAYPOINT);
-		$point2->latitude = 30.0;
-		$point2->longitude = 40.0;
-
-		$point3 = new Point(Point::WAYPOINT);
-		$point3->latitude = 15.0;
-		$point3->longitude = 25.0;
+		$point1 = new Point(Point::WAYPOINT, 10.0, 20.0);
+		$point2 = new Point(Point::WAYPOINT, 30.0, 40.0);
+		$point3 = new Point(Point::WAYPOINT, 15.0, 25.0);
 
 		$points = [$point1, $point2, $point3];
 
@@ -60,9 +52,7 @@ class BoundsCalculatorTest extends TestCase
 	 */
 	public function test_calculate_bounds_with_single_point_returns_same_point_for_both_corners(): void
 	{
-		$point = new Point(Point::WAYPOINT);
-		$point->latitude = 45.5;
-		$point->longitude = -73.6;
+		$point = new Point(Point::WAYPOINT, 45.5, -73.6);
 
 		$points = [$point];
 
@@ -86,24 +76,13 @@ class BoundsCalculatorTest extends TestCase
 	public function test_calculate_bounds_with_points_spanning_hemispheres_returns_correct_boundaries(): void
 	{
 		// Northeast quadrant
-		$pointNE = new Point(Point::WAYPOINT);
-		$pointNE->latitude = 40.0;
-		$pointNE->longitude = 50.0;
-
+		$pointNE = new Point(Point::WAYPOINT, 40.0, 50.0);
 		// Northwest quadrant
-		$pointNW = new Point(Point::WAYPOINT);
-		$pointNW->latitude = 35.0;
-		$pointNW->longitude = -60.0;
-
+		$pointNW = new Point(Point::WAYPOINT, 35.0, -60.0);
 		// Southeast quadrant
-		$pointSE = new Point(Point::WAYPOINT);
-		$pointSE->latitude = -25.0;
-		$pointSE->longitude = 70.0;
-
+		$pointSE = new Point(Point::WAYPOINT, -25.0, 70.0);
 		// Southwest quadrant
-		$pointSW = new Point(Point::WAYPOINT);
-		$pointSW->latitude = -30.0;
-		$pointSW->longitude = -80.0;
+		$pointSW = new Point(Point::WAYPOINT, -30.0, -80.0);
 
 		$points = [$pointNE, $pointNW, $pointSE, $pointSW];
 
@@ -126,19 +105,11 @@ class BoundsCalculatorTest extends TestCase
 	public function test_calculate_bounds_with_points_crossing_equator_returns_correct_boundaries(): void
 	{
 		// Point north of equator
-		$pointNorth = new Point(Point::WAYPOINT);
-		$pointNorth->latitude = 15.0;
-		$pointNorth->longitude = 0.0;
-
+		$pointNorth = new Point(Point::WAYPOINT, 15.0, 0.0);
 		// Point south of equator
-		$pointSouth = new Point(Point::WAYPOINT);
-		$pointSouth->latitude = -20.0;
-		$pointSouth->longitude = 10.0;
-
+		$pointSouth = new Point(Point::WAYPOINT, -20.0, 10.0);
 		// Point on equator
-		$pointEquator = new Point(Point::WAYPOINT);
-		$pointEquator->latitude = 0.0;
-		$pointEquator->longitude = 5.0;
+		$pointEquator = new Point(Point::WAYPOINT, 0.0, 5.0);
 
 		$points = [$pointNorth, $pointSouth, $pointEquator];
 
@@ -161,19 +132,11 @@ class BoundsCalculatorTest extends TestCase
 	public function test_calculate_bounds_with_points_crossing_prime_meridian_returns_correct_boundaries(): void
 	{
 		// Point west of prime meridian
-		$pointWest = new Point(Point::WAYPOINT);
-		$pointWest->latitude = 51.5;
-		$pointWest->longitude = -5.0;
-
+		$pointWest = new Point(Point::WAYPOINT, 51.5, -5.0);
 		// Point east of prime meridian
-		$pointEast = new Point(Point::WAYPOINT);
-		$pointEast->latitude = 48.8;
-		$pointEast->longitude = 2.3;
-
+		$pointEast = new Point(Point::WAYPOINT, 48.8, 2.3);
 		// Point on prime meridian
-		$pointPrime = new Point(Point::WAYPOINT);
-		$pointPrime->latitude = 50.0;
-		$pointPrime->longitude = 0.0;
+		$pointPrime = new Point(Point::WAYPOINT, 50.0, 0.0);
 
 		$points = [$pointWest, $pointEast, $pointPrime];
 
@@ -196,19 +159,11 @@ class BoundsCalculatorTest extends TestCase
 	public function test_calculate_bounds_with_points_near_poles_returns_correct_boundaries(): void
 	{
 		// Point near North Pole
-		$pointNorth = new Point(Point::WAYPOINT);
-		$pointNorth->latitude = 85.0;
-		$pointNorth->longitude = 45.0;
-
+		$pointNorth = new Point(Point::WAYPOINT, 85.0, 45.0);
 		// Point near South Pole
-		$pointSouth = new Point(Point::WAYPOINT);
-		$pointSouth->latitude = -80.0;
-		$pointSouth->longitude = -120.0;
-
+		$pointSouth = new Point(Point::WAYPOINT, -80.0, -120.0);
 		// Point in middle latitudes
-		$pointMiddle = new Point(Point::WAYPOINT);
-		$pointMiddle->latitude = 0.0;
-		$pointMiddle->longitude = 0.0;
+		$pointMiddle = new Point(Point::WAYPOINT, 0.0, 0.0);
 
 		$points = [$pointNorth, $pointSouth, $pointMiddle];
 
@@ -231,19 +186,11 @@ class BoundsCalculatorTest extends TestCase
 	public function test_calculate_bounds_with_points_near_date_line_returns_correct_boundaries(): void
 	{
 		// Point west of date line
-		$pointWest = new Point(Point::WAYPOINT);
-		$pointWest->latitude = 20.0;
-		$pointWest->longitude = 175.0;
-
+		$pointWest = new Point(Point::WAYPOINT, 20.0, 175.0);
 		// Point east of date line
-		$pointEast = new Point(Point::WAYPOINT);
-		$pointEast->latitude = 25.0;
-		$pointEast->longitude = -170.0;
-
+		$pointEast = new Point(Point::WAYPOINT, 25.0, -170.0);
 		// Point in middle
-		$pointMiddle = new Point(Point::WAYPOINT);
-		$pointMiddle->latitude = 22.5;
-		$pointMiddle->longitude = 0.0;
+		$pointMiddle = new Point(Point::WAYPOINT, 22.5, 0.0);
 
 		$points = [$pointWest, $pointEast, $pointMiddle];
 
@@ -269,10 +216,9 @@ class BoundsCalculatorTest extends TestCase
 		
 		// Create 100 points with varying coordinates
 		for ($i = 0; $i < 100; $i++) {
-			$point = new Point(Point::WAYPOINT);
-			$point->latitude = -50.0 + ($i * 1.0); // Range from -50 to 49
-			$point->longitude = -100.0 + ($i * 2.0); // Range from -100 to 98
-			$points[] = $point;
+			$lat = -50.0 + ($i * 1.0); // Range from -50 to 49
+			$lon = -100.0 + ($i * 2.0); // Range from -100 to 98
+			$points[] = new Point(Point::WAYPOINT, $lat, $lon);
 		}
 
 		$bounds = BoundsCalculator::calculate($points);
@@ -293,17 +239,9 @@ class BoundsCalculatorTest extends TestCase
 	 */
 	public function test_calculate_bounds_with_same_latitude_different_longitude_returns_correct_boundaries(): void
 	{
-		$point1 = new Point(Point::WAYPOINT);
-		$point1->latitude = 45.0;
-		$point1->longitude = -10.0;
-
-		$point2 = new Point(Point::WAYPOINT);
-		$point2->latitude = 45.0;
-		$point2->longitude = 20.0;
-
-		$point3 = new Point(Point::WAYPOINT);
-		$point3->latitude = 45.0;
-		$point3->longitude = 5.0;
+		$point1 = new Point(Point::WAYPOINT, 45.0, -10.0);
+		$point2 = new Point(Point::WAYPOINT, 45.0, 20.0);
+		$point3 = new Point(Point::WAYPOINT, 45.0, 5.0);
 
 		$points = [$point1, $point2, $point3];
 
@@ -323,17 +261,9 @@ class BoundsCalculatorTest extends TestCase
 	 */
 	public function test_calculate_bounds_with_same_longitude_different_latitude_returns_correct_boundaries(): void
 	{
-		$point1 = new Point(Point::WAYPOINT);
-		$point1->latitude = -20.0;
-		$point1->longitude = 30.0;
-
-		$point2 = new Point(Point::WAYPOINT);
-		$point2->latitude = 40.0;
-		$point2->longitude = 30.0;
-
-		$point3 = new Point(Point::WAYPOINT);
-		$point3->latitude = 10.0;
-		$point3->longitude = 30.0;
+		$point1 = new Point(Point::WAYPOINT, -20.0, 30.0);
+		$point2 = new Point(Point::WAYPOINT, 40.0, 30.0);
+		$point3 = new Point(Point::WAYPOINT, 10.0, 30.0);
 
 		$points = [$point1, $point2, $point3];
 
@@ -354,24 +284,13 @@ class BoundsCalculatorTest extends TestCase
 	public function test_calculate_bounds_with_real_world_coordinates_returns_correct_boundaries(): void
 	{
 		// New York
-		$newYork = new Point(Point::WAYPOINT);
-		$newYork->latitude = 40.7128;
-		$newYork->longitude = -74.0060;
-
+		$newYork = new Point(Point::WAYPOINT, 40.7128, -74.0060);
 		// London
-		$london = new Point(Point::WAYPOINT);
-		$london->latitude = 51.5074;
-		$london->longitude = -0.1278;
-
+		$london = new Point(Point::WAYPOINT, 51.5074, -0.1278);
 		// Tokyo
-		$tokyo = new Point(Point::WAYPOINT);
-		$tokyo->latitude = 35.6762;
-		$tokyo->longitude = 139.6503;
-
+		$tokyo = new Point(Point::WAYPOINT, 35.6762, 139.6503);
 		// Sydney
-		$sydney = new Point(Point::WAYPOINT);
-		$sydney->latitude = -33.8688;
-		$sydney->longitude = 151.2093;
+		$sydney = new Point(Point::WAYPOINT, -33.8688, 151.2093);
 
 		$points = [$newYork, $london, $tokyo, $sydney];
 
@@ -439,10 +358,7 @@ class BoundsCalculatorTest extends TestCase
 				// Create points
 				$points = [];
 				foreach ($coordinates as $coord) {
-					$point = new Point(Point::WAYPOINT);
-					$point->latitude = $coord['lat'];
-					$point->longitude = $coord['lon'];
-					$points[] = $point;
+					$points[] = new Point(Point::WAYPOINT, $coord['lat'], $coord['lon']);
 				}
 				
 				// Calculate bounds

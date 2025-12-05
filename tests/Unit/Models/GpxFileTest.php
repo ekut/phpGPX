@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace phpGPX\Tests\Unit\Models;
 
+use Eris\Generators;
+use Eris\TestTrait;
 use phpGPX\Models\GpxFile;
 use phpGPX\Models\Point;
 use phpGPX\Models\Route;
@@ -21,10 +23,11 @@ use phpGPX\Tests\Support\Factories\MetadataFactory;
  */
 final class GpxFileTest extends TestCase
 {
+	use TestTrait;
 	public function test_gpx_file_can_be_created(): void
 	{
 		// Act
-		$gpxFile = new GpxFile();
+		$gpxFile = new GpxFile('Test Creator');
 
 		// Assert
 		$this->assertInstanceOf(GpxFile::class, $gpxFile);
@@ -36,13 +39,55 @@ final class GpxFileTest extends TestCase
 		$this->assertEmpty($gpxFile->tracks);
 		$this->assertNull($gpxFile->metadata);
 		$this->assertNull($gpxFile->extensions);
-		$this->assertNull($gpxFile->creator);
+		$this->assertEquals('Test Creator', $gpxFile->creator);
+	}
+
+	public function test_gpx_file_requires_creator(): void
+	{
+		// Assert
+		$this->expectException(\TypeError::class);
+
+		// Act
+		new GpxFile();
+	}
+
+	public function test_gpx_file_rejects_empty_creator(): void
+	{
+		// Assert
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('GPX creator');
+		$this->expectExceptionMessage('required');
+		$this->expectExceptionMessage('cannot be empty');
+
+		// Act
+		new GpxFile('');
+	}
+
+	public function test_gpx_file_rejects_whitespace_only_creator(): void
+	{
+		// Assert
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('GPX creator');
+		$this->expectExceptionMessage('required');
+		$this->expectExceptionMessage('cannot be empty');
+
+		// Act
+		new GpxFile('   ');
+	}
+
+	public function test_gpx_file_accepts_valid_creator(): void
+	{
+		// Act
+		$gpxFile = new GpxFile('My Application v1.0');
+
+		// Assert
+		$this->assertEquals('My Application v1.0', $gpxFile->creator);
 	}
 
 	public function test_gpx_file_can_be_created_with_tracks(): void
 	{
 		// Arrange
-		$gpxFile = new GpxFile();
+		$gpxFile = new GpxFile('Test Creator');
 		$track1 = TrackFactory::createWithPoints(5);
 		$track2 = TrackFactory::createWithPoints(3);
 
@@ -59,7 +104,7 @@ final class GpxFileTest extends TestCase
 	public function test_gpx_file_can_be_created_with_routes(): void
 	{
 		// Arrange
-		$gpxFile = new GpxFile();
+		$gpxFile = new GpxFile('Test Creator');
 		$route = new Route();
 		$route->name = 'Test Route';
 		// Create route points with ROUTEPOINT type
@@ -82,7 +127,7 @@ final class GpxFileTest extends TestCase
 	public function test_gpx_file_can_be_created_with_waypoints(): void
 	{
 		// Arrange
-		$gpxFile = new GpxFile();
+		$gpxFile = new GpxFile('Test Creator');
 		$waypoint1 = PointFactory::create(['pointType' => Point::WAYPOINT, 'name' => 'WP1']);
 		$waypoint2 = PointFactory::create(['pointType' => Point::WAYPOINT, 'name' => 'WP2']);
 
@@ -99,7 +144,7 @@ final class GpxFileTest extends TestCase
 	public function test_gpx_file_with_metadata(): void
 	{
 		// Arrange
-		$gpxFile = new GpxFile();
+		$gpxFile = new GpxFile('Test Creator');
 		$metadata = MetadataFactory::create([
 			'name' => 'My GPX File',
 			'description' => 'A test GPX file'
@@ -117,7 +162,7 @@ final class GpxFileTest extends TestCase
 	public function test_gpx_file_with_creator(): void
 	{
 		// Arrange
-		$gpxFile = new GpxFile();
+		$gpxFile = new GpxFile('Initial Creator');
 
 		// Act
 		$gpxFile->creator = 'Test Creator v1.0';
@@ -129,20 +174,21 @@ final class GpxFileTest extends TestCase
 	public function test_gpx_file_to_array_with_empty_file(): void
 	{
 		// Arrange
-		$gpxFile = new GpxFile();
+		$gpxFile = new GpxFile('Test Creator');
 
 		// Act
 		$array = $gpxFile->toArray();
 
 		// Assert
 		$this->assertIsArray($array);
-		$this->assertEmpty($array);
+		$this->assertArrayHasKey('creator', $array);
+		$this->assertEquals('Test Creator', $array['creator']);
 	}
 
 	public function test_gpx_file_to_array_with_tracks(): void
 	{
 		// Arrange
-		$gpxFile = new GpxFile();
+		$gpxFile = new GpxFile('Test Creator');
 		$track = TrackFactory::createWithPoints(3);
 		$track->name = 'Test Track';
 		$gpxFile->tracks[] = $track;
@@ -160,7 +206,7 @@ final class GpxFileTest extends TestCase
 	public function test_gpx_file_to_array_with_metadata(): void
 	{
 		// Arrange
-		$gpxFile = new GpxFile();
+		$gpxFile = new GpxFile('Test Creator');
 		$metadata = MetadataFactory::create(['name' => 'Test File']);
 		$gpxFile->metadata = $metadata;
 
@@ -176,8 +222,7 @@ final class GpxFileTest extends TestCase
 	public function test_gpx_file_to_array_with_creator(): void
 	{
 		// Arrange
-		$gpxFile = new GpxFile();
-		$gpxFile->creator = 'Test Creator';
+		$gpxFile = new GpxFile('Test Creator');
 
 		// Act
 		$array = $gpxFile->toArray();
@@ -190,8 +235,7 @@ final class GpxFileTest extends TestCase
 	public function test_gpx_file_to_json(): void
 	{
 		// Arrange
-		$gpxFile = new GpxFile();
-		$gpxFile->creator = 'Test Creator';
+		$gpxFile = new GpxFile('Test Creator');
 		$track = TrackFactory::createWithPoints(2);
 		$track->name = 'JSON Track';
 		$gpxFile->tracks[] = $track;
@@ -210,8 +254,7 @@ final class GpxFileTest extends TestCase
 	public function test_gpx_file_to_xml_creates_valid_xml(): void
 	{
 		// Arrange
-		$gpxFile = new GpxFile();
-		$gpxFile->creator = 'Test Creator';
+		$gpxFile = new GpxFile('Test Creator');
 
 		// Act
 		$document = $gpxFile->toXML();
@@ -225,8 +268,7 @@ final class GpxFileTest extends TestCase
 	public function test_gpx_file_to_xml_includes_creator(): void
 	{
 		// Arrange
-		$gpxFile = new GpxFile();
-		$gpxFile->creator = 'Custom Creator v2.0';
+		$gpxFile = new GpxFile('Custom Creator v2.0');
 
 		// Act
 		$document = $gpxFile->toXML();
@@ -236,24 +278,23 @@ final class GpxFileTest extends TestCase
 		$this->assertStringContainsString('creator="Custom Creator v2.0"', $xml);
 	}
 
-	public function test_gpx_file_to_xml_uses_default_creator_when_not_set(): void
+	public function test_gpx_file_to_xml_always_includes_creator(): void
 	{
 		// Arrange
-		$gpxFile = new GpxFile();
+		$gpxFile = new GpxFile('Required Creator');
 
 		// Act
 		$document = $gpxFile->toXML();
 		$xml = $document->saveXML();
 
 		// Assert
-		$this->assertStringContainsString('creator=', $xml);
-		$this->assertStringContainsString('phpGPX', $xml);
+		$this->assertStringContainsString('creator="Required Creator"', $xml);
 	}
 
 	public function test_gpx_file_to_xml_includes_metadata(): void
 	{
 		// Arrange
-		$gpxFile = new GpxFile();
+		$gpxFile = new GpxFile('Test Creator');
 		$metadata = MetadataFactory::create(['name' => 'XML Test']);
 		$gpxFile->metadata = $metadata;
 
@@ -269,7 +310,7 @@ final class GpxFileTest extends TestCase
 	public function test_gpx_file_to_xml_includes_waypoints(): void
 	{
 		// Arrange
-		$gpxFile = new GpxFile();
+		$gpxFile = new GpxFile('Test Creator');
 		$waypoint = PointFactory::create([
 			'pointType' => Point::WAYPOINT,
 			'name' => 'Test Waypoint',
@@ -292,7 +333,7 @@ final class GpxFileTest extends TestCase
 	public function test_gpx_file_to_xml_includes_routes(): void
 	{
 		// Arrange
-		$gpxFile = new GpxFile();
+		$gpxFile = new GpxFile('Test Creator');
 		$route = new Route();
 		$route->name = 'Test Route';
 		// Create route points with ROUTEPOINT type
@@ -315,7 +356,7 @@ final class GpxFileTest extends TestCase
 	public function test_gpx_file_to_xml_includes_tracks(): void
 	{
 		// Arrange
-		$gpxFile = new GpxFile();
+		$gpxFile = new GpxFile('Test Creator');
 		$track = TrackFactory::createWithPoints(2);
 		$track->name = 'Test Track';
 		$gpxFile->tracks[] = $track;
@@ -334,7 +375,7 @@ final class GpxFileTest extends TestCase
 	public function test_gpx_file_to_xml_has_correct_version(): void
 	{
 		// Arrange
-		$gpxFile = new GpxFile();
+		$gpxFile = new GpxFile('Test Creator');
 
 		// Act
 		$document = $gpxFile->toXML();
@@ -347,7 +388,7 @@ final class GpxFileTest extends TestCase
 	public function test_gpx_file_to_xml_has_correct_namespace(): void
 	{
 		// Arrange
-		$gpxFile = new GpxFile();
+		$gpxFile = new GpxFile('Test Creator');
 
 		// Act
 		$document = $gpxFile->toXML();
@@ -361,8 +402,7 @@ final class GpxFileTest extends TestCase
 	public function test_gpx_file_with_all_elements(): void
 	{
 		// Arrange
-		$gpxFile = new GpxFile();
-		$gpxFile->creator = 'Complete Test';
+		$gpxFile = new GpxFile('Complete Test');
 		$gpxFile->metadata = MetadataFactory::create(['name' => 'Complete File']);
 		$gpxFile->waypoints[] = PointFactory::create(['pointType' => Point::WAYPOINT, 'name' => 'WP1']);
 		
@@ -399,8 +439,7 @@ final class GpxFileTest extends TestCase
 	public function test_gpx_file_save_xml_format(): void
 	{
 		// Arrange
-		$gpxFile = new GpxFile();
-		$gpxFile->creator = 'Save Test';
+		$gpxFile = new GpxFile('Save Test');
 		$track = TrackFactory::createWithPoints(2);
 		$gpxFile->tracks[] = $track;
 		$tempFile = sys_get_temp_dir() . '/test_gpx_' . uniqid() . '.gpx';
@@ -421,8 +460,7 @@ final class GpxFileTest extends TestCase
 	public function test_gpx_file_save_json_format(): void
 	{
 		// Arrange
-		$gpxFile = new GpxFile();
-		$gpxFile->creator = 'JSON Save Test';
+		$gpxFile = new GpxFile('JSON Save Test');
 		$track = TrackFactory::createWithPoints(2);
 		$track->name = 'JSON Track';
 		$gpxFile->tracks[] = $track;
@@ -446,7 +484,7 @@ final class GpxFileTest extends TestCase
 	public function test_gpx_file_save_throws_exception_for_unsupported_format(): void
 	{
 		// Arrange
-		$gpxFile = new GpxFile();
+		$gpxFile = new GpxFile('Test Creator');
 		$tempFile = sys_get_temp_dir() . '/test_gpx_' . uniqid() . '.txt';
 
 		// Assert
@@ -456,5 +494,40 @@ final class GpxFileTest extends TestCase
 		// Act
 		$gpxFile->save($tempFile, 'INVALID_FORMAT');
 	}
-}
 
+	/**
+	 * **Feature: gpx-schema-compliance, Property 28: GpxFile requires creator**
+	 * **Validates: Requirements 12.1**
+	 */
+	public function test_property_gpx_file_requires_creator(): void
+	{
+		// This property is tested by the type system
+		// Attempting to create GpxFile without creator throws TypeError
+		$this->expectException(\TypeError::class);
+		new GpxFile();
+	}
+
+	/**
+	 * **Feature: gpx-schema-compliance, Property 29: GpxFile creator validation**
+	 * **Validates: Requirements 12.4**
+	 */
+	public function test_property_gpx_file_creator_validation(): void
+	{
+		$this
+			->withRand('mt_rand')
+			->forAll(
+				Generators::elements(['', ' ', '  ', "\t", "\n", "   \t\n   "])
+			)
+			->then(function ($emptyCreator) {
+				try {
+					new GpxFile($emptyCreator);
+					$this->fail('Expected InvalidArgumentException for empty/whitespace creator: ' . json_encode($emptyCreator));
+				} catch (\InvalidArgumentException $e) {
+					// Verify error message contains required information
+					$this->assertStringContainsString('GPX creator', $e->getMessage());
+					$this->assertStringContainsString('required', $e->getMessage());
+					$this->assertStringContainsString('cannot be empty', $e->getMessage());
+				}
+			});
+	}
+}
