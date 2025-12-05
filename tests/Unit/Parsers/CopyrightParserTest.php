@@ -12,7 +12,7 @@ use DOMElement;
 use phpGPX\Models\Copyright;
 use phpGPX\Parsers\CopyrightParser;
 
-class CopyrightParserTest extends AbstractParserTest
+class CopyrightParserTest extends ParserTestBase
 {
 	protected $testModelClass = Copyright::class;
 

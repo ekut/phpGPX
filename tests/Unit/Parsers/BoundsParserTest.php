@@ -13,7 +13,7 @@ use DOMElement;
 use phpGPX\Models\Bounds;
 use phpGPX\Parsers\BoundsParser;
 
-class BoundsParserTest extends AbstractParserTest
+class BoundsParserTest extends ParserTestBase
 {
 	protected $testModelClass = Bounds::class;
 

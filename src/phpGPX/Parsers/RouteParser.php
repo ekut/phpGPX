@@ -62,10 +62,10 @@ abstract class RouteParser
 	];
 
 	/**
-	 * @param SimpleXMLElement[] $nodes
+	 * @param SimpleXMLElement|SimpleXMLElement[] $nodes
 	 * @return Route[]
 	 */
-	public static function parse($nodes)
+	public static function parse(SimpleXMLElement|array $nodes): array
 	{
 		$routes = [];
 
@@ -115,10 +115,7 @@ abstract class RouteParser
 		return $routes;
 	}
 
-	/**
-  * @return DOMElement
-  */
-	public static function toXML(Route $route, DOMDocument &$document)
+	public static function toXML(Route $route, DOMDocument &$document): DOMElement
 	{
 		$node = $document->createElement(self::$tagName);
 
@@ -157,7 +154,7 @@ abstract class RouteParser
 	/**
   * @return DOMElement[]
   */
-	public static function toXMLArray(array $routes, DOMDocument &$document)
+	public static function toXMLArray(array $routes, DOMDocument &$document): array
 	{
 		$result = [];
 

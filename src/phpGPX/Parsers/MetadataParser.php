@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace phpGPX\Parsers;
 
 use DOMDocument;
+use DOMElement;
 use phpGPX\Helpers\DateTimeHelper;
 use phpGPX\Models\Metadata;
 use SimpleXMLElement;
@@ -60,10 +61,7 @@ abstract class MetadataParser
 		],
 	];
 
-	/**
-  * @return Metadata
-  */
-	public static function parse(SimpleXMLElement $node)
+	public static function parse(SimpleXMLElement $node): Metadata
 	{
 		$metadata = new Metadata();
 
@@ -101,7 +99,7 @@ abstract class MetadataParser
 		return $metadata;
 	}
 
-	public static function toXML(Metadata $metadata, DOMDocument &$document)
+	public static function toXML(Metadata $metadata, DOMDocument &$document): DOMElement
 	{
 		$node =  $document->createElement(self::$tagName);
 

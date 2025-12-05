@@ -18,10 +18,10 @@ abstract class LinkParser
 	private static $tagName = 'link';
 
 	/**
-	 * @param SimpleXMLElement[] $nodes
+	 * @param SimpleXMLElement|SimpleXMLElement[] $nodes
 	 * @return Link[]
 	 */
-	public static function parse($nodes = [])
+	public static function parse(SimpleXMLElement|array $nodes = []): array
 	{
 		$links = [];
 		foreach ($nodes as $node) {
@@ -45,7 +45,7 @@ abstract class LinkParser
   * @param Link[] $links
   * @return DOMElement[]
   */
-	public static function toXMLArray(array $links, DOMDocument &$document)
+	public static function toXMLArray(array $links, DOMDocument &$document): array
 	{
 		$result = [];
 
@@ -56,10 +56,7 @@ abstract class LinkParser
 		return $result;
 	}
 
-	/**
-  * @return DOMElement
-  */
-	public static function toXML(Link $link, DOMDocument &$document)
+	public static function toXML(Link $link, DOMDocument &$document): DOMElement
 	{
 		$node =  $document->createElement(self::$tagName);
 

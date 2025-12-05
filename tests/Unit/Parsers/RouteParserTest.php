@@ -15,7 +15,7 @@ use phpGPX\Models\Route;
 use phpGPX\Parsers\RouteParser;
 use phpGPX\phpGPX;
 
-class RouteParserTest extends AbstractParserTest
+class RouteParserTest extends ParserTestBase
 {
 	protected $testModelClass = Route::class;
 

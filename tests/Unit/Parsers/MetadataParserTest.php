@@ -15,7 +15,7 @@ use phpGPX\Models\Link;
 use phpGPX\Models\Metadata;
 use phpGPX\Parsers\MetadataParser;
 
-class MetadataParserTest extends AbstractParserTest
+class MetadataParserTest extends ParserTestBase
 {
 	protected $testModelClass = Metadata::class;
 

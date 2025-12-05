@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace phpGPX\Parsers;
 
 use DOMDocument;
+use DOMElement;
 use phpGPX\Models\Person;
 use SimpleXMLElement;
 
@@ -20,10 +21,7 @@ abstract class PersonParser
 {
 	public static $tagName = 'author';
 
-	/**
-	 * @return Person
-	 */
-	public static function parse(SimpleXMLElement $node)
+	public static function parse(SimpleXMLElement $node): Person
 	{
 		$name = property_exists($node, 'name') && $node->name !== null ? ((string) $node->name) : null;
 		$email = property_exists($node, 'email') && $node->email !== null ? EmailParser::parse($node->email) : null;
@@ -32,7 +30,7 @@ abstract class PersonParser
 		return new Person($name, $email, $links);
 	}
 
-	public static function toXML(Person $person, DOMDocument &$document)
+	public static function toXML(Person $person, DOMDocument &$document): DOMElement
 	{
 		$node =  $document->createElement(self::$tagName);
 

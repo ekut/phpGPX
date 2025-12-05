@@ -12,7 +12,7 @@ use DOMElement;
 use phpGPX\Models\Link;
 use phpGPX\Parsers\LinkParser;
 
-class LinkParserTest extends AbstractParserTest
+class LinkParserTest extends ParserTestBase
 {
 	protected $testModelClass = Link::class;
 

@@ -15,7 +15,7 @@ use phpGPX\Helpers\DateTimeHelper;
 use phpGPX\Models\Point;
 use phpGPX\Parsers\PointParser;
 
-class PointParserTest extends AbstractParserTest
+class PointParserTest extends ParserTestBase
 {
 	protected $testModelClass = Point::class;
 

@@ -12,7 +12,7 @@ use DOMElement;
 use phpGPX\Models\Email;
 use phpGPX\Parsers\EmailParser;
 
-class EmailParserTest extends AbstractParserTest
+class EmailParserTest extends ParserTestBase
 {
 	protected $testModelClass = Email::class;
 

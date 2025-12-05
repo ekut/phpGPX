@@ -22,10 +22,10 @@ abstract class SegmentParser
 	public static $tagName = 'trkseg';
 
 	/**
-	 * @param $nodes \SimpleXMLElement[]
+	 * @param \SimpleXMLElement|\SimpleXMLElement[] $nodes
 	 * @return Segment[]
 	 */
-	public static function parse($nodes)
+	public static function parse(\SimpleXMLElement|array $nodes): array
 	{
 		$segments = [];
 
@@ -55,10 +55,7 @@ abstract class SegmentParser
 		return $segments;
 	}
 
-	/**
-  * @return DOMElement
-  */
-	public static function toXML(Segment $segment, DOMDocument &$document)
+	public static function toXML(Segment $segment, DOMDocument &$document): DOMElement
 	{
 		$node = $document->createElement(self::$tagName);
 
@@ -76,7 +73,7 @@ abstract class SegmentParser
 	/**
   * @return DOMElement[]
   */
-	public static function toXMLArray(array $segments, DOMDocument $document)
+	public static function toXMLArray(array $segments, DOMDocument $document): array
 	{
 		$result = [];
 

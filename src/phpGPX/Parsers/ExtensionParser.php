@@ -25,11 +25,7 @@ abstract class ExtensionParser
 
 	public static $usedNamespaces = [];
 
-	/**
-	 * @param SimpleXMLElement $nodes
-	 * @return Extensions
-	 */
-	public static function parse($nodes)
+	public static function parse(SimpleXMLElement $nodes): Extensions
 	{
 		$extensions = new Extensions();
 
@@ -54,10 +50,7 @@ abstract class ExtensionParser
 		return $extensions;
 	}
 
-	/**
-  * @return DOMElement|null
-  */
-	public static function toXML(Extensions $extensions, DOMDocument &$document)
+	public static function toXML(Extensions $extensions, DOMDocument &$document): DOMElement
 	{
 		$node =  $document->createElement(self::$tagName);
 

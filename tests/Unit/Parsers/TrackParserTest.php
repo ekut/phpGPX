@@ -14,7 +14,7 @@ use phpGPX\Models\Track;
 use phpGPX\Parsers\TrackParser;
 use phpGPX\phpGPX;
 
-class TrackParserTest extends AbstractParserTest
+class TrackParserTest extends ParserTestBase
 {
 	protected $testModelClass = Track::class;
 

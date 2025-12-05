@@ -13,7 +13,7 @@ use phpGPX\Models\Segment;
 use phpGPX\Parsers\SegmentParser;
 use phpGPX\phpGPX;
 
-class SegmentParserTest extends AbstractParserTest
+class SegmentParserTest extends ParserTestBase
 {
 	protected $testModelClass = Segment::class;
 

@@ -10,7 +10,7 @@ use phpGPX\Models\Extensions;
 use phpGPX\Models\Extensions\TrackPointExtension;
 use phpGPX\Parsers\ExtensionParser;
 
-class ExtensionParserTest extends AbstractParserTest
+class ExtensionParserTest extends ParserTestBase
 {
 	protected $testModelClass = Extension::class;
 

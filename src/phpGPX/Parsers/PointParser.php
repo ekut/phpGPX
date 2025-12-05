@@ -10,6 +10,7 @@ namespace phpGPX\Parsers;
 
 use DOMDocument;
 use DOMElement;
+use phpGPX\Enums\PointType;
 use phpGPX\Helpers\DateTimeHelper;
 use phpGPX\Models\Point;
 use SimpleXMLElement;
@@ -96,12 +97,12 @@ abstract class PointParser
 	];
 
 	private static $typeMapper = [
-		'trkpt' => Point::TRACKPOINT,
-		'wpt' => Point::WAYPOINT,
-		'rtept' => Point::ROUTEPOINT,
+		'trkpt' => PointType::TRACKPOINT,
+		'wpt' => PointType::WAYPOINT,
+		'rtept' => PointType::ROUTEPOINT,
 	];
 
-	public static function parse(SimpleXMLElement $node)
+	public static function parse(SimpleXMLElement $node): ?Point
 	{
 		if (!array_key_exists($node->getName(), self::$typeMapper)) {
 			return null;
@@ -158,14 +159,15 @@ abstract class PointParser
 		return $point;
 	}
 
-	/**
-	 * @return DOMElement
-	 */
-	public static function toXML(Point $point, DOMDocument &$document)
+	public static function toXML(Point $point, DOMDocument &$document): DOMElement
 	{
-		// Get the enum value and find the corresponding XML element name
-		$pointTypeValue = $point->getPointType()->value;
-		$node = $document->createElement(array_search($pointTypeValue, self::$typeMapper, true));
+		// Use match expression to map PointType enum to XML element name
+		$elementName = match ($point->getPointType()) {
+			PointType::TRACKPOINT => 'trkpt',
+			PointType::WAYPOINT => 'wpt',
+			PointType::ROUTEPOINT => 'rtept',
+		};
+		$node = $document->createElement($elementName);
 
 		$node->setAttribute('lat', (string) $point->latitude);
 		$node->setAttribute('lon', (string) $point->longitude);
@@ -205,7 +207,7 @@ abstract class PointParser
 	/**
   * @return DOMElement[]
   */
-	public static function toXMLArray(array $points, DOMDocument &$document)
+	public static function toXMLArray(array $points, DOMDocument &$document): array
 	{
 		$result = [];
 

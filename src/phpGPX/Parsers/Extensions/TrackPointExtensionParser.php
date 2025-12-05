@@ -51,10 +51,7 @@ class TrackPointExtensionParser
 		],
 	];
 
-	/**
-	 * @param SimpleXMLElement $node
-	 */
-	public static function parse($node): \phpGPX\Models\Extensions\TrackPointExtension
+	public static function parse(SimpleXMLElement $node): TrackPointExtension
 	{
 		$extension = new TrackPointExtension();
 
@@ -89,10 +86,7 @@ class TrackPointExtensionParser
 		return $extension;
 	}
 
-	/**
-  * @return DOMElement
-  */
-	public static function toXML(TrackPointExtension $extension, DOMDocument &$document)
+	public static function toXML(TrackPointExtension $extension, DOMDocument &$document): DOMElement
 	{
 		$node =  $document->createElement("gpxtpx:TrackPointExtension");
 

@@ -26,10 +26,8 @@ abstract class BoundsParser
 	 *
 	 * All four coordinate attributes are required per GPX 1.1 schema.
 	 * Returns null if any required attribute is missing.
-	 *
-	 * @return Bounds|null
 	 */
-	public static function parse(SimpleXMLElement $node)
+	public static function parse(SimpleXMLElement $node): ?Bounds
 	{
 		if ($node->getName() !== self::$tagName) {
 			return null;
@@ -53,10 +51,8 @@ abstract class BoundsParser
 	 * Create XML representation.
 	 *
 	 * All four coordinate attributes are always present per GPX 1.1 schema.
-	 *
-	 * @return DOMElement
 	 */
-	public static function toXML(Bounds $bounds, DOMDocument &$document)
+	public static function toXML(Bounds $bounds, DOMDocument &$document): DOMElement
 	{
 		$node = $document->createElement(self::$tagName);
 

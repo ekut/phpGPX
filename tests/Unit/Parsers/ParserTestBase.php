@@ -15,7 +15,11 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use SimpleXMLElement;
 
-abstract class AbstractParserTest extends TestCase
+/**
+ * Base class for parser tests. Not meant to be run directly.
+ * @internal
+ */
+abstract class ParserTestBase extends TestCase
 {
 	/**
 	 * @var SimpleXMLElement

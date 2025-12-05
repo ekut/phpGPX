@@ -14,7 +14,7 @@ use phpGPX\Models\Metadata;
 use phpGPX\Models\Person;
 use phpGPX\Parsers\PersonParser;
 
-class PersonParserTest extends AbstractParserTest
+class PersonParserTest extends ParserTestBase
 {
 	protected $testModelClass = Person::class;
 

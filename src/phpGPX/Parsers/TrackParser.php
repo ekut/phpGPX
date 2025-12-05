@@ -64,7 +64,7 @@ abstract class TrackParser
 	/**
   * @return Track[]
   */
-	public static function parse(SimpleXMLElement $nodes)
+	public static function parse(SimpleXMLElement $nodes): array
 	{
 		$tracks = [];
 
@@ -108,10 +108,7 @@ abstract class TrackParser
 		return $tracks;
 	}
 
-	/**
-  * @return DOMElement
-  */
-	public static function toXML(Track $track, DOMDocument &$document)
+	public static function toXML(Track $track, DOMDocument &$document): DOMElement
 	{
 		$node = $document->createElement(self::$tagName);
 
@@ -150,7 +147,7 @@ abstract class TrackParser
 	/**
   * @return DOMElement[]
   */
-	public static function toXMLArray(array $tracks, DOMDocument &$document)
+	public static function toXMLArray(array $tracks, DOMDocument &$document): array
 	{
 		$result = [];
 
