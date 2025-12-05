@@ -13,7 +13,6 @@ use phpGPX\Models\GpxFile;
 use phpGPX\Models\Metadata;
 use phpGPX\Models\Point;
 use phpGPX\Models\Route;
-use phpGPX\phpGPX;
 use phpGPX\Tests\Support\Factories\MetadataFactory;
 use phpGPX\Tests\Support\Factories\PointFactory;
 use phpGPX\Tests\Support\Factories\TrackFactory;

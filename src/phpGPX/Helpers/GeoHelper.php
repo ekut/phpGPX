@@ -26,15 +26,9 @@ abstract class GeoHelper
 	 */
 	public static function getRawDistance(Point $point1, Point $point2): float
 	{
-		// PHPStan: latitude and longitude can be null, but deg2rad expects float
-		// This is intentional - if coordinates are null, TypeError will be thrown
-		// @phpstan-ignore argument.type
 		$latFrom = deg2rad($point1->latitude);
-		// @phpstan-ignore argument.type
 		$lonFrom = deg2rad($point1->longitude);
-		// @phpstan-ignore argument.type
 		$latTo = deg2rad($point2->latitude);
-		// @phpstan-ignore argument.type
 		$lonTo = deg2rad($point2->longitude);
 
 		$lonDelta = $lonTo - $lonFrom;

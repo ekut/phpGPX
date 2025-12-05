@@ -64,7 +64,6 @@ if ($allValid) {
 	echo "✅ SUCCESS: All generated GPX files are fully compliant with GPX 1.1 specification!\n";
 	echo "\nThis confirms that the phpGPX library generates 100% schema-compliant GPX files.\n";
 	exit(0);
-} else {
-	echo "❌ FAILURE: Some GPX files failed validation.\n";
-	exit(1);
 }
+echo "❌ FAILURE: Some GPX files failed validation.\n";
+exit(1);

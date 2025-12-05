@@ -6,8 +6,6 @@ use Rector\Config\RectorConfig;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
-use Rector\TypeDeclaration\Rector\ClassMethod\AddVoidReturnTypeWhereNoReturnRector;
-use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromStrictConstructorRector;
 
 return RectorConfig::configure()
 	->withPaths([
@@ -25,8 +23,6 @@ return RectorConfig::configure()
 		SetList::PRIVATIZATION,
 	])
 	->withRules([
-		AddVoidReturnTypeWhereNoReturnRector::class,
-		TypedPropertyFromStrictConstructorRector::class,
 		ClassPropertyAssignToConstructorPromotionRector::class,
 	])
 	->withPreparedSets(
@@ -35,5 +31,5 @@ return RectorConfig::configure()
 		typeDeclarations: true,
 		privatization: true,
 		earlyReturn: true,
-		strictBooleans: true,
+		codingStyle: true,
 	);

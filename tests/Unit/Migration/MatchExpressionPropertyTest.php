@@ -42,7 +42,7 @@ final class MatchExpressionPropertyTest extends TestCase
 				$gpxFile = new GpxFile('Match Expression Test');
 				$track = TrackFactory::createWithPoints(2);
 				$gpxFile->tracks[] = $track;
-				
+
 				$tempFile = sys_get_temp_dir() . '/test_match_' . uniqid() . '.' . $format->value;
 
 				try {
@@ -154,4 +154,3 @@ final class MatchExpressionPropertyTest extends TestCase
 		}
 	}
 }
-

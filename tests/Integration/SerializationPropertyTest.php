@@ -18,7 +18,6 @@ use phpGPX\Models\Person;
 use phpGPX\Models\Point;
 use phpGPX\Models\Segment;
 use phpGPX\Models\Track;
-use phpGPX\phpGPX;
 use phpGPX\Tests\Support\TestCase;
 
 /**

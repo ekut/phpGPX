@@ -25,7 +25,7 @@ class phpGPX
 	 * @deprecated Use FileFormat::JSON instead
 	 */
 	public const JSON_FORMAT = 'json';
-	
+
 	/**
 	 * @deprecated Use FileFormat::XML instead
 	 */

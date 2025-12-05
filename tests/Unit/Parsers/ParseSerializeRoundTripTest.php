@@ -141,9 +141,9 @@ final class ParseSerializeRoundTripTest extends TestCase
 
 				// Ensure within valid ranges
 				$minLat = min(90.0, max(-90.0, $minLat));
-				$minLon = min(180.0, max(-180.0, $minLon));
+				$minLon = min(179.999999, max(-180.0, $minLon));
 				$maxLat = min(90.0, max(-90.0, $maxLat));
-				$maxLon = min(180.0, max(-180.0, $maxLon));
+				$maxLon = min(179.999999, max(-180.0, $maxLon));
 
 				// Ensure min < max
 				if ($minLat > $maxLat) {

@@ -9,8 +9,6 @@ parameters:
 		- vendor
 	
 	# Strict rules
-	checkMissingIterableValueType: true
-	checkGenericClassInNonGenericObjectType: true
 	checkMissingCallableSignature: true
 	
 	# Report unused

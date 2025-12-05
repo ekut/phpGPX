@@ -26,7 +26,7 @@ use phpGPX\Models\Track;
 // Create output directory if it doesn't exist
 $outputDir = __DIR__ . '/gpx-samples';
 if (!is_dir($outputDir)) {
-	mkdir($outputDir, 0755, true);
+	mkdir($outputDir, 0o755, true);
 }
 
 echo "Generating GPX 1.1 compliant sample files...\n\n";
@@ -131,7 +131,7 @@ $metadata->bounds = new Bounds(
 	minLatitude: 54.9,
 	minLongitude: 9.8,
 	maxLatitude: 55.0,
-	maxLongitude: 9.9
+	maxLongitude: 9.9,
 );
 
 // Add link
@@ -195,7 +195,7 @@ $metadata->bounds = new Bounds(
 	minLatitude: -90.0,
 	minLongitude: -180.0,
 	maxLatitude: 90.0,
-	maxLongitude: 179.999999
+	maxLongitude: 179.999999,
 );
 $boundaryGpx->metadata = $metadata;
 
