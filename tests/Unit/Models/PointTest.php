@@ -6,6 +6,7 @@ namespace phpGPX\Tests\Unit\Models;
 
 use Eris\Generators;
 use Eris\TestTrait;
+use phpGPX\Enums\PointType;
 use phpGPX\Models\Point;
 use phpGPX\Parsers\PointParser;
 use phpGPX\Tests\Support\Factories\PointFactory;
@@ -33,7 +34,7 @@ final class PointTest extends TestCase
 		$this->assertInstanceOf(Point::class, $point);
 		$this->assertEquals(54.9328621088893, $point->latitude);
 		$this->assertEquals(9.860624216140083, $point->longitude);
-		$this->assertEquals(Point::TRACKPOINT, $point->getPointType());
+		$this->assertSame(PointType::TRACKPOINT, $point->getPointType());
 	}
 
 	/**
@@ -48,7 +49,7 @@ final class PointTest extends TestCase
 		$point->longitude = 10.0;
 		
 		// Assert
-		$this->assertEquals(Point::WAYPOINT, $point->getPointType());
+		$this->assertSame(PointType::WAYPOINT, $point->getPointType());
 	}
 
 	/**
@@ -63,7 +64,7 @@ final class PointTest extends TestCase
 		$point->longitude = 10.0;
 		
 		// Assert
-		$this->assertEquals(Point::ROUTEPOINT, $point->getPointType());
+		$this->assertSame(PointType::ROUTEPOINT, $point->getPointType());
 	}
 
 	/**
@@ -381,7 +382,7 @@ final class PointTest extends TestCase
 	}
 
 	/**
-	 * Test Point initialization has null values.
+	 * Test Point initialization has null values for optional properties.
 	 * Requirements: 2.2
 	 */
 	public function test_point_initialization_has_null_values(): void
@@ -389,7 +390,7 @@ final class PointTest extends TestCase
 		// Arrange & Act
 		$point = new Point(Point::TRACKPOINT);
 		
-		// Assert
+		// Assert - all optional properties should be null
 		$this->assertNull($point->latitude);
 		$this->assertNull($point->longitude);
 		$this->assertNull($point->elevation);
@@ -513,7 +514,8 @@ final class PointTest extends TestCase
 				$this->assertEquals($description, $point->description, "Description should be stored correctly");
 				$this->assertEquals($comment, $point->comment, "Comment should be stored correctly");
 				$this->assertEquals($satellites, $point->satellitesNumber, "Satellites number should be stored correctly");
-				$this->assertEquals($pointType, $point->getPointType(), "Point type should be stored correctly");
+				// Point type is converted to enum, so compare the enum value
+				$this->assertEquals($pointType, $point->getPointType()->value, "Point type should be stored correctly");
 			});
 	}
 

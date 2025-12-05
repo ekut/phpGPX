@@ -86,9 +86,14 @@ abstract class RouteParser
 						break;
 					default:
 						if (!in_array($attribute['type'], ['object', 'array'])) {
-							$route->{$attribute['name']} = $node->$key ?? null;
-							if (!is_null($route->{$attribute['name']})) {
-								settype($route->{$attribute['name']}, $attribute['type']);
+							$value = $node->$key ?? null;
+							if ($value !== null) {
+								// @phpstan-ignore cast.string
+								$value = (string) $value;
+								if ($value !== '') {
+									settype($value, $attribute['type']);
+									$route->{$attribute['name']} = $value;
+								}
 							}
 						}
 						break;

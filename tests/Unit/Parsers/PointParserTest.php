@@ -5,6 +5,7 @@
 
 namespace phpGPX\Tests\Unit\Parsers;
 
+use phpGPX\Enums\PointType;
 use phpGPX\Helpers\DateTimeHelper;
 use phpGPX\Models\Point;
 use phpGPX\Parsers\SegmentParser;
@@ -82,7 +83,7 @@ class PointParserTest extends AbstractParserTest
 		$this->assertInstanceOf(Point::class, $point);
 		$this->assertEquals(54.9328621088893, $point->latitude);
 		$this->assertEquals(9.860624216140083, $point->longitude);
-		$this->assertEquals(Point::TRACKPOINT, $point->getPointType());
+		$this->assertSame(PointType::TRACKPOINT, $point->getPointType());
 	}
 
 	/**
@@ -98,7 +99,7 @@ class PointParserTest extends AbstractParserTest
 		$point = PointParser::parse($xml);
 
 		$this->assertInstanceOf(Point::class, $point);
-		$this->assertEquals(Point::WAYPOINT, $point->getPointType());
+		$this->assertSame(PointType::WAYPOINT, $point->getPointType());
 		$this->assertEquals(52.5200, $point->latitude);
 		$this->assertEquals(13.4050, $point->longitude);
 	}
@@ -116,7 +117,7 @@ class PointParserTest extends AbstractParserTest
 		$point = PointParser::parse($xml);
 
 		$this->assertInstanceOf(Point::class, $point);
-		$this->assertEquals(Point::ROUTEPOINT, $point->getPointType());
+		$this->assertSame(PointType::ROUTEPOINT, $point->getPointType());
 		$this->assertEquals(48.8566, $point->latitude);
 		$this->assertEquals(2.3522, $point->longitude);
 	}
@@ -297,7 +298,7 @@ class PointParserTest extends AbstractParserTest
 		$point = PointParser::parse($xml);
 
 		$this->assertInstanceOf(Point::class, $point);
-		$this->assertNull($point->latitude);
+		$this->assertNull($point->latitude); // Missing latitude is null
 		$this->assertEquals(10.0, $point->longitude);
 	}
 
@@ -315,7 +316,7 @@ class PointParserTest extends AbstractParserTest
 
 		$this->assertInstanceOf(Point::class, $point);
 		$this->assertEquals(50.0, $point->latitude);
-		$this->assertNull($point->longitude);
+		$this->assertNull($point->longitude); // Missing longitude is null
 	}
 
 	/**

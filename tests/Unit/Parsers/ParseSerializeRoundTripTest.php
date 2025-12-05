@@ -6,6 +6,7 @@ namespace phpGPX\Tests\Unit\Parsers;
 
 use Eris\Generators;
 use Eris\TestTrait;
+use phpGPX\Enums\PointType;
 use phpGPX\Models\Point;
 use phpGPX\Models\Bounds;
 use phpGPX\Models\Extensions;
@@ -90,7 +91,7 @@ final class ParseSerializeRoundTripTest extends TestCase
 				
 				// Verify round-trip consistency
 				$this->assertInstanceOf(Point::class, $reparsedPoint, "Re-parsing should produce a Point object");
-				$this->assertEquals($pointType, $reparsedPoint->getPointType(), "Point type should be preserved");
+				$this->assertEquals($pointType, $reparsedPoint->getPointType()->value, "Point type should be preserved");
 				
 				// Allow small floating point tolerance
 				$epsilon = 0.000001;

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Created            26/08/16 14:22
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
@@ -6,6 +9,7 @@
 
 namespace phpGPX\Models;
 
+use phpGPX\Enums\PointType;
 use phpGPX\Helpers\SerializationHelper;
 use phpGPX\Helpers\DateTimeHelper;
 use phpGPX\phpGPX;
@@ -18,196 +22,173 @@ use phpGPX\phpGPX;
  */
 class Point implements Summarizable
 {
-	const WAYPOINT = 'waypoint';
-	const TRACKPOINT = 'track';
-	const ROUTEPOINT = 'route';
+	// Legacy constants for backward compatibility - use PointType enum instead
+	public const WAYPOINT = 'waypoint';
+	public const TRACKPOINT = 'track';
+	public const ROUTEPOINT = 'route';
 
 	/**
 	 * The latitude of the point. Decimal degrees, WGS84 datum.
 	 * Original GPX 1.1 attribute.
-	 * @var float
 	 */
-	public $latitude;
+	public ?float $latitude = null;
 
 	/**
 	 * The longitude of the point. Decimal degrees, WGS84 datum.
 	 * Original GPX 1.1 attribute.
-	 * @var float
 	 */
-	public $longitude;
+	public ?float $longitude = null;
 
 	/**
 	 * Elevation (in meters) of the point.
 	 * Original GPX 1.1 attribute.
-	 * @var float|null
 	 */
-	public $elevation;
+	public ?float $elevation = null;
 
 	/**
 	 * Creation/modification timestamp for element. Date and time in are in Univeral Coordinated Time (UTC), not local time!
 	 * Fractional seconds are allowed for millisecond timing in tracklogs.
-	 * @var \DateTime|null
 	 */
-	public $time;
+	public ?\DateTime $time = null;
 
 	/**
 	 * Magnetic variation (in degrees) at the point
 	 * Original GPX 1.1 attribute.
-	 * @var float|null
 	 */
-	public $magVar;
+	public ?float $magVar = null;
 
 	/**
 	 * Height (in meters) of geoid (mean sea level) above WGS84 earth ellipsoid. As defined in NMEA GGA message.
 	 * Original GPX 1.1 attribute.
-	 * @var float|null
 	 */
-	public $geoidHeight;
+	public ?float $geoidHeight = null;
 
 	/**
 	 * The GPS name of the waypoint. This field will be transferred to and from the GPS.
 	 * GPX does not place restrictions on the length of this field or the characters contained in it.
 	 * It is up to the receiving application to validate the field before sending it to the GPS.
 	 * Original GPX 1.1 attribute.
-	 * @var string|null
 	 */
-	public $name;
+	public ?string $name = null;
 
 	/**
 	 * GPS waypoint comment. Sent to GPS as comment.
 	 * Original GPX 1.1 attribute.
-	 * @var string|null
 	 */
-	public $comment;
+	public ?string $comment = null;
 
 	/**
 	 * A text description of the element. Holds additional information about the element intended for the user, not the GPS.
 	 * Original GPX 1.1 attribute.
-	 * @var string|null
 	 */
-	public $description;
+	public ?string $description = null;
 
 	/**
 	 * Source of data. Included to give user some idea of reliability and accuracy of data. "Garmin eTrex", "USGS quad Boston North", e.g.
 	 * Original GPX 1.1 attribute.
-	 * @var string|null
 	 */
-	public $source;
+	public ?string $source = null;
 
 	/**
 	 * Link to additional information about the waypoint.
 	 * Original GPX 1.1 attribute.
 	 * @var Link[]
 	 */
-	public $links = [];
+	public array $links = [];
 
 	/**
 	 * Text of GPS symbol name. For interchange with other programs, use the exact spelling of the symbol as displayed on the GPS.
 	 * If the GPS abbreviates words, spell them out.
 	 * Original GPX 1.1 attribute.
-	 * @var string|null
 	 */
-	public $symbol;
+	public ?string $symbol = null;
 
 	/**
 	 * Type (classification) of the waypoint.
 	 * Original GPX 1.1 attribute.
-	 * @var string|null
 	 */
-	public $type;
+	public ?string $type = null;
 
 	/**
 	 * Type of GPS fix. none means GPS had no fix. To signify "the fix info is unknown, leave out fixType entirely. pps = military signal used
 	 * Possible values: {'none'|'2d'|'3d'|'dgps'|'pps'}
 	 * Original GPX 1.1 attribute.
 	 * @see http://www.topografix.com/GPX/1/1/#type_fixType
-	 * @var string
 	 */
-	public $fix;
+	public ?string $fix = null;
 
 	/**
 	 * Number of satellites used to calculate the GPX fix. Always positive value.
 	 * Original GPX 1.1 attribute.
-	 * @var integer
 	 */
-	public $satellitesNumber;
+	public ?int $satellitesNumber = null;
 
 	/**
 	 * Horizontal dilution of precision.
 	 * Original GPX 1.1 attribute.
-	 * @var float
 	 */
-	public $hdop;
+	public ?float $hdop = null;
 
 	/**
 	 * Vertical dilution of precision.
 	 * Original GPX 1.1 attribute.
-	 * @var float
 	 */
-	public $vdop;
+	public ?float $vdop = null;
 
 	/**
 	 * Position dilution of precision.
 	 * Original GPX 1.1 attribute
-	 * @var float
 	 */
-	public $pdop;
+	public ?float $pdop = null;
 
 	/**
 	 * Number of seconds since last DGPS update.
 	 * Original GPX 1.1 attribute.
-	 * @var integer
 	 */
-	public $ageOfGpsData;
+	public ?int $ageOfGpsData = null;
 
 	/**
 	 * ID of DGPS station used in differential correction.
 	 * Original GPX 1.1 attribute.
 	 * @see http://www.topografix.com/GPX/1/1/#type_dgpsStationType
-	 * @var integer
 	 */
-	public $dgpsid;
+	public ?int $dgpsid = null;
 
 	/**
 	 * Difference in in distance (in meters) between last point.
 	 * Value is created by phpGPX library.
-	 * @var float
 	 */
-	public $difference;
+	public ?float $difference = null;
 
 	/**
 	 * Distance from collection start in meters.
 	 * Value is created by phpGPX library.
-	 * @var float
 	 */
-	public $distance;
+	public ?float $distance = null;
 
 	/**
 	 * Objects stores GPX extensions from another namespaces.
-	 * @var Extensions
 	 */
-	public $extensions;
+	public ?Extensions $extensions = null;
 
 	/**
 	 * Type of the point (parent collation type (ROUTE|WAYPOINT|TRACK))
-	 * @var string
 	 */
-	private $pointType;
+	private readonly PointType $pointType;
 
 	/**
 	 * Point constructor.
-	 * @param string $pointType
 	 */
-	public function __construct($pointType)
+	public function __construct(PointType|string $pointType)
 	{
-		$this->pointType = $pointType;
+		// Support both enum and legacy string values for backward compatibility
+		$this->pointType = $pointType instanceof PointType ? $pointType : PointType::from($pointType);
 	}
 
 	/**
 	 * Return point type (ROUTE|TRACK|WAYPOINT)
-	 * @return string
 	 */
-	public function getPointType()
+	public function getPointType(): PointType
 	{
 		return $this->pointType;
 	}

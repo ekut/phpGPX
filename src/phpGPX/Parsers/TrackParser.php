@@ -79,9 +79,14 @@ abstract class TrackParser
 						break;
 					default:
 						if (!in_array($attribute['type'], ['object', 'array'])) {
-							$track->{$attribute['name']} = $node->$key ?? null;
-							if (!is_null($track->{$attribute['name']})) {
-								settype($track->{$attribute['name']}, $attribute['type']);
+							$value = $node->$key ?? null;
+							if ($value !== null) {
+								// @phpstan-ignore cast.string
+								$value = (string) $value;
+								if ($value !== '') {
+									settype($value, $attribute['type']);
+									$track->{$attribute['name']} = $value;
+								}
 							}
 						}
 						break;

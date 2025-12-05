@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Created            30/08/16 17:12
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
@@ -18,109 +21,98 @@ class Stats implements Summarizable
 
 	/**
 	 * Distance in meters (m)
-	 * @var float
 	 */
-	public $distance = 0;
+	public float $distance = 0;
 
 	/**
 	 * Distance in meters (m) including elevation loss/gain
-	 * @var float
 	 */
-	public $realDistance = 0;
+	public float $realDistance = 0;
 
 	/**
 	 * Average speed in meters per second (m/s)
-	 * @var float
 	 */
-	public $averageSpeed;
+	public ?float $averageSpeed = null;
 
 	/**
 	 * Average pace in seconds per kilometer (s/km)
-	 * @var float
 	 */
-	public $averagePace;
+	public ?float $averagePace = null;
 
 	/**
 	 * Minimal altitude in meters (m)
-	 * @var int
 	 */
-	public $minAltitude;
+	public ?float $minAltitude = null;
 
 	/**
 	 * Minimal altitude coordinate
-	 * @var [float,float]
+	 * @var array{0: float, 1: float}|null
 	 */
-	public $minAltitudeCoords;
+	public ?array $minAltitudeCoords = null;
 
 	/**
 	 * Maximal altitude in meters (m)
-	 * @var int
 	 */
-	public $maxAltitude;
+	public ?float $maxAltitude = null;
 
 	/**
 	 * Maximal altitude coordinate
-	 * @var [float,float]
+	 * @var array{0: float, 1: float}|null
 	 */
-	public $maxAltitudeCoords;
+	public ?array $maxAltitudeCoords = null;
 
 	/**
 	 * Cumulative elevation gain in meters (m)
-	 * @var int
 	 */
-	public $cumulativeElevationGain;
+	public ?float $cumulativeElevationGain = null;
 
 	/**
 	 * Cumulative elevation loss in meters (m)
-	 * @var int
 	 */
-	public $cumulativeElevationLoss;
+	public ?float $cumulativeElevationLoss = null;
 
 	/**
 	 * Started time
-	 * @var \DateTime
 	 */
-	public $startedAt;
+	public ?\DateTime $startedAt = null;
 
 	/**
 	 * startedAt coordinate
-	 * @var [float,float]
+	 * @var array{0: float, 1: float}|null
 	 */
-	public $startedAtCoords;
+	public ?array $startedAtCoords = null;
 
 	/**
 	 * Ending time
-	 * @var \DateTime
 	 */
-	public $finishedAt;
+	public ?\DateTime $finishedAt = null;
 
 	/**
 	 * finishedAt coordinate
-	 * @var [float,float]
+	 * @var array{0: float, 1: float}|null
 	 */
-	public $finishedAtCoords;
+	public ?array $finishedAtCoords = null;
 
 	/**
 	 * Duration is seconds
-	 * @var int
 	 */
-	public $duration;
+	public ?int $duration = null;
 
 	/**
 	 * An array of two points representing
 	 * the most northwestern and the most
 	 * southeastern points of a segment
-	 * @var array
+	 * @var array<int, mixed>|null
 	 */
-	public $bounds = [];
+	public ?array $bounds = null;
 
 	/**
 	 * Reset all stats
 	 */
 	public function reset(): void
 	{
-		$this->distance = null;
-		$this->realDistance = null;
+		$this->distance = 0;
+		$this->realDistance = 0;
 		$this->averageSpeed = null;
 		$this->averagePace = null;
 		$this->minAltitude = null;
@@ -133,13 +125,14 @@ class Stats implements Summarizable
 		$this->startedAtCoords = null;
 		$this->finishedAt = null;
 		$this->finishedAtCoords = null;
+		$this->duration = null;
 		$this->bounds = null;
 	}
 
 	/**
-  * Serialize object to array
-  */
- public function toArray(): array
+	 * Serialize object to array
+	 */
+	public function toArray(): array
 	{
 		return [
 			'distance' => (float)$this->distance,

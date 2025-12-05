@@ -168,7 +168,7 @@ final class TrackTest extends TestCase
 		
 		// Assert
 		$this->assertInstanceOf(Stats::class, $track->stats);
-		$this->assertNull($track->stats->distance);
+		$this->assertEquals(0.0, $track->stats->distance);
 	}
 
 	public function test_recalculate_stats_with_empty_segments(): void
@@ -182,7 +182,7 @@ final class TrackTest extends TestCase
 		
 		// Assert
 		$this->assertInstanceOf(Stats::class, $track->stats);
-		$this->assertNull($track->stats->distance);
+		$this->assertEquals(0.0, $track->stats->distance);
 	}
 
 	public function test_recalculate_stats_aggregates_multiple_segments(): void

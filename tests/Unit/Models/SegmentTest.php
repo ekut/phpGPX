@@ -109,7 +109,7 @@ final class SegmentTest extends TestCase
 		
 		// Assert
 		$this->assertInstanceOf(Stats::class, $segment->stats);
-		$this->assertNull($segment->stats->distance);
+		$this->assertEquals(0.0, $segment->stats->distance);
 	}
 
 	public function test_recalculate_stats_with_single_point(): void

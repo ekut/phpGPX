@@ -165,7 +165,7 @@ final class RouteTest extends TestCase
 		
 		// Assert
 		$this->assertInstanceOf(Stats::class, $route->stats);
-		$this->assertNull($route->stats->distance);
+		$this->assertEquals(0.0, $route->stats->distance);
 	}
 
 	public function test_recalculate_stats_with_single_point(): void

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Created            26/08/16 14:21
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
@@ -16,64 +19,56 @@ abstract class Collection implements Summarizable, StatsCalculator
 	/**
 	 * GPS name of route / track.
 	 * An original GPX 1.1 attribute.
-	 * @var string|null
 	 */
-	public $name;
+	public ?string $name = null;
 
 	/**
 	 * GPS comment for route.
 	 * An original GPX 1.1 attribute.
-	 * @var string|null
 	 */
-	public $comment;
+	public ?string $comment = null;
 
 	/**
 	 * Text description of route/track for user. Not sent to GPS.
 	 * An original GPX 1.1 attribute.
-	 * @var string|null
 	 */
-	public $description;
+	public ?string $description = null;
 
 	/**
 	 * Source of data. Included to give user some idea of reliability and accuracy of data.
 	 * An original GPX 1.1 attribute.
-	 * @var string|null
 	 */
-	public $source;
+	public ?string $source = null;
 
 	/**
 	 * Links to external information about the route/track.
 	 * An original GPX 1.1 attribute.
 	 * @var Link[]
 	 */
-	public $links = [];
+	public array $links = [];
 
 	/**
 	 * GPS route/track number.
 	 * An original GPX 1.1 attribute.
-	 * @var int|null
 	 */
-	public $number;
+	public ?int $number = null;
 
 	/**
 	 * Type (classification) of route/track.
 	 * An original GPX 1.1 attribute.
-	 * @var string|null
 	 */
-	public $type;
+	public ?string $type = null;
 
 	/**
 	 * You can add extend GPX by adding your own elements from another schema here.
 	 * An original GPX 1.1 attribute.
-	 * @var Extensions|null
 	 */
-	public $extensions;
+	public ?Extensions $extensions = null;
 
 	/**
 	 * Objects contains calculated statistics for collection.
-	 * @var Stats|null
 	 */
-	public $stats;
+	public ?Stats $stats = null;
 
 
 	/**

@@ -6,6 +6,7 @@ namespace phpGPX\Tests\Unit\Models;
 
 use Eris\Generators;
 use Eris\TestTrait;
+use phpGPX\Enums\PointType;
 use phpGPX\Models\Point;
 use phpGPX\Models\Track;
 use phpGPX\Models\Segment;
@@ -132,7 +133,7 @@ final class SerializationRoundTripTest extends TestCase
 				
 				// Verify round-trip consistency
 				$this->assertInstanceOf(Point::class, $parsedPoint, "Parsed object should be a Point");
-				$this->assertEquals($pointType, $parsedPoint->getPointType(), "Point type should be preserved");
+				$this->assertEquals($pointType, $parsedPoint->getPointType()->value, "Point type should be preserved");
 				
 				// Allow small floating point tolerance
 				$epsilon = 0.000001;

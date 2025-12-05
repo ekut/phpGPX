@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace phpGPX\Tests\Unit\Parsers;
 
+use phpGPX\Enums\PointType;
 use phpGPX\Models\Point;
 use phpGPX\Parsers\WaypointParser;
 use PHPUnit\Framework\TestCase;
@@ -38,7 +39,7 @@ class WaypointParserTest extends TestCase
 		$this->assertEquals('This is a test waypoint description', $waypoints[0]->description);
 		$this->assertEquals(54.9328621088893, $waypoints[0]->latitude);
 		$this->assertEquals(9.860624216140083, $waypoints[0]->longitude);
-		$this->assertEquals(Point::WAYPOINT, $waypoints[0]->getPointType());
+		$this->assertSame(PointType::WAYPOINT, $waypoints[0]->getPointType());
 	}
 
 	/**

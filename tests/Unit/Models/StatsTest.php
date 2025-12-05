@@ -39,8 +39,7 @@ final class StatsTest extends TestCase
 		$this->assertNull($stats->finishedAt);
 		$this->assertNull($stats->finishedAtCoords);
 		$this->assertNull($stats->duration);
-		$this->assertIsArray($stats->bounds);
-		$this->assertEmpty($stats->bounds);
+		$this->assertNull($stats->bounds);
 	}
 
 	/**
@@ -259,9 +258,9 @@ final class StatsTest extends TestCase
 		// Act
 		$stats->reset();
 		
-		// Assert
-		$this->assertNull($stats->distance);
-		$this->assertNull($stats->realDistance);
+		// Assert - distance and realDistance are non-nullable floats, reset to 0
+		$this->assertEquals(0.0, $stats->distance);
+		$this->assertEquals(0.0, $stats->realDistance);
 		$this->assertNull($stats->averageSpeed);
 		$this->assertNull($stats->averagePace);
 		$this->assertNull($stats->minAltitude);
@@ -274,7 +273,8 @@ final class StatsTest extends TestCase
 		$this->assertNull($stats->startedAtCoords);
 		$this->assertNull($stats->finishedAt);
 		$this->assertNull($stats->finishedAtCoords);
-		$this->assertNull($stats->bounds);
+		$this->assertNull($stats->duration);
+		$this->assertEmpty($stats->bounds); // bounds is a non-nullable array, reset to empty array
 	}
 
 	/**
@@ -693,9 +693,8 @@ final class StatsTest extends TestCase
 		$array = $stats->toArray();
 		
 		// Assert
-		$this->assertIsArray($stats->bounds);
-		$this->assertEmpty($stats->bounds);
-		$this->assertIsArray($array['bounds']);
+		$this->assertNull($stats->bounds);
+		$this->assertNull($array['bounds']);
 	}
 
 	/**

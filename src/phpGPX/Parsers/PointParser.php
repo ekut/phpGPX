@@ -104,6 +104,7 @@ abstract class PointParser
 
 		$point = new Point(self::$typeMapper[$node->getName()]);
 
+		// Latitude and longitude are required in GPX spec, but handle missing values gracefully
 		$point->latitude = isset($node['lat']) ? ((float) $node['lat']) : null;
 		$point->longitude = isset($node['lon']) ? ((float) $node['lon']) : null;
 
@@ -120,9 +121,25 @@ abstract class PointParser
 					break;
 				default:
 					if (!in_array($attribute['type'], ['object', 'array'])) {
-						$point->{$attribute['name']} = $node->$key ?? null;
-						if (!is_null($point->{$attribute['name']})) {
-							settype($point->{$attribute['name']}, $attribute['type']);
+						$value = $node->$key ?? null;
+						if (!is_null($value)) {
+							// Cast SimpleXMLElement to proper type
+							switch ($attribute['type']) {
+								case 'float':
+									$point->{$attribute['name']} = (float) $value;
+									break;
+								case 'integer':
+									$point->{$attribute['name']} = (int) $value;
+									break;
+								case 'string':
+									$point->{$attribute['name']} = (string) $value;
+									break;
+								default:
+									$point->{$attribute['name']} = $value;
+									break;
+							}
+						} else {
+							$point->{$attribute['name']} = null;
 						}
 					}
 					break;
@@ -133,11 +150,13 @@ abstract class PointParser
 	}
 
 	/**
-  * @return \DOMElement
-  */
- public static function toXML(Point $point, \DOMDocument &$document)
+	 * @return \DOMElement
+	 */
+	public static function toXML(Point $point, \DOMDocument &$document)
 	{
-		$node = $document->createElement(array_search($point->getPointType(), self::$typeMapper));
+		// Get the enum value and find the corresponding XML element name
+		$pointTypeValue = $point->getPointType()->value;
+		$node = $document->createElement(array_search($pointTypeValue, self::$typeMapper));
 
 		$node->setAttribute('lat', $point->latitude);
 		$node->setAttribute('lon', $point->longitude);
