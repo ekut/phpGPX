@@ -143,9 +143,8 @@ final class DistanceCalculatorTest extends TestCase
 
 	/**
 	 * Test handling of points with null coordinates.
-	 * Note: The current implementation doesn't explicitly handle null coordinates,
-	 * but we test the behavior to document it. In PHP 8.4, passing null to deg2rad
-	 * triggers a deprecation notice.
+	 * With PHP 8.4 strict types, passing null to deg2rad() throws a TypeError.
+	 * This test verifies that the type system correctly enforces non-null coordinates.
 	 */
 	public function test_calculate_distance_with_null_coordinates(): void
 	{
@@ -156,20 +155,11 @@ final class DistanceCalculatorTest extends TestCase
 		
 		$point2 = PointFactory::createAtCoordinates(54.0, 9.0);
 		
-		// Act - Calculate distance with null coordinates
+		// Act & Assert - Expect TypeError when calculating distance with null coordinates
+		$this->expectException(\TypeError::class);
+		
 		$calculator = new DistanceCalculator([$point1, $point2]);
-		
-		// Suppress deprecation warnings for this test
-		$errorReporting = error_reporting();
-		error_reporting($errorReporting & ~E_DEPRECATED);
-		
-		$distance = $calculator->getRawDistance();
-		
-		error_reporting($errorReporting);
-		
-		// Assert - Distance calculation completes (even with null values)
-		// The result may be NaN or 0, but the calculation doesn't throw an exception
-		$this->assertTrue(is_numeric($distance) || is_nan($distance));
+		$calculator->getRawDistance();
 	}
 
 	/**

@@ -184,24 +184,6 @@ class DateTimeHelperTest extends TestCase
 		$this->assertNull($result);
 	}
 
-	public function test_format_datetime_with_empty_string_returns_null(): void
-	{
-		// Act
-		$result = DateTimeHelper::formatDateTime("");
-
-		// Assert
-		$this->assertNull($result);
-	}
-
-	public function test_format_datetime_with_non_datetime_object_returns_null(): void
-	{
-		// Act
-		$result = DateTimeHelper::formatDateTime("not a datetime");
-
-		// Assert
-		$this->assertNull($result);
-	}
-
 	// ========================================
 	// parseDateTime tests
 	// ========================================

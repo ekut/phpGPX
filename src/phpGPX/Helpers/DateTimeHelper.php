@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Created            05/09/16 17:02
  * @author            Jakub Dubec <jakub.dubec@gmail.com>
@@ -25,12 +28,9 @@ class DateTimeHelper
 	}
 
 	/**
-	 * @param $datetime
-	 * @param string $format
-	 * @param string $timezone
-	 * @return null|string
+	 * Format a DateTime object to string.
 	 */
-	public static function formatDateTime($datetime, $format = 'c', $timezone = 'UTC')
+	public static function formatDateTime(?\DateTime $datetime, string $format = 'c', string $timezone = 'UTC'): ?string
 	{
 		$formatted 				= null;
 
@@ -43,10 +43,9 @@ class DateTimeHelper
 	}
 
 	/**
-  * @param $value
-  * @param string $timezone
-  */
- public static function parseDateTime($value, $timezone = 'Europe/London'): \DateTime
+	 * Parse a string value to DateTime object.
+	 */
+	public static function parseDateTime(string $value, string $timezone = 'Europe/London'): \DateTime
 	{
 		$timezone = new \DateTimeZone($timezone);
 		$datetime = new \DateTime($value, $timezone);

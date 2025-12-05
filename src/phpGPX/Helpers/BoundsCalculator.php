@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * DistanceCalculator.php
  *
@@ -21,7 +24,9 @@ use phpGPX\phpGPX;
 class BoundsCalculator
 {
 	/**
-	 * @return array of array Only two points with latitude and longitude that correspond to the
+	 * Calculate bounds from an array of points.
+	 * @param Point[] $points
+	 * @return array Only two points with latitude and longitude that correspond to the
 	 *   most northwestern and southeastern points of the track
 	 */
 	public static function calculate(array $points): array
