@@ -59,12 +59,25 @@ final class ReadonlyPropertyTest extends TestCase
 				);
 
 				// Attempt to modify the readonly property should throw an Error
-				$this->expectException(Error::class);
-				$this->expectExceptionMessageMatches('/Cannot modify readonly property/');
+				$exceptionThrown = false;
 
-				// Use reflection to attempt modification (simulates direct property access)
-				$property->setAccessible(true);
-				$property->setValue($point, $newType);
+				try {
+					// Use reflection to attempt modification (simulates direct property access)
+					$property->setAccessible(true);
+					$property->setValue($point, $newType);
+				} catch (Error $e) {
+					$exceptionThrown = true;
+					$this->assertStringContainsString(
+						'Cannot modify readonly property',
+						$e->getMessage(),
+						"Expected error message about readonly property modification",
+					);
+				}
+
+				$this->assertTrue(
+					$exceptionThrown,
+					"Attempting to modify a readonly property should throw an Error",
+				);
 			});
 	}
 

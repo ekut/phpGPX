@@ -40,15 +40,13 @@ class SerializationHelperTest extends TestCase
 		$this->assertIsString(SerializationHelper::stringOrNull("Bla bla"));
 	}
 
-	/**
-	 * @dataProvider dataProviderFilterNotNull
-	 */
-	public function testFilterNotNull($expected, $actual): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('dataProviderFilterNotNull')]
+	public function testFilterNotNull(array $expected, array $actual): void
 	{
 		$this->assertEquals($expected, SerializationHelper::filterNotNull($actual));
 	}
 
-	public function dataProviderFilterNotNull()
+	public static function dataProviderFilterNotNull(): array
 	{
 		return [
 			'numeric 1' => [
