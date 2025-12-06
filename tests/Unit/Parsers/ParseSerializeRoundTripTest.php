@@ -127,9 +127,9 @@ final class ParseSerializeRoundTripTest extends TestCase
 			->withRand('mt_rand')
 			->forAll(
 				Generators::choose(-90, 90),    // minLat
-				Generators::choose(-180, 180),  // minLon
+				Generators::choose(-180, 179),  // minLon (must be < 180)
 				Generators::choose(-90, 90),    // maxLat
-				Generators::choose(-180, 180),   // maxLon
+				Generators::choose(-180, 179),   // maxLon (must be < 180)
 			)
 			->withMaxSize(100)
 			->then(function ($minLatBase, $minLonBase, $maxLatBase, $maxLonBase): void {
@@ -141,9 +141,9 @@ final class ParseSerializeRoundTripTest extends TestCase
 
 				// Ensure within valid ranges
 				$minLat = min(90.0, max(-90.0, $minLat));
-				$minLon = min(179.999999, max(-180.0, $minLon));
+				$minLon = min(179.999999, max(-180.0, $minLon)); // Must be < 180.0
 				$maxLat = min(90.0, max(-90.0, $maxLat));
-				$maxLon = min(179.999999, max(-180.0, $maxLon));
+				$maxLon = min(179.999999, max(-180.0, $maxLon)); // Must be < 180.0
 
 				// Ensure min < max
 				if ($minLat > $maxLat) {

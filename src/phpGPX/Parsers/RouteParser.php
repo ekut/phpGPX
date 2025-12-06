@@ -62,7 +62,7 @@ abstract class RouteParser
 	];
 
 	/**
-	 * @param SimpleXMLElement|SimpleXMLElement[] $nodes
+	 * @param SimpleXMLElement|array<SimpleXMLElement> $nodes
 	 * @return Route[]
 	 */
 	public static function parse(SimpleXMLElement|array $nodes): array
@@ -85,7 +85,10 @@ abstract class RouteParser
 
 						if (property_exists($node, 'rtept') && $node->rtept !== null) {
 							foreach ($node->rtept as $point) {
-								$route->points[] = PointParser::parse($point);
+								$parsedPoint = PointParser::parse($point);
+								if ($parsedPoint !== null) {
+									$route->points[] = $parsedPoint;
+								}
 							}
 						}
 						break;
@@ -133,8 +136,10 @@ abstract class RouteParser
 						break;
 					default:
 						$child = $document->createElement($key);
-						$elementText = $document->createTextNode((string) $route->{$attribute['name']});
-						$child->appendChild($elementText);
+						if ($child !== false) {
+							$elementText = $document->createTextNode((string) $route->{$attribute['name']});
+							$child->appendChild($elementText);
+						}
 						break;
 				}
 
@@ -142,7 +147,7 @@ abstract class RouteParser
 					foreach ($child as $item) {
 						$node->appendChild($item);
 					}
-				} else {
+				} elseif ($child instanceof DOMElement) {
 					$node->appendChild($child);
 				}
 			}

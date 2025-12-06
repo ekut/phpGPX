@@ -22,7 +22,7 @@ abstract class SegmentParser
 	public static $tagName = 'trkseg';
 
 	/**
-	 * @param \SimpleXMLElement|\SimpleXMLElement[] $nodes
+	 * @param \SimpleXMLElement|array<\SimpleXMLElement> $nodes
 	 * @return Segment[]
 	 */
 	public static function parse(\SimpleXMLElement|array $nodes): array
@@ -40,7 +40,10 @@ abstract class SegmentParser
 				$segment->points = [];
 
 				foreach ($node->trkpt as $point) {
-					$segment->points[] = PointParser::parse($point);
+					$parsedPoint = PointParser::parse($point);
+					if ($parsedPoint !== null) {
+						$segment->points[] = $parsedPoint;
+					}
 				}
 			}
 			$segment->extensions = isset($node->extensions) ? ExtensionParser::parse($node->extensions) : null;

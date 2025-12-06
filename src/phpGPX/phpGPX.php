@@ -24,108 +24,97 @@ class phpGPX
 	/**
 	 * @deprecated Use FileFormat::JSON instead
 	 */
-	public const JSON_FORMAT = 'json';
+	public const string JSON_FORMAT = 'json';
 
 	/**
 	 * @deprecated Use FileFormat::XML instead
 	 */
-	public const XML_FORMAT = 'xml';
+	public const string XML_FORMAT = 'xml';
 
-	public const PACKAGE_NAME = 'phpGPX';
-	public const VERSION = '1.3.0';
+	public const string PACKAGE_NAME = 'phpGPX';
+	public const string VERSION = '1.3.0';
 
 	/**
 	 * Create Stats object for each track, segment and route
-	 * @var bool
 	 */
-	public static $CALCULATE_STATS = true;
+	public static bool $CALCULATE_STATS = true;
 
 	/**
 	 * Additional sort based on timestamp in Routes & Tracks on XML read.
 	 * Disabled by default, data should be already sorted.
-	 * @var bool
 	 */
-	public static $SORT_BY_TIMESTAMP = false;
+	public static bool $SORT_BY_TIMESTAMP = false;
 
 	/**
 	 * Default DateTime output format in JSON serialization.
-	 * @var string
 	 */
-	public static $DATETIME_FORMAT = 'c';
+	public static string $DATETIME_FORMAT = 'c';
 
 	/**
 	 * Default timezone for display.
 	 * Data are always stored in UTC timezone.
-	 * @var string
 	 */
-	public static $DATETIME_TIMEZONE_OUTPUT = 'UTC';
+	public static string $DATETIME_TIMEZONE_OUTPUT = 'UTC';
 
 	/**
 	 * Pretty print.
-	 * @var bool
 	 */
-	public static $PRETTY_PRINT = true;
+	public static bool $PRETTY_PRINT = true;
 
 	/**
 	 * In stats elevation calculation: ignore points with an elevation of 0
 	 * This can happen with some GPS software adding a point with 0 elevation
-	 *
-	 * @var bool
 	 */
-	public static $IGNORE_ELEVATION_0 = true;
+	public static bool $IGNORE_ELEVATION_0 = true;
 
 	/**
 	 * Apply elevation gain/loss smoothing? If true, the threshold in
 	 * ELEVATION_SMOOTHING_THRESHOLD and ELEVATION_SMOOTHING_SPIKES_THRESHOLD (if not null) applies
-	 * @var bool
 	 */
-	public static $APPLY_ELEVATION_SMOOTHING = false;
+	public static bool $APPLY_ELEVATION_SMOOTHING = false;
 
 	/**
 	 * if APPLY_ELEVATION_SMOOTHING is true
 	 * the minimum elevation difference between considered points in meters
-	 * @var int
 	 */
-	public static $ELEVATION_SMOOTHING_THRESHOLD = 2;
+	public static int $ELEVATION_SMOOTHING_THRESHOLD = 2;
 
 	/**
 	 * if APPLY_ELEVATION_SMOOTHING is true
 	 * the maximum elevation difference between considered points in meters
-	 * @var int|null
 	 */
-	public static $ELEVATION_SMOOTHING_SPIKES_THRESHOLD;
+	public static ?int $ELEVATION_SMOOTHING_SPIKES_THRESHOLD = null;
 
 	/**
 	 * Apply distance calculation smoothing? If true, the threshold in
 	 * DISTANCE_SMOOTHING_THRESHOLD applies
-	 * @var bool
 	 */
-	public static $APPLY_DISTANCE_SMOOTHING = false;
+	public static bool $APPLY_DISTANCE_SMOOTHING = false;
 
 	/**
 	 * if APPLY_DISTANCE_SMOOTHING is true
 	 * the minimum distance between considered points in meters
-	 * @var int
 	 */
-	public static $DISTANCE_SMOOTHING_THRESHOLD = 2;
+	public static int $DISTANCE_SMOOTHING_THRESHOLD = 2;
 
 	/**
 	 * Load GPX file.
-	 * @param $path
-	 * @return GpxFile
 	 */
-	public static function load($path)
+	public static function load(string $path): GpxFile
 	{
 		$xml = file_get_contents($path);
+		
+		if ($xml === false) {
+			throw new \RuntimeException("Failed to read file: {$path}");
+		}
 
 		return self::parse($xml);
 	}
 
 	/**
-  * Parse GPX data string.
-  * @param $xml
-  */
-	public static function parse($xml): \phpGPX\Models\GpxFile
+	 * Parse GPX data string.
+	 */
+	public static function parse(string $xml): GpxFile
 	{
 		$xml = simplexml_load_string($xml);
 

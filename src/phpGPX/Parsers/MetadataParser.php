@@ -126,8 +126,10 @@ abstract class MetadataParser
 						break;
 					default:
 						$child = $document->createElement($key);
-						$elementText = $document->createTextNode((string) $metadata->{$attribute['name']});
-						$child->appendChild($elementText);
+						if ($child !== false) {
+							$elementText = $document->createTextNode((string) $metadata->{$attribute['name']});
+							$child->appendChild($elementText);
+						}
 						break;
 				}
 
@@ -135,7 +137,7 @@ abstract class MetadataParser
 					foreach ($child as $item) {
 						$node->appendChild($item);
 					}
-				} else {
+				} elseif ($child instanceof DOMElement) {
 					$node->appendChild($child);
 				}
 			}

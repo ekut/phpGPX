@@ -18,12 +18,13 @@ abstract class LinkParser
 	private static $tagName = 'link';
 
 	/**
-	 * @param SimpleXMLElement|SimpleXMLElement[] $nodes
+	 * @param SimpleXMLElement|array<SimpleXMLElement> $nodes
 	 * @return Link[]
 	 */
 	public static function parse(SimpleXMLElement|array $nodes = []): array
 	{
 		$links = [];
+		
 		foreach ($nodes as $node) {
 			$href = isset($node['href']) ? (string) $node['href'] : '';
 
