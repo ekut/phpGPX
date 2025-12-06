@@ -40,6 +40,11 @@ Repository branches:
 - Start / end coordinates ([lat,lng])
 - Duration (seconds)
 
+## Requirements
+
+- **PHP 8.4 or higher**
+- Extensions: `libxml`, `simplexml`, `dom`
+
 ## Installation
 
 You can easily install phpGPX library with [composer](https://getcomposer.org/).
@@ -48,7 +53,11 @@ You can easily install phpGPX library with [composer](https://getcomposer.org/).
 composer require sibyx/phpgpx:^2.0
 ```
 
-**Version 2.0 includes breaking changes for GPX 1.1 schema compliance. See the [Migration Guide](#migration-guide-v1x-to-v20) below.**
+**Version 2.0 includes breaking changes:**
+- **PHP 8.4 minimum requirement** - Leverages modern PHP features for better type safety and performance
+- **GPX 1.1 schema compliance** - Enforces validation at construction time
+
+See the [Migration Guide](#migration-guide-v1x-to-v20) below for detailed upgrade instructions.
 
 ## Examples
 
@@ -485,6 +494,112 @@ After migrating, verify your code:
 1. **Run your tests** - Ensure all tests pass with the new API
 2. **Validate GPX output** - Use an XSD validator to confirm schema compliance
 3. **Check error handling** - Ensure validation errors are caught appropriately
+
+## PHP 8.4 Features
+
+Version 2.0 leverages modern PHP 8.4 features for improved code quality, type safety, and developer experience:
+
+### Strict Types
+All files use `declare(strict_types=1)` for maximum type safety and predictable behavior.
+
+### Typed Properties
+All class properties have explicit type declarations:
+```php
+class Point {
+    public float $latitude;
+    public float $longitude;
+    public ?float $elevation = null;
+    public ?string $name = null;
+}
+```
+
+### Constructor Property Promotion
+Reduced boilerplate with promoted constructor parameters:
+```php
+class Link {
+    public function __construct(
+        public string $href,
+        public ?string $text = null,
+        public ?string $type = null
+    ) {
+        // Validation logic only
+    }
+}
+```
+
+### Readonly Properties
+Immutable data uses readonly modifiers to prevent accidental modification:
+```php
+class Point {
+    public function __construct(
+        public readonly PointType $pointType,
+        public float $latitude,
+        public float $longitude
+    ) {}
+}
+```
+
+### Enums
+Type-safe enumerated values replace string constants:
+```php
+enum PointType: string {
+    case WAYPOINT = 'waypoint';
+    case TRACKPOINT = 'track';
+    case ROUTEPOINT = 'route';
+}
+
+enum GpsFixType: string {
+    case NONE = 'none';
+    case TWO_D = '2d';
+    case THREE_D = '3d';
+    case DGPS = 'dgps';
+    case PPS = 'pps';
+}
+
+enum FileFormat: string {
+    case JSON = 'json';
+    case XML = 'xml';
+}
+```
+
+### Match Expressions
+Concise and type-safe conditional logic:
+```php
+$output = match($format) {
+    FileFormat::XML => $this->toXML()->saveXML(),
+    FileFormat::JSON => json_encode($this->toArray()),
+};
+```
+
+### Explicit Return Types
+All methods have explicit return type declarations:
+```php
+public function calculateDistance(Point $from, Point $to): float
+public function toArray(): array
+public function save(string $filename, FileFormat $format): void
+```
+
+### Union Types
+Methods accepting multiple types use union type syntax:
+```php
+public function parse(string|\SimpleXMLElement $data): GpxFile
+```
+
+### Nullsafe Operator
+Safe property access on potentially null objects:
+```php
+$authorName = $metadata?->author?->name;
+```
+
+### Benefits
+
+These modern PHP features provide:
+
+- ✅ **Better IDE support** - Autocomplete and type hints work perfectly
+- ✅ **Fewer bugs** - Type errors caught at compile time, not runtime
+- ✅ **Self-documenting code** - Types make the API clear without extensive documentation
+- ✅ **Better performance** - PHP 8.4's JIT compiler optimizes typed code
+- ✅ **Easier refactoring** - Type system catches breaking changes automatically
 
 I wrote this library as part of my job in [Backbone s.r.o.](https://www.backbone.sk/en/).
 
