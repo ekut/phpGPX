@@ -12,6 +12,7 @@ use DOMDocument;
 use DOMElement;
 use phpGPX\Models\Segment;
 use phpGPX\phpGPX;
+use SimpleXMLElement;
 
 /**
  * Class SegmentParser
@@ -22,10 +23,10 @@ abstract class SegmentParser
 	public static $tagName = 'trkseg';
 
 	/**
-	 * @param \SimpleXMLElement|array<\SimpleXMLElement> $nodes
+	 * @param SimpleXMLElement|array<SimpleXMLElement> $nodes
 	 * @return Segment[]
 	 */
-	public static function parse(\SimpleXMLElement|array $nodes): array
+	public static function parse(SimpleXMLElement|array $nodes): array
 	{
 		$segments = [];
 

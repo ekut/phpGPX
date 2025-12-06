@@ -35,14 +35,14 @@ final class PsalmCompliancePropertyTest extends TestCase
 		$this->assertSame(
 			0,
 			$exitCode,
-			"Psalm should complete with exit code 0 (no errors).\nOutput:\n{$outputString}"
+			"Psalm should complete with exit code 0 (no errors).\nOutput:\n{$outputString}",
 		);
 
 		// Assert that the output contains the success message
 		$this->assertStringContainsString(
 			'No errors found!',
 			$outputString,
-			"Psalm output should contain 'No errors found!' message.\nOutput:\n{$outputString}"
+			"Psalm output should contain 'No errors found!' message.\nOutput:\n{$outputString}",
 		);
 
 		// Assert that no ERROR section is present in the output
@@ -50,7 +50,7 @@ final class PsalmCompliancePropertyTest extends TestCase
 		$this->assertStringNotContainsString(
 			'ERROR:',
 			$outputString,
-			"Psalm output should not contain any ERROR messages.\nOutput:\n{$outputString}"
+			"Psalm output should not contain any ERROR messages.\nOutput:\n{$outputString}",
 		);
 	}
 }

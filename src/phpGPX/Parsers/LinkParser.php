@@ -24,7 +24,7 @@ abstract class LinkParser
 	public static function parse(SimpleXMLElement|array $nodes = []): array
 	{
 		$links = [];
-		
+
 		foreach ($nodes as $node) {
 			$href = isset($node['href']) ? (string) $node['href'] : '';
 

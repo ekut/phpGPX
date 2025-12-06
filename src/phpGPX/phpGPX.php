@@ -14,6 +14,7 @@ use phpGPX\Parsers\MetadataParser;
 use phpGPX\Parsers\RouteParser;
 use phpGPX\Parsers\TrackParser;
 use phpGPX\Parsers\WaypointParser;
+use RuntimeException;
 
 /**
  * Class phpGPX
@@ -103,9 +104,9 @@ class phpGPX
 	public static function load(string $path): GpxFile
 	{
 		$xml = file_get_contents($path);
-		
+
 		if ($xml === false) {
-			throw new \RuntimeException("Failed to read file: {$path}");
+			throw new RuntimeException("Failed to read file: {$path}");
 		}
 
 		return self::parse($xml);

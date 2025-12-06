@@ -35,21 +35,21 @@ final class PHPStanCompliancePropertyTest extends TestCase
 		$this->assertSame(
 			0,
 			$exitCode,
-			"PHPStan should complete with exit code 0 (no errors).\nOutput:\n{$outputString}"
+			"PHPStan should complete with exit code 0 (no errors).\nOutput:\n{$outputString}",
 		);
 
 		// Assert that the output contains the success message
 		$this->assertStringContainsString(
 			'[OK] No errors',
 			$outputString,
-			"PHPStan output should contain '[OK] No errors' message.\nOutput:\n{$outputString}"
+			"PHPStan output should contain '[OK] No errors' message.\nOutput:\n{$outputString}",
 		);
 
 		// Assert that no error count is present in the output
 		$this->assertStringNotContainsString(
 			'[ERROR]',
 			$outputString,
-			"PHPStan output should not contain any [ERROR] messages.\nOutput:\n{$outputString}"
+			"PHPStan output should not contain any [ERROR] messages.\nOutput:\n{$outputString}",
 		);
 	}
 }
