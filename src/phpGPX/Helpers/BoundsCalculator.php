@@ -25,7 +25,7 @@ class BoundsCalculator
 	/**
 	 * Calculate bounds from an array of points.
 	 * @param Point[] $points
-	 * @return array Only two points with latitude and longitude that correspond to the
+	 * @return array{array{lat: float, lng: float}, array{lat: float, lng: float}} Only two points with latitude and longitude that correspond to the
 	 *   most northwestern and southeastern points of the track
 	 */
 	public static function calculate(array $points): array

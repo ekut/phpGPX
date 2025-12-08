@@ -28,12 +28,13 @@ class Extensions implements Summarizable
 	public ?TrackPointExtension $trackPointExtension = null;
 
 	/**
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	public array $unsupported = [];
 
 	/**
 	 * Serialize object to array
+	 * @return array{trackpoint: array<int|string, mixed>|null, unsupported: array<string, mixed>}
 	 */
 	public function toArray(): array
 	{

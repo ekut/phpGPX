@@ -19,6 +19,7 @@ class ElevationGainLossCalculator
 	/**
 	 * Calculate elevation gain and loss from an array of points.
 	 * @param Point[] $points
+	 * @return array{float, float} Array containing [cumulativeElevationGain, cumulativeElevationLoss]
 	 */
 	public static function calculate(array $points): array
 	{

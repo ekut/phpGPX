@@ -20,9 +20,10 @@ use SimpleXMLElement;
  */
 abstract class MetadataParser
 {
-	private static $tagName = 'metadata';
+	private static string $tagName = 'metadata';
 
-	private static $attributeMapper = [
+	/** @var array<string, array{name: string, type: string}> */
+	private static array $attributeMapper = [
 		'name' => [
 			'name' => 'name',
 			'type' => 'string',
@@ -87,9 +88,17 @@ abstract class MetadataParser
 					break;
 				default:
 					if (!in_array($attribute['type'], ['object', 'array'], true)) {
-						$metadata->{$attribute['name']} = $node->$key ?? null;
-						if (!is_null($metadata->{$attribute['name']})) {
-							settype($metadata->{$attribute['name']}, $attribute['type']);
+						/** @var mixed $value */
+						$value = $node->$key ?? null;
+						if ($value !== null && ($value instanceof SimpleXMLElement || is_scalar($value))) {
+							// Cast SimpleXMLElement to string first
+							$stringValue = (string) $value;
+							$type = $attribute['type'];
+							assert(is_string($type));
+							settype($stringValue, $type);
+							$metadata->{$attribute['name']} = $stringValue;
+						} else {
+							$metadata->{$attribute['name']} = null;
 						}
 					}
 					break;
@@ -101,33 +110,52 @@ abstract class MetadataParser
 
 	public static function toXML(Metadata $metadata, DOMDocument &$document): DOMElement
 	{
-		$node =  $document->createElement(self::$tagName);
+		$tagName = self::$tagName;
+		$node =  $document->createElement($tagName);
 
 		foreach (self::$attributeMapper as $key => $attribute) {
 			if (!is_null($metadata->{$attribute['name']})) {
+				$child = null;
+				
 				switch ($key) {
 					case 'author':
-						$child = PersonParser::toXML($metadata->author, $document);
+						if ($metadata->author !== null) {
+							$child = PersonParser::toXML($metadata->author, $document);
+						}
 						break;
 					case 'copyright':
-						$child = CopyrightParser::toXML($metadata->copyright, $document);
+						if ($metadata->copyright !== null) {
+							$child = CopyrightParser::toXML($metadata->copyright, $document);
+						}
 						break;
 					case 'link':
-						$child = LinkParser::toXMLArray($metadata->links, $document);
+						if ($metadata->links !== null) {
+							$child = LinkParser::toXMLArray($metadata->links, $document);
+						}
 						break;
 					case 'time':
-						$child = $document->createElement('time', DateTimeHelper::formatDateTime($metadata->time));
+						$timeValue = DateTimeHelper::formatDateTime($metadata->time);
+						if ($timeValue !== null) {
+							$child = $document->createElement('time', $timeValue);
+						}
 						break;
 					case 'bounds':
-						$child = BoundsParser::toXML($metadata->bounds, $document);
+						if ($metadata->bounds !== null) {
+							$child = BoundsParser::toXML($metadata->bounds, $document);
+						}
 						break;
 					case 'extensions':
-						$child = ExtensionParser::toXML($metadata->extensions, $document);
+						if ($metadata->extensions !== null) {
+							$child = ExtensionParser::toXML($metadata->extensions, $document);
+						}
 						break;
 					default:
 						$child = $document->createElement($key);
 						if ($child !== false) {
-							$elementText = $document->createTextNode((string) $metadata->{$attribute['name']});
+							/** @var mixed $value */
+							$value = $metadata->{$attribute['name']};
+							$stringValue = is_scalar($value) ? (string) $value : '';
+							$elementText = $document->createTextNode($stringValue);
 							$child->appendChild($elementText);
 						}
 						break;

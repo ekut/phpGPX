@@ -80,10 +80,12 @@ class GpxFile implements Summarizable
 
 	/**
 	 * Serialize object to array
+	 * @return array<string, mixed>
 	 */
 	public function toArray(): array
 	{
-		return SerializationHelper::filterNotNull([
+		/** @var array<string, mixed> $result */
+		$result = SerializationHelper::filterNotNull([
 			'creator' => SerializationHelper::stringOrNull($this->creator),
 			'metadata' => SerializationHelper::serialize($this->metadata),
 			'waypoints' => SerializationHelper::serialize($this->waypoints),
@@ -91,15 +93,17 @@ class GpxFile implements Summarizable
 			'tracks' => SerializationHelper::serialize($this->tracks),
 			'extensions' => SerializationHelper::serialize($this->extensions),
 		]);
+		return $result;
 	}
 
 	/**
 	 * Return JSON representation of GPX file with statistics.
 	 * @return string
 	 */
-	public function toJSON()
+	public function toJSON(): string
 	{
-		return json_encode($this->toArray(), phpGPX::$PRETTY_PRINT ? JSON_PRETTY_PRINT : null);
+		$result = json_encode($this->toArray(), phpGPX::$PRETTY_PRINT ? JSON_PRETTY_PRINT : 0);
+		return $result !== false ? $result : '{}';
 	}
 
 	/**
@@ -142,15 +146,25 @@ class GpxFile implements Summarizable
 			'http://www.topografix.com/GPX/1/1/gpx.xsd',
 		];
 
-		foreach (ExtensionParser::$usedNamespaces as $usedNamespace) {
+		if (count(ExtensionParser::$usedNamespaces) > 0) {
+			foreach (ExtensionParser::$usedNamespaces as $usedNamespace) {
+			$prefix = $usedNamespace['prefix'];
+			$namespace = $usedNamespace['namespace'];
+			$xsd = $usedNamespace['xsd'];
+			
+			assert(is_string($prefix));
+			assert(is_string($namespace));
+			assert(is_string($xsd));
+			
 			$gpx->setAttributeNS(
 				"http://www.w3.org/2000/xmlns/",
-				sprintf("xmlns:%s", $usedNamespace['prefix']),
-				$usedNamespace['namespace'],
+				sprintf("xmlns:%s", $prefix),
+				$namespace,
 			);
 
-			$schemaLocationArray[] = $usedNamespace['namespace'];
-			$schemaLocationArray[] = $usedNamespace['xsd'];
+			$schemaLocationArray[] = $namespace;
+			$schemaLocationArray[] = $xsd;
+			}
 		}
 
 		$gpx->setAttributeNS(

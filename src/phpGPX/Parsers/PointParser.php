@@ -17,7 +17,8 @@ use SimpleXMLElement;
 
 abstract class PointParser
 {
-	private static $attributeMapper = [
+	/** @var array<string, array{name: string, type: string}> */
+	private static array $attributeMapper = [
 		'ele' => [
 			'name' => 'elevation',
 			'type' => 'float',
@@ -96,7 +97,8 @@ abstract class PointParser
 		],
 	];
 
-	private static $typeMapper = [
+	/** @var array<string, PointType> */
+	private static array $typeMapper = [
 		'trkpt' => PointType::TRACKPOINT,
 		'wpt' => PointType::WAYPOINT,
 		'rtept' => PointType::ROUTEPOINT,
@@ -131,21 +133,23 @@ abstract class PointParser
 					break;
 				default:
 					if (!in_array($attribute['type'], ['object', 'array'], true)) {
+						/** @var mixed $value */
 						$value = $node->$key ?? null;
-						if (!is_null($value)) {
-							// Cast SimpleXMLElement to proper type
+						if (!is_null($value) && ($value instanceof SimpleXMLElement || is_scalar($value))) {
+							// Cast SimpleXMLElement to string first, then to proper type
+							$stringValue = (string) $value;
 							switch ($attribute['type']) {
 								case 'float':
-									$point->{$attribute['name']} = (float) $value;
+									$point->{$attribute['name']} = (float) $stringValue;
 									break;
 								case 'integer':
-									$point->{$attribute['name']} = (int) $value;
+									$point->{$attribute['name']} = (int) $stringValue;
 									break;
 								case 'string':
-									$point->{$attribute['name']} = (string) $value;
+									$point->{$attribute['name']} = $stringValue;
 									break;
 								default:
-									$point->{$attribute['name']} = $value;
+									$point->{$attribute['name']} = $stringValue;
 									break;
 							}
 						} else {
@@ -174,20 +178,30 @@ abstract class PointParser
 
 		foreach (self::$attributeMapper as $key => $attribute) {
 			if (!is_null($point->{$attribute['name']})) {
+				$child = null;
+				
 				switch ($key) {
 					case 'link':
 						$child = LinkParser::toXMLArray($point->links, $document);
 						break;
 					case 'time':
-						$child = $document->createElement('time', DateTimeHelper::formatDateTime($point->time));
+						$timeValue = DateTimeHelper::formatDateTime($point->time);
+						if ($timeValue !== null) {
+							$child = $document->createElement('time', $timeValue);
+						}
 						break;
 					case 'extensions':
-						$child = ExtensionParser::toXML($point->extensions, $document);
+						if ($point->extensions !== null) {
+							$child = ExtensionParser::toXML($point->extensions, $document);
+						}
 						break;
 					default:
 						$child = $document->createElement($key);
 						if ($child !== false) {
-							$elementText = $document->createTextNode((string) $point->{$attribute['name']});
+							/** @var mixed $value */
+							$value = $point->{$attribute['name']};
+							$stringValue = is_scalar($value) ? (string) $value : '';
+							$elementText = $document->createTextNode($stringValue);
 							$child->appendChild($elementText);
 						}
 						break;
@@ -207,8 +221,9 @@ abstract class PointParser
 	}
 
 	/**
-  * @return DOMElement[]
-  */
+	 * @param Point[] $points
+	 * @return DOMElement[]
+	 */
 	public static function toXMLArray(array $points, DOMDocument &$document): array
 	{
 		$result = [];

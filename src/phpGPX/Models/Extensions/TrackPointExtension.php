@@ -100,6 +100,7 @@ class TrackPointExtension extends AbstractExtension
 
 	/**
 	 * Serialize object to array
+	 * @return array{aTemp: float|null, wTemp: float|null, depth: float|null, hr: float|null, cad: float|null, speed: float|null, course: int|null, bearing: int|null}
 	 */
 	public function toArray(): array
 	{

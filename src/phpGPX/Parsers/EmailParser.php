@@ -19,7 +19,7 @@ use SimpleXMLElement;
  */
 abstract class EmailParser
 {
-	private static $tagName = 'email';
+	private static string $tagName = 'email';
 
 	public static function parse(SimpleXMLElement $node): ?Email
 	{
@@ -36,7 +36,8 @@ abstract class EmailParser
 
 	public static function toXML(Email $email, DOMDocument &$document): DOMElement
 	{
-		$node =  $document->createElement(self::$tagName);
+		$tagName = self::$tagName;
+		$node =  $document->createElement($tagName);
 
 		if (!empty($email->id)) {
 			$node->setAttribute('id', $email->id);

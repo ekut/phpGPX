@@ -15,7 +15,7 @@ use SimpleXMLElement;
 
 abstract class LinkParser
 {
-	private static $tagName = 'link';
+	private static string $tagName = 'link';
 
 	/**
 	 * @param SimpleXMLElement|array<SimpleXMLElement> $nodes
@@ -59,7 +59,8 @@ abstract class LinkParser
 
 	public static function toXML(Link $link, DOMDocument &$document): DOMElement
 	{
-		$node =  $document->createElement(self::$tagName);
+		$tagName = self::$tagName;
+		$node =  $document->createElement($tagName);
 
 		$node->setAttribute('href', $link->href);
 

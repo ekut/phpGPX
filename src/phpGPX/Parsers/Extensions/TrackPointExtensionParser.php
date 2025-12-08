@@ -16,7 +16,8 @@ use SimpleXMLElement;
 
 class TrackPointExtensionParser
 {
-	private static $attributeMapper = [
+	/** @var array<string, array{name: string, type: string}> */
+	private static array $attributeMapper = [
 		'atemp' => [
 			'name' => 'aTemp',
 			'type' => 'float',
@@ -58,12 +59,13 @@ class TrackPointExtensionParser
 		foreach (self::$attributeMapper as $key => $attribute) {
 			$value = $node->$key ?? null;
 
-			if ($value !== null) {
-				// Cast to the appropriate type
+			if ($value !== null && ($value instanceof SimpleXMLElement || is_scalar($value))) {
+				// Cast SimpleXMLElement to string first, then to the appropriate type
+				$stringValue = (string) $value;
 				if ($attribute['type'] === 'float') {
-					$extension->{$attribute['name']} = (float) $value;
+					$extension->{$attribute['name']} = (float) $stringValue;
 				} elseif ($attribute['type'] === 'int') {
-					$extension->{$attribute['name']} = (int) $value;
+					$extension->{$attribute['name']} = (int) $stringValue;
 				}
 			}
 
@@ -98,10 +100,14 @@ class TrackPointExtensionParser
 		];
 
 		foreach (self::$attributeMapper as $key => $attribute) {
-			if (!is_null($extension->{$attribute['name']})) {
+			/** @var mixed $value */
+			$value = $extension->{$attribute['name']};
+			if (!is_null($value)) {
+				// Ensure value is converted to string properly
+				$stringValue = is_scalar($value) ? (string) $value : '';
 				$child = $document->createElement(
 					sprintf("%s:%s", TrackPointExtension::EXTENSION_NAMESPACE_PREFIX, $key),
-					(string) $extension->{$attribute['name']},
+					$stringValue,
 				);
 				$node->appendChild($child);
 			}

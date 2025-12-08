@@ -252,8 +252,9 @@ class Point implements Summarizable
 	}
 
 	/**
-  * Serialize object to array
-  */
+	 * Serialize object to array
+	 * @return array<string, mixed>
+	 */
 	public function toArray(): array
 	{
 		return [

@@ -20,9 +20,10 @@ use SimpleXMLElement;
  */
 abstract class RouteParser
 {
-	public static $tagName = 'rte';
+	public static string $tagName = 'rte';
 
-	private static $attributeMapper = [
+	/** @var array<string, array{name: string, type: string}> */
+	private static array $attributeMapper = [
 		'name' => [
 			'name' => 'name',
 			'type' => 'string',
@@ -94,13 +95,16 @@ abstract class RouteParser
 						break;
 					default:
 						if (!in_array($attribute['type'], ['object', 'array'], true)) {
+							/** @var mixed $value */
 							$value = $node->$key ?? null;
-							if ($value !== null) {
-								// @phpstan-ignore cast.string
-								$value = (string) $value;
-								if ($value !== '') {
-									settype($value, $attribute['type']);
-									$route->{$attribute['name']} = $value;
+							if ($value !== null && ($value instanceof SimpleXMLElement || is_scalar($value))) {
+								// Cast SimpleXMLElement to string first
+								$stringValue = (string) $value;
+								if ($stringValue !== '') {
+									$type = $attribute['type'];
+									assert(is_string($type));
+									settype($stringValue, $type);
+									$route->{$attribute['name']} = $stringValue;
 								}
 							}
 						}
@@ -120,16 +124,21 @@ abstract class RouteParser
 
 	public static function toXML(Route $route, DOMDocument &$document): DOMElement
 	{
-		$node = $document->createElement(self::$tagName);
+		$tagName = self::$tagName;
+		$node = $document->createElement($tagName);
 
 		foreach (self::$attributeMapper as $key => $attribute) {
 			if (!is_null($route->{$attribute['name']})) {
+				$child = null;
+				
 				switch ($key) {
 					case 'links':
 						$child = LinkParser::toXMLArray($route->links, $document);
 						break;
 					case 'extensions':
-						$child = ExtensionParser::toXML($route->extensions, $document);
+						if ($route->extensions !== null) {
+							$child = ExtensionParser::toXML($route->extensions, $document);
+						}
 						break;
 					case 'rtept':
 						$child = PointParser::toXMLArray($route->points, $document);
@@ -137,7 +146,10 @@ abstract class RouteParser
 					default:
 						$child = $document->createElement($key);
 						if ($child !== false) {
-							$elementText = $document->createTextNode((string) $route->{$attribute['name']});
+							/** @var mixed $value */
+							$value = $route->{$attribute['name']};
+							$stringValue = is_scalar($value) ? (string) $value : '';
+							$elementText = $document->createTextNode($stringValue);
 							$child->appendChild($elementText);
 						}
 						break;
@@ -157,8 +169,9 @@ abstract class RouteParser
 	}
 
 	/**
-  * @return DOMElement[]
-  */
+	 * @param Route[] $routes
+	 * @return DOMElement[]
+	 */
 	public static function toXMLArray(array $routes, DOMDocument &$document): array
 	{
 		$result = [];

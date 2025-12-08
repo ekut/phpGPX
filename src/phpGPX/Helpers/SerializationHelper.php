@@ -44,13 +44,18 @@ abstract class SerializationHelper
 
 	/**
 	 * Recursively traverse Summarizable objects and returns their array representation according summary() method.
+	 * @param Summarizable|array<Summarizable>|null $object
+	 * @return array<mixed>|null
 	 */
 	public static function serialize(Summarizable|array|null $object): ?array
 	{
 		if (is_array($object)) {
 			$result = [];
 			foreach ($object as $record) {
-				$result[] = $record->toArray();
+				// Add type check before calling toArray()
+				if ($record instanceof Summarizable) {
+					$result[] = $record->toArray();
+				}
 				$record = null;
 			}
 			$object = null;
@@ -61,6 +66,10 @@ abstract class SerializationHelper
 		return $object !== null ? $object->toArray() : null;
 	}
 
+	/**
+	 * @param array<mixed> $array
+	 * @return array<mixed>
+	 */
 	public static function filterNotNull(array $array): array
 	{
 		foreach ($array as &$item) {

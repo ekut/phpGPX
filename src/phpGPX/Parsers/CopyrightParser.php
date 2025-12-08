@@ -19,7 +19,7 @@ use SimpleXMLElement;
  */
 abstract class CopyrightParser
 {
-	public static $tagName = 'copyright';
+	public static string $tagName = 'copyright';
 
 	public static function parse(SimpleXMLElement $node): ?Copyright
 	{
@@ -42,7 +42,8 @@ abstract class CopyrightParser
 
 	public static function toXML(Copyright $copyright, DOMDocument &$document): DOMElement
 	{
-		$node = $document->createElement(self::$tagName);
+		$tagName = self::$tagName;
+		$node = $document->createElement($tagName);
 
 		$node->setAttribute('author', $copyright->author);
 

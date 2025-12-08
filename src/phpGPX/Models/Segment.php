@@ -43,8 +43,9 @@ class Segment implements Summarizable, StatsCalculator
 	public $stats;
 
 	/**
-  * Serialize object to array
-  */
+	 * Serialize object to array
+	 * @return array{points: array<int|string, mixed>|null, extensions: array<int|string, mixed>|null, stats: array<int|string, mixed>|null}
+	 */
 	public function toArray(): array
 	{
 		return [

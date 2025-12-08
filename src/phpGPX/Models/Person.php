@@ -37,6 +37,7 @@ class Person implements Summarizable
 
 	/**
 	 * Serialize object to array
+	 * @return array{name: string|null, email: array<int|string, mixed>|null, links: array<int|string, mixed>|null}
 	 */
 	public function toArray(): array
 	{

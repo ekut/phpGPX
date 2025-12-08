@@ -20,7 +20,7 @@ use SimpleXMLElement;
  */
 abstract class SegmentParser
 {
-	public static $tagName = 'trkseg';
+	public static string $tagName = 'trkseg';
 
 	/**
 	 * @param SimpleXMLElement|array<SimpleXMLElement> $nodes
@@ -61,7 +61,8 @@ abstract class SegmentParser
 
 	public static function toXML(Segment $segment, DOMDocument &$document): DOMElement
 	{
-		$node = $document->createElement(self::$tagName);
+		$tagName = self::$tagName;
+		$node = $document->createElement($tagName);
 
 		foreach ($segment->points as $point) {
 			$node->appendChild(PointParser::toXML($point, $document));
@@ -75,8 +76,9 @@ abstract class SegmentParser
 	}
 
 	/**
-  * @return DOMElement[]
-  */
+	 * @param Segment[] $segments
+	 * @return DOMElement[]
+	 */
 	public static function toXMLArray(array $segments, DOMDocument $document): array
 	{
 		$result = [];

@@ -48,8 +48,9 @@ class Track extends Collection
 	}
 
 	/**
-  * Serialize object to array
-  */
+	 * Serialize object to array
+	 * @return array<string, mixed>
+	 */
 	public function toArray(): array
 	{
 		return [
@@ -102,8 +103,15 @@ class Track extends Collection
 			return;
 		}
 
-		end($this->segments);
-		$lastPoint = end(end($this->segments)->points);
+		$lastSegment = end($this->segments);
+		if ($lastSegment === false) {
+			return;
+		}
+		
+		$lastPoint = end($lastSegment->points);
+		if ($lastPoint === false) {
+			return;
+		}
 
 		$this->stats->startedAt = $firstPoint->time;
 		$this->stats->startedAtCoords = ["lat" => $firstPoint->latitude, "lng" => $firstPoint->longitude];
@@ -111,27 +119,35 @@ class Track extends Collection
 		$this->stats->finishedAtCoords = ["lat" => $lastPoint->latitude, "lng" => $lastPoint->longitude];
 		$this->stats->minAltitude = $firstPoint->elevation;
 		$this->stats->minAltitudeCoords = ["lat" => $firstPoint->latitude, "lng" => $firstPoint->longitude];
+		$this->stats->cumulativeElevationGain = 0.0;
+		$this->stats->cumulativeElevationLoss = 0.0;
 
 		for ($s = 0; $s < $segmentsCount; $s++) {
 			$this->segments[$s]->recalculateStats();
 
-			$this->stats->cumulativeElevationGain += $this->segments[$s]->stats->cumulativeElevationGain;
-			$this->stats->cumulativeElevationLoss += $this->segments[$s]->stats->cumulativeElevationLoss;
+			// Add null check for segment stats
+			$segmentStats = $this->segments[$s]->stats;
+			if ($segmentStats === null) {
+				continue;
+			}
 
-			$this->stats->distance += $this->segments[$s]->stats->distance;
-			$this->stats->realDistance += $this->segments[$s]->stats->realDistance;
+			$this->stats->cumulativeElevationGain += $segmentStats->cumulativeElevationGain ?? 0.0;
+			$this->stats->cumulativeElevationLoss += $segmentStats->cumulativeElevationLoss ?? 0.0;
+
+			$this->stats->distance += $segmentStats->distance;
+			$this->stats->realDistance += $segmentStats->realDistance;
 
 			if ($this->stats->minAltitude === null) {
-				$this->stats->minAltitude = $this->segments[$s]->stats->minAltitude;
-				$this->stats->minAltitudeCoords = $this->segments[$s]->stats->minAltitudeCoords;
+				$this->stats->minAltitude = $segmentStats->minAltitude;
+				$this->stats->minAltitudeCoords = $segmentStats->minAltitudeCoords;
 			}
-			if ($this->stats->maxAltitude < $this->segments[$s]->stats->maxAltitude) {
-				$this->stats->maxAltitude = $this->segments[$s]->stats->maxAltitude;
-				$this->stats->maxAltitudeCoords = $this->segments[$s]->stats->maxAltitudeCoords;
+			if ($segmentStats->maxAltitude !== null && ($this->stats->maxAltitude === null || $this->stats->maxAltitude < $segmentStats->maxAltitude)) {
+				$this->stats->maxAltitude = $segmentStats->maxAltitude;
+				$this->stats->maxAltitudeCoords = $segmentStats->maxAltitudeCoords;
 			}
-			if ($this->stats->minAltitude > $this->segments[$s]->stats->minAltitude) {
-				$this->stats->minAltitude = $this->segments[$s]->stats->minAltitude;
-				$this->stats->minAltitudeCoords = $this->segments[$s]->stats->minAltitudeCoords;
+			if ($segmentStats->minAltitude !== null && ($this->stats->minAltitude === null || $this->stats->minAltitude > $segmentStats->minAltitude)) {
+				$this->stats->minAltitude = $segmentStats->minAltitude;
+				$this->stats->minAltitudeCoords = $segmentStats->minAltitudeCoords;
 			}
 		}
 

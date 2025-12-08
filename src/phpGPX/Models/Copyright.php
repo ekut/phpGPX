@@ -36,6 +36,7 @@ class Copyright implements Summarizable
 
 	/**
 	 * Serialize object to array
+	 * @return array{author: string, year: string|null, license: string|null}
 	 */
 	public function toArray(): array
 	{

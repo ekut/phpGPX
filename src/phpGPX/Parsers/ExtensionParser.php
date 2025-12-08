@@ -21,9 +21,10 @@ use SimpleXMLElement;
  */
 abstract class ExtensionParser
 {
-	public static $tagName = 'extensions';
+	public static string $tagName = 'extensions';
 
-	public static $usedNamespaces = [];
+	/** @var array<string, array{namespace: string, xsd: string, name: string, prefix: string}> */
+	public static array $usedNamespaces = [];
 
 	public static function parse(SimpleXMLElement $nodes): Extensions
 	{
@@ -52,7 +53,8 @@ abstract class ExtensionParser
 
 	public static function toXML(Extensions $extensions, DOMDocument &$document): DOMElement
 	{
-		$node =  $document->createElement(self::$tagName);
+		$tagName = self::$tagName;
+		$node =  $document->createElement($tagName);
 
 		if (null !== $extensions->trackPointExtension) {
 			$child = TrackPointExtensionParser::toXML($extensions->trackPointExtension, $document);

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace phpGPX\Parsers;
 
+use phpGPX\Models\Point;
 use SimpleXMLElement;
 
 /**
@@ -18,7 +19,7 @@ abstract class WaypointParser
 {
 	/**
 	 * @param SimpleXMLElement $nodes - a non empty list of wpt elements
-	 * @return array
+	 * @return Point[]
 	 */
 	public static function parse(SimpleXMLElement $nodes): array
 	{

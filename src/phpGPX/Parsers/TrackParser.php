@@ -20,9 +20,10 @@ use SimpleXMLElement;
  */
 abstract class TrackParser
 {
-	public static $tagName = 'trk';
+	public static string $tagName = 'trk';
 
-	private static $attributeMapper = [
+	/** @var array<string, array{name: string, type: string}> */
+	private static array $attributeMapper = [
 		'name' => [
 			'name' => 'name',
 			'type' => 'string',
@@ -84,13 +85,16 @@ abstract class TrackParser
 						break;
 					default:
 						if (!in_array($attribute['type'], ['object', 'array'], true)) {
+							/** @var mixed $value */
 							$value = $node->$key ?? null;
-							if ($value !== null) {
-								// @phpstan-ignore cast.string
-								$value = (string) $value;
-								if ($value !== '') {
-									settype($value, $attribute['type']);
-									$track->{$attribute['name']} = $value;
+							if ($value !== null && ($value instanceof SimpleXMLElement || is_scalar($value))) {
+								// Cast SimpleXMLElement to string first
+								$stringValue = (string) $value;
+								if ($stringValue !== '') {
+									$type = $attribute['type'];
+									assert(is_string($type));
+									settype($stringValue, $type);
+									$track->{$attribute['name']} = $stringValue;
 								}
 							}
 						}
@@ -110,16 +114,21 @@ abstract class TrackParser
 
 	public static function toXML(Track $track, DOMDocument &$document): DOMElement
 	{
-		$node = $document->createElement(self::$tagName);
+		$tagName = self::$tagName;
+		$node = $document->createElement($tagName);
 
 		foreach (self::$attributeMapper as $key => $attribute) {
 			if (!is_null($track->{$attribute['name']})) {
+				$child = null;
+				
 				switch ($key) {
 					case 'link':
 						$child = LinkParser::toXMLArray($track->links, $document);
 						break;
 					case 'extensions':
-						$child = ExtensionParser::toXML($track->extensions, $document);
+						if ($track->extensions !== null) {
+							$child = ExtensionParser::toXML($track->extensions, $document);
+						}
 						break;
 					case 'trkseg':
 						$child = SegmentParser::toXMLArray($track->segments, $document);
@@ -127,7 +136,10 @@ abstract class TrackParser
 					default:
 						$child = $document->createElement($key);
 						if ($child !== false) {
-							$elementText = $document->createTextNode((string) $track->{$attribute['name']});
+							/** @var mixed $value */
+							$value = $track->{$attribute['name']};
+							$stringValue = is_scalar($value) ? (string) $value : '';
+							$elementText = $document->createTextNode($stringValue);
 							$child->appendChild($elementText);
 						}
 						break;
@@ -147,8 +159,9 @@ abstract class TrackParser
 	}
 
 	/**
-  * @return DOMElement[]
-  */
+	 * @param Track[] $tracks
+	 * @return DOMElement[]
+	 */
 	public static function toXMLArray(array $tracks, DOMDocument &$document): array
 	{
 		$result = [];

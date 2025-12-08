@@ -19,7 +19,7 @@ use SimpleXMLElement;
  */
 abstract class BoundsParser
 {
-	private static $tagName = 'bounds';
+	private static string $tagName = 'bounds';
 
 	/**
 	 * Parse data from XML.
@@ -54,7 +54,8 @@ abstract class BoundsParser
 	 */
 	public static function toXML(Bounds $bounds, DOMDocument &$document): DOMElement
 	{
-		$node = $document->createElement(self::$tagName);
+		$tagName = self::$tagName;
+		$node = $document->createElement($tagName);
 
 		// All four attributes are required per GPX 1.1 schema
 		$node->setAttribute('minlat', (string) $bounds->minLatitude);

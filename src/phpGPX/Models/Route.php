@@ -48,8 +48,9 @@ class Route extends Collection
 	}
 
 	/**
-  * Serialize object to array
-  */
+	 * Serialize object to array
+	 * @return array<string, mixed>
+	 */
 	public function toArray(): array
 	{
 		return [
@@ -124,7 +125,7 @@ class Route extends Collection
 				$this->stats->averageSpeed = $this->stats->distance / $this->stats->duration;
 			}
 
-			if ($this->stats->distance !== 0) {
+			if ($this->stats->distance != 0) {
 				$this->stats->averagePace = $this->stats->duration / ($this->stats->distance / 1000);
 			}
 		}

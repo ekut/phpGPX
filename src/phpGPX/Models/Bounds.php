@@ -71,6 +71,7 @@ class Bounds implements Summarizable
 
 	/**
 	 * Serialize object to array
+	 * @return array{minlat: float, minlon: float, maxlat: float, maxlon: float}
 	 */
 	public function toArray(): array
 	{

@@ -46,7 +46,7 @@ class Stats implements Summarizable
 
 	/**
 	 * Minimal altitude coordinate
-	 * @var array{0: float, 1: float}|null
+	 * @var array{lat: float, lng: float}|null
 	 */
 	public ?array $minAltitudeCoords = null;
 
@@ -57,7 +57,7 @@ class Stats implements Summarizable
 
 	/**
 	 * Maximal altitude coordinate
-	 * @var array{0: float, 1: float}|null
+	 * @var array{lat: float, lng: float}|null
 	 */
 	public ?array $maxAltitudeCoords = null;
 
@@ -78,7 +78,7 @@ class Stats implements Summarizable
 
 	/**
 	 * startedAt coordinate
-	 * @var array{0: float, 1: float}|null
+	 * @var array{lat: float, lng: float}|null
 	 */
 	public ?array $startedAtCoords = null;
 
@@ -89,7 +89,7 @@ class Stats implements Summarizable
 
 	/**
 	 * finishedAt coordinate
-	 * @var array{0: float, 1: float}|null
+	 * @var array{lat: float, lng: float}|null
 	 */
 	public ?array $finishedAtCoords = null;
 
@@ -131,6 +131,7 @@ class Stats implements Summarizable
 
 	/**
 	 * Serialize object to array
+	 * @return array<string, mixed>
 	 */
 	public function toArray(): array
 	{

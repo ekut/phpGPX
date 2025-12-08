@@ -57,7 +57,7 @@ class Metadata implements Summarizable
 
 	/**
 	 * Date of GPX creation
-	 * @var DateTime
+	 * @var DateTime|null
 	 */
 	public $time;
 
@@ -81,8 +81,9 @@ class Metadata implements Summarizable
 	public $extensions;
 
 	/**
-  * Serialize object to array
-  */
+	 * Serialize object to array
+	 * @return array<string, mixed>
+	 */
 	public function toArray(): array
 	{
 		return [

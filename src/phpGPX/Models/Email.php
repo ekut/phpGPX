@@ -33,6 +33,7 @@ class Email implements Summarizable
 
 	/**
 	 * Serialize object to array
+	 * @return array{id: string, domain: string}
 	 */
 	public function toArray(): array
 	{

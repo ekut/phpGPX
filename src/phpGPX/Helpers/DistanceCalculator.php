@@ -34,23 +34,29 @@ class DistanceCalculator
 
 	public function getRawDistance(): float
 	{
-		return $this->calculate([GeoHelper::class, 'getRawDistance']);
+		/** @var callable(Point, Point): float $strategy */
+		$strategy = [GeoHelper::class, 'getRawDistance'];
+		return $this->calculate($strategy);
 	}
 
 	public function getRealDistance(): float
 	{
-		return $this->calculate([GeoHelper::class, 'getRealDistance']);
+		/** @var callable(Point, Point): float $strategy */
+		$strategy = [GeoHelper::class, 'getRealDistance'];
+		return $this->calculate($strategy);
 	}
 
 	/**
 	 * Calculate distance using the provided strategy.
+	 * @param callable(Point, Point): float $strategy
 	 */
-	private function calculate(array $strategy): float
+	private function calculate(callable $strategy): float
 	{
 		$distance = 0;
 
 		$pointCount = count($this->points);
 
+		/** @var Point|null $lastConsideredPoint */
 		$lastConsideredPoint = null;
 
 		for ($p = 0; $p < $pointCount; $p++) {
@@ -63,6 +69,7 @@ class DistanceCalculator
 			}
 
 			// calculate the delta from current point to last considered point
+			assert($lastConsideredPoint !== null);
 			$curPoint->difference = call_user_func($strategy, $lastConsideredPoint, $curPoint);
 
 			// if smoothing is applied we only consider points with a delta above the threshold (e.g. 2 meters)
@@ -70,14 +77,14 @@ class DistanceCalculator
 				$differenceFromLastConsideredPoint = call_user_func($strategy, $curPoint, $lastConsideredPoint);
 
 				if ($differenceFromLastConsideredPoint > phpGPX::$DISTANCE_SMOOTHING_THRESHOLD) {
-					$distance += $differenceFromLastConsideredPoint;
+					$distance += (float) $differenceFromLastConsideredPoint;
 					$lastConsideredPoint = $curPoint;
 				}
 			}
 
 			// if smoothing is not applied we consider every point
 			else {
-				$distance += $curPoint->difference;
+				$distance += (float) $curPoint->difference;
 				$lastConsideredPoint = $curPoint;
 			}
 

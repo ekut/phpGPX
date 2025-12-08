@@ -34,6 +34,7 @@ class Link implements Summarizable
 
 	/**
 	 * Serialize object to array
+	 * @return array{href: string, text: string|null, type: string|null}
 	 */
 	public function toArray(): array
 	{

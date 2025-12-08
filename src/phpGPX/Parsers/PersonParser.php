@@ -19,7 +19,7 @@ use SimpleXMLElement;
  */
 abstract class PersonParser
 {
-	public static $tagName = 'author';
+	public static string $tagName = 'author';
 
 	public static function parse(SimpleXMLElement $node): Person
 	{
@@ -32,7 +32,8 @@ abstract class PersonParser
 
 	public static function toXML(Person $person, DOMDocument &$document): DOMElement
 	{
-		$node =  $document->createElement(self::$tagName);
+		$tagName = self::$tagName;
+		$node =  $document->createElement($tagName);
 
 		if (!empty($person->name)) {
 			$child = $document->createElement('name', $person->name);
@@ -44,8 +45,7 @@ abstract class PersonParser
 			$node->appendChild($child);
 		}
 
-		// TODO: is_iterable
-		if (!is_null($person->links)) {
+		if (!empty($person->links)) {
 			foreach ($person->links as $link) {
 				$child = LinkParser::toXML($link, $document);
 				$node->appendChild($child);
