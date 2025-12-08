@@ -61,7 +61,7 @@ abstract class SerializationHelper
 			return $result;
 		}
 
-		return $object !== null ? $object->toArray() : null;
+		return $object instanceof \phpGPX\Models\Summarizable ? $object->toArray() : null;
 	}
 
 	/**
@@ -78,8 +78,6 @@ abstract class SerializationHelper
 			$item = self::filterNotNull($item);
 		}
 
-		return array_filter($array, function ($item): bool {
-			return $item !== null && (!is_array($item) || count($item));
-		});
+		return array_filter($array, fn ($item): bool => $item !== null && (!is_array($item) || count($item)));
 	}
 }

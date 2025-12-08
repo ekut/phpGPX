@@ -39,8 +39,7 @@ final class ElevationGainLossCalculator
 			}
 
 			// skip points with 0 elevation if configuration allows
-			// Note: Using loose comparison to handle both int 0 and float 0.0
-			if (phpGPX::$IGNORE_ELEVATION_0 && $curElevation == 0) {
+			if (phpGPX::$IGNORE_ELEVATION_0 && $curElevation === 0.0) {
 				continue;
 			}
 

@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace phpGPX\Models;
 
+use Override;
 use phpGPX\Helpers\SerializationHelper;
 use phpGPX\Models\Extensions\TrackPointExtension;
 
@@ -36,7 +37,7 @@ final class Extensions implements Summarizable
 	 * Serialize object to array
 	 * @return array{trackpoint: array<int|string, mixed>|null, unsupported: array<string, mixed>}
 	 */
-	#[\Override]
+	#[Override]
 	public function toArray(): array
 	{
 		return [

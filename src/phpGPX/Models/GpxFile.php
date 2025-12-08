@@ -10,6 +10,7 @@ namespace phpGPX\Models;
 
 use DOMDocument;
 use InvalidArgumentException;
+use Override;
 use phpGPX\Enums\FileFormat;
 use phpGPX\Helpers\GpxValidator;
 use phpGPX\Helpers\SerializationHelper;
@@ -83,7 +84,7 @@ final class GpxFile implements Summarizable
 	 * Serialize object to array
 	 * @return array<string, mixed>
 	 */
-	#[\Override]
+	#[Override]
 	public function toArray(): array
 	{
 		/** @var array<string, mixed> $result */
@@ -95,24 +96,24 @@ final class GpxFile implements Summarizable
 			'tracks' => SerializationHelper::serialize($this->tracks),
 			'extensions' => SerializationHelper::serialize($this->extensions),
 		]);
+
 		return $result;
 	}
 
 	/**
 	 * Return JSON representation of GPX file with statistics.
-	 * @return string
 	 */
 	public function toJSON(): string
 	{
 		$result = json_encode($this->toArray(), phpGPX::$PRETTY_PRINT ? JSON_PRETTY_PRINT : 0);
+
 		return $result !== false ? $result : '{}';
 	}
 
 	/**
 	 * Create XML representation of GPX file.
-	 * @return DOMDocument
 	 */
-	public function toXML()
+	public function toXML(): DOMDocument
 	{
 		$document = new DOMDocument("1.0", 'UTF-8');
 
@@ -148,17 +149,18 @@ final class GpxFile implements Summarizable
 			'http://www.topografix.com/GPX/1/1/gpx.xsd',
 		];
 
+		/** @psalm-suppress TypeDoesNotContainType */
 		if (count(ExtensionParser::$usedNamespaces) > 0) {
 			foreach (ExtensionParser::$usedNamespaces as $usedNamespace) {
 				$prefix = $usedNamespace['prefix'];
 				$namespace = $usedNamespace['namespace'];
 				$xsd = $usedNamespace['xsd'];
-				
+
 				// Type assertions to satisfy PHPStan
 				assert(is_string($prefix));
 				assert(is_string($namespace));
 				assert(is_string($xsd));
-				
+
 				$gpx->setAttributeNS(
 					"http://www.w3.org/2000/xmlns/",
 					sprintf("xmlns:%s", $prefix),
@@ -188,8 +190,6 @@ final class GpxFile implements Summarizable
 
 	/**
 	 * Save data to file according to selected format.
-	 * @param string $path
-	 * @param FileFormat $format
 	 * @api
 	 * @psalm-api
 	 */

@@ -15,10 +15,10 @@ use SimpleXMLElement;
 
 /**
  * Utility class for parsing and serializing Person objects.
- * 
+ *
  * This class provides static methods for converting between XML/SimpleXML
  * and Person model objects. It is not meant to be instantiated.
- * 
+ *
  * @package phpGPX\Parsers
  */
 final class PersonParser
@@ -51,16 +51,14 @@ final class PersonParser
 			$node->appendChild($child);
 		}
 
-		if ($person->email !== null) {
+		if ($person->email instanceof \phpGPX\Models\Email) {
 			$child = EmailParser::toXML($person->email, $document);
 			$node->appendChild($child);
 		}
 
-		if (count($person->links) > 0) {
-			foreach ($person->links as $link) {
-				$child = LinkParser::toXML($link, $document);
-				$node->appendChild($child);
-			}
+		foreach ($person->links as $link) {
+			$child = LinkParser::toXML($link, $document);
+			$node->appendChild($child);
 		}
 
 		return $node;

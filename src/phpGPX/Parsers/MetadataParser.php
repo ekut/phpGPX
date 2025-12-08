@@ -16,10 +16,10 @@ use SimpleXMLElement;
 
 /**
  * Utility class for parsing and serializing Metadata objects.
- * 
+ *
  * This class provides static methods for converting between XML/SimpleXML
  * and Metadata model objects. It is not meant to be instantiated.
- * 
+ *
  * @package phpGPX\Parsers
  */
 final class MetadataParser
@@ -111,6 +111,7 @@ final class MetadataParser
 							$metadata->{$attribute['name']} = null;
 						}
 					}
+
 					break;
 			}
 		}
@@ -126,38 +127,44 @@ final class MetadataParser
 		foreach (self::$attributeMapper as $key => $attribute) {
 			if (!is_null($metadata->{$attribute['name']})) {
 				$child = null;
-				
+
 				switch ($key) {
 					case 'author':
 						if ($metadata->author !== null) {
 							$child = PersonParser::toXML($metadata->author, $document);
 						}
+
 						break;
 					case 'copyright':
 						if ($metadata->copyright !== null) {
 							$child = CopyrightParser::toXML($metadata->copyright, $document);
 						}
+
 						break;
 					case 'link':
 						if ($metadata->links !== null) {
 							$child = LinkParser::toXMLArray($metadata->links, $document);
 						}
+
 						break;
 					case 'time':
 						$timeValue = DateTimeHelper::formatDateTime($metadata->time);
 						if ($timeValue !== null) {
 							$child = $document->createElement('time', $timeValue);
 						}
+
 						break;
 					case 'bounds':
 						if ($metadata->bounds !== null) {
 							$child = BoundsParser::toXML($metadata->bounds, $document);
 						}
+
 						break;
 					case 'extensions':
 						if ($metadata->extensions !== null) {
 							$child = ExtensionParser::toXML($metadata->extensions, $document);
 						}
+
 						break;
 					default:
 						$child = $document->createElement($key);
@@ -168,6 +175,7 @@ final class MetadataParser
 							$elementText = $document->createTextNode($stringValue);
 							$child->appendChild($elementText);
 						}
+
 						break;
 				}
 

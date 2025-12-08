@@ -15,17 +15,17 @@ use SimpleXMLElement;
 
 /**
  * Utility class for parsing and serializing Link objects.
- * 
+ *
  * This class provides static methods for converting between XML/SimpleXML
  * and Link model objects. It is not meant to be instantiated.
- * 
+ *
  * @package phpGPX\Parsers
  */
 final class LinkParser
 {
 	/**
 	 * Private constructor prevents instantiation of this utility class.
-	 * 
+	 *
 	 * @psalm-suppress UnusedConstructor
 	 */
 	private function __construct()

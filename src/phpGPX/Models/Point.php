@@ -11,6 +11,7 @@ namespace phpGPX\Models;
 
 use DateTime;
 use InvalidArgumentException;
+use Override;
 use phpGPX\Enums\PointType;
 use phpGPX\Helpers\DateTimeHelper;
 use phpGPX\Helpers\GpxValidator;
@@ -27,9 +28,11 @@ use phpGPX\phpGPX;
 final class Point implements Summarizable
 {
 	// Legacy constants for backward compatibility - use PointType enum instead
-	public const WAYPOINT = 'waypoint';
-	public const TRACKPOINT = 'track';
-	public const ROUTEPOINT = 'route';
+	public const string WAYPOINT = 'waypoint';
+
+	public const string TRACKPOINT = 'track';
+
+	public const string ROUTEPOINT = 'route';
 
 	/**
 	 * The latitude of the point. Decimal degrees, WGS84 datum.
@@ -223,6 +226,7 @@ final class Point implements Summarizable
 		if ($magVar !== null) {
 			GpxValidator::validateDegrees($magVar);
 		}
+
 		$this->magVar = $magVar;
 	}
 
@@ -239,6 +243,7 @@ final class Point implements Summarizable
 		if ($dgpsId !== null) {
 			GpxValidator::validateDgpsStation($dgpsId);
 		}
+
 		$this->dgpsid = $dgpsId;
 	}
 
@@ -255,6 +260,7 @@ final class Point implements Summarizable
 		if ($sat !== null) {
 			GpxValidator::validateNonNegativeInteger($sat, 'Satellite count');
 		}
+
 		$this->satellitesNumber = $sat;
 	}
 
@@ -262,7 +268,7 @@ final class Point implements Summarizable
 	 * Serialize object to array
 	 * @return array<string, mixed>
 	 */
-	#[\Override]
+	#[Override]
 	public function toArray(): array
 	{
 		return [

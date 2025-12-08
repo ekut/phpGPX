@@ -16,10 +16,10 @@ use SimpleXMLElement;
 
 /**
  * Utility class for parsing and serializing Track objects.
- * 
+ *
  * This class provides static methods for converting between XML/SimpleXML
  * and Track model objects. It is not meant to be instantiated.
- * 
+ *
  * @package phpGPX\Parsers
  * @psalm-api
  */
@@ -109,6 +109,7 @@ final class TrackParser
 								}
 							}
 						}
+
 						break;
 				}
 			}
@@ -131,15 +132,16 @@ final class TrackParser
 		foreach (self::$attributeMapper as $key => $attribute) {
 			if (!is_null($track->{$attribute['name']})) {
 				$child = null;
-				
+
 				switch ($key) {
 					case 'link':
 						$child = LinkParser::toXMLArray($track->links, $document);
 						break;
 					case 'extensions':
-						if ($track->extensions !== null) {
+						if ($track->extensions instanceof \phpGPX\Models\Extensions) {
 							$child = ExtensionParser::toXML($track->extensions, $document);
 						}
+
 						break;
 					case 'trkseg':
 						$child = SegmentParser::toXMLArray($track->segments, $document);
@@ -153,6 +155,7 @@ final class TrackParser
 							$elementText = $document->createTextNode($stringValue);
 							$child->appendChild($elementText);
 						}
+
 						break;
 				}
 

@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace phpGPX\Models;
 
 use DateTime;
+use Override;
 use phpGPX\Helpers\DistanceCalculator;
 use phpGPX\Helpers\ElevationGainLossCalculator;
 use phpGPX\Helpers\SerializationHelper;
@@ -33,7 +34,7 @@ final class Route extends Collection
 	 * Return all points in collection.
 	 * @return Point[]
 	 */
-	#[\Override]
+	#[Override]
 	public function getPoints(): array
 	{
 		/** @var Point[] $points */
@@ -52,7 +53,7 @@ final class Route extends Collection
 	 * Serialize object to array
 	 * @return array<string, mixed>
 	 */
-	#[\Override]
+	#[Override]
 	public function toArray(): array
 	{
 		return [
@@ -72,16 +73,16 @@ final class Route extends Collection
 	/**
   * Recalculate stats objects.
   */
-	#[\Override]
+	#[Override]
 	public function recalculateStats(): void
 	{
-		if (empty($this->stats)) {
+		if (!$this->stats instanceof \phpGPX\Models\Stats) {
 			$this->stats = new Stats();
 		}
 
 		$this->stats->reset();
 
-		if (empty($this->points)) {
+		if ($this->points === []) {
 			return;
 		}
 

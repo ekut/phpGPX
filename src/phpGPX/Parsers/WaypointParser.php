@@ -13,10 +13,10 @@ use SimpleXMLElement;
 
 /**
  * Utility class for parsing and serializing Waypoint objects.
- * 
+ *
  * This class provides static methods for converting between XML/SimpleXML
  * and Waypoint model objects. It is not meant to be instantiated.
- * 
+ *
  * @package phpGPX\Parsers
  */
 final class WaypointParser
@@ -40,7 +40,7 @@ final class WaypointParser
 		foreach ($nodes as $item) {
 			$point = PointParser::parse($item);
 
-			if ($point) {
+			if ($point instanceof \phpGPX\Models\Point) {
 				$points[] = $point;
 			}
 		}

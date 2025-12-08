@@ -12,7 +12,6 @@ interface StatsCalculator
 {
 	/**
 	 * Recalculate stats objects.
-	 * @return void
 	 */
 	public function recalculateStats(): void;
 

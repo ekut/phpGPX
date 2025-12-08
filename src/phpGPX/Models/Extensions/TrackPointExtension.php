@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace phpGPX\Models\Extensions;
 
+use Override;
 use phpGPX\Helpers\SerializationHelper;
 
 /**
@@ -20,14 +21,17 @@ use phpGPX\Helpers\SerializationHelper;
  */
 final class TrackPointExtension extends AbstractExtension
 {
-	public const EXTENSION_V1_NAMESPACE = 'http://www.garmin.com/xmlschemas/TrackPointExtension/v1';
-	public const EXTENSION_V1_NAMESPACE_XSD = 'http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd';
+	public const string EXTENSION_V1_NAMESPACE = 'http://www.garmin.com/xmlschemas/TrackPointExtension/v1';
 
-	public const EXTENSION_NAMESPACE = 'http://www.garmin.com/xmlschemas/TrackPointExtension/v2';
-	public const EXTENSION_NAMESPACE_XSD = 'http://www.garmin.com/xmlschemas/TrackPointExtensionv2.xsd';
+	public const string EXTENSION_V1_NAMESPACE_XSD = 'http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd';
 
-	public const EXTENSION_NAME = 'TrackPointExtension';
-	public const EXTENSION_NAMESPACE_PREFIX = 'gpxtpx';
+	public const string EXTENSION_NAMESPACE = 'http://www.garmin.com/xmlschemas/TrackPointExtension/v2';
+
+	public const string EXTENSION_NAMESPACE_XSD = 'http://www.garmin.com/xmlschemas/TrackPointExtensionv2.xsd';
+
+	public const string EXTENSION_NAME = 'TrackPointExtension';
+
+	public const string EXTENSION_NAMESPACE_PREFIX = 'gpxtpx';
 
 	/**
 	 * Average temperature value measured in degrees Celsius.
@@ -109,7 +113,7 @@ final class TrackPointExtension extends AbstractExtension
 	 * Serialize object to array
 	 * @return array{aTemp: float|null, wTemp: float|null, depth: float|null, hr: float|null, cad: float|null, speed: float|null, course: int|null, bearing: int|null}
 	 */
-	#[\Override]
+	#[Override]
 	public function toArray(): array
 	{
 		return [

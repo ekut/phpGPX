@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace phpGPX\Models;
 
+use Override;
 use phpGPX\Helpers\GpxValidator;
 use phpGPX\Helpers\SerializationHelper;
 
@@ -38,7 +39,7 @@ final class Copyright implements Summarizable
 	 * Serialize object to array
 	 * @return array{author: string, year: string|null, license: string|null}
 	 */
-	#[\Override]
+	#[Override]
 	public function toArray(): array
 	{
 		return [

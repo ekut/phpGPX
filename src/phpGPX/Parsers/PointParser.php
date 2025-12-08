@@ -17,10 +17,10 @@ use SimpleXMLElement;
 
 /**
  * Utility class for parsing and serializing Point objects.
- * 
+ *
  * This class provides static methods for converting between XML/SimpleXML
  * and Point model objects. It is not meant to be instantiated.
- * 
+ *
  * @package phpGPX\Parsers
  */
 final class PointParser
@@ -153,24 +153,17 @@ final class PointParser
 						if (!is_null($value) && ($value instanceof SimpleXMLElement || is_scalar($value))) {
 							// Cast SimpleXMLElement to string first, then to proper type
 							$stringValue = (string) $value;
-							switch ($attribute['type']) {
-								case 'float':
-									$point->{$attribute['name']} = (float) $stringValue;
-									break;
-								case 'integer':
-									$point->{$attribute['name']} = (int) $stringValue;
-									break;
-								case 'string':
-									$point->{$attribute['name']} = $stringValue;
-									break;
-								default:
-									$point->{$attribute['name']} = $stringValue;
-									break;
-							}
+							$point->{$attribute['name']} = match ($attribute['type']) {
+								'float' => (float) $stringValue,
+								'integer' => (int) $stringValue,
+								'string' => $stringValue,
+								default => $stringValue,
+							};
 						} else {
 							$point->{$attribute['name']} = null;
 						}
 					}
+
 					break;
 			}
 		}
@@ -194,7 +187,7 @@ final class PointParser
 		foreach (self::$attributeMapper as $key => $attribute) {
 			if (!is_null($point->{$attribute['name']})) {
 				$child = null;
-				
+
 				switch ($key) {
 					case 'link':
 						$child = LinkParser::toXMLArray($point->links, $document);
@@ -204,11 +197,13 @@ final class PointParser
 						if ($timeValue !== null) {
 							$child = $document->createElement('time', $timeValue);
 						}
+
 						break;
 					case 'extensions':
-						if ($point->extensions !== null) {
+						if ($point->extensions instanceof \phpGPX\Models\Extensions) {
 							$child = ExtensionParser::toXML($point->extensions, $document);
 						}
+
 						break;
 					default:
 						$child = $document->createElement($key);
@@ -219,6 +214,7 @@ final class PointParser
 							$elementText = $document->createTextNode($stringValue);
 							$child->appendChild($elementText);
 						}
+
 						break;
 				}
 

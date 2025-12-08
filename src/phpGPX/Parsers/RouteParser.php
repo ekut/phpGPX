@@ -16,10 +16,10 @@ use SimpleXMLElement;
 
 /**
  * Utility class for parsing and serializing Route objects.
- * 
+ *
  * This class provides static methods for converting between XML/SimpleXML
  * and Route model objects. It is not meant to be instantiated.
- * 
+ *
  * @package phpGPX\Parsers
  * @psalm-api
  */
@@ -99,11 +99,12 @@ final class RouteParser
 						if (property_exists($node, 'rtept') && $node->rtept !== null) {
 							foreach ($node->rtept as $point) {
 								$parsedPoint = PointParser::parse($point);
-								if ($parsedPoint !== null) {
+								if ($parsedPoint instanceof \phpGPX\Models\Point) {
 									$route->points[] = $parsedPoint;
 								}
 							}
 						}
+
 						break;
 					default:
 						if (!in_array($attribute['type'], ['object', 'array'], true)) {
@@ -119,6 +120,7 @@ final class RouteParser
 								}
 							}
 						}
+
 						break;
 				}
 			}
@@ -141,15 +143,16 @@ final class RouteParser
 		foreach (self::$attributeMapper as $key => $attribute) {
 			if (!is_null($route->{$attribute['name']})) {
 				$child = null;
-				
+
 				switch ($key) {
 					case 'links':
 						$child = LinkParser::toXMLArray($route->links, $document);
 						break;
 					case 'extensions':
-						if ($route->extensions !== null) {
+						if ($route->extensions instanceof \phpGPX\Models\Extensions) {
 							$child = ExtensionParser::toXML($route->extensions, $document);
 						}
+
 						break;
 					case 'rtept':
 						$child = PointParser::toXMLArray($route->points, $document);
@@ -163,6 +166,7 @@ final class RouteParser
 							$elementText = $document->createTextNode($stringValue);
 							$child->appendChild($elementText);
 						}
+
 						break;
 				}
 

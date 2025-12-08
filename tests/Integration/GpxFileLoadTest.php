@@ -7,6 +7,7 @@ namespace phpGPX\Tests\Integration;
 use phpGPX\Models\GpxFile;
 use phpGPX\phpGPX;
 use phpGPX\Tests\Support\TestCase;
+use RuntimeException;
 
 /**
  * Integration tests for loading GPX files.
@@ -185,7 +186,7 @@ final class GpxFileLoadTest extends TestCase
 
 		// Act & Assert
 		// The simplexml_load_string will fail for malformed XML and throw RuntimeException
-		$this->expectException(\RuntimeException::class);
+		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage('Failed to parse XML string');
 
 		$file = $gpx->load($filePath);

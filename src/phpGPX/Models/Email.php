@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace phpGPX\Models;
 
+use Override;
 use phpGPX\Helpers\GpxValidator;
 
 /**
@@ -35,7 +36,7 @@ final class Email implements Summarizable
 	 * Serialize object to array
 	 * @return array{id: string, domain: string}
 	 */
-	#[\Override]
+	#[Override]
 	public function toArray(): array
 	{
 		return [

@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace phpGPX\Models;
 
 use InvalidArgumentException;
+use Override;
 use phpGPX\Helpers\GpxValidator;
 
 /**
@@ -73,7 +74,7 @@ final class Bounds implements Summarizable
 	 * Serialize object to array
 	 * @return array{minlat: float, minlon: float, maxlat: float, maxlon: float}
 	 */
-	#[\Override]
+	#[Override]
 	public function toArray(): array
 	{
 		return [

@@ -17,25 +17,21 @@ use phpGPX\Models\Summarizable;
 abstract class AbstractExtension implements Summarizable
 {
 	/**
-	 * XML namespace of extension
-	 * @api
-	 * @psalm-suppress PossiblyUnusedProperty Used by extension implementations and accessed in tests
-	 */
-	public string $namespace;
-
-	/**
-	 * Node name extension.
-	 * @api
-	 * @psalm-suppress PossiblyUnusedProperty Used by extension implementations and accessed in tests
-	 */
-	public string $extensionName;
-
-	/**
 	 * AbstractExtension constructor.
 	 */
-	public function __construct(string $namespace, string $extensionName)
-	{
-		$this->namespace = $namespace;
-		$this->extensionName = $extensionName;
+	public function __construct(
+		/**
+		 * XML namespace of extension
+		 * @api
+		 * @psalm-suppress PossiblyUnusedProperty Used by extension implementations and accessed in tests
+		 */
+		public string $namespace,
+		/**
+		 * Node name extension.
+		 * @api
+		 * @psalm-suppress PossiblyUnusedProperty Used by extension implementations and accessed in tests
+		 */
+		public string $extensionName,
+	) {
 	}
 }

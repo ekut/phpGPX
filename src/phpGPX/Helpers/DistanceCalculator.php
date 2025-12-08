@@ -13,36 +13,33 @@ declare(strict_types=1);
 
 namespace phpGPX\Helpers;
 
+use Closure;
 use phpGPX\Models\Point;
 use phpGPX\phpGPX;
 
 final class DistanceCalculator
 {
 	/**
-	 * @var Point[]
-	 */
-	private array $points;
-
-	/**
 	 * DistanceCalculator constructor.
 	 * @param Point[] $points
 	 */
-	public function __construct(array $points)
+	public function __construct(private array $points)
 	{
-		$this->points = $points;
 	}
 
 	public function getRawDistance(): float
 	{
-		/** @var callable(Point, Point): float $strategy */
-		$strategy = [GeoHelper::class, 'getRawDistance'];
+		/** @var Closure(Point, Point): float $strategy */
+		$strategy = GeoHelper::getRawDistance(...);
+
 		return $this->calculate($strategy);
 	}
 
 	public function getRealDistance(): float
 	{
-		/** @var callable(Point, Point): float $strategy */
-		$strategy = [GeoHelper::class, 'getRealDistance'];
+		/** @var Closure(Point, Point): float $strategy */
+		$strategy = GeoHelper::getRealDistance(...);
+
 		return $this->calculate($strategy);
 	}
 

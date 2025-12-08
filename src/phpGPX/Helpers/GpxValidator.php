@@ -15,18 +15,23 @@ use InvalidArgumentException;
 final class GpxValidator
 {
 	// Coordinate ranges (WGS84 datum)
-	public const MIN_LATITUDE = -90.0;
-	public const MAX_LATITUDE = 90.0;
-	public const MIN_LONGITUDE = -180.0;
-	public const MAX_LONGITUDE = 180.0;  // exclusive
+	public const float MIN_LATITUDE = -90.0;
+
+	public const float MAX_LATITUDE = 90.0;
+
+	public const float MIN_LONGITUDE = -180.0;
+
+	public const float MAX_LONGITUDE = 180.0;  // exclusive
 
 	// Degrees range (for magnetic variation, bearing, etc.)
-	public const MIN_DEGREES = 0.0;
-	public const MAX_DEGREES = 360.0;  // exclusive
+	public const float MIN_DEGREES = 0.0;
+
+	public const float MAX_DEGREES = 360.0;  // exclusive
 
 	// DGPS station ID range
-	public const MIN_DGPS_STATION = 0;
-	public const MAX_DGPS_STATION = 1023;
+	public const int MIN_DGPS_STATION = 0;
+
+	public const int MAX_DGPS_STATION = 1023;
 
 	/**
 	 * Validate latitude is within WGS84 datum range.

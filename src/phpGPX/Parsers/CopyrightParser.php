@@ -15,10 +15,10 @@ use SimpleXMLElement;
 
 /**
  * Utility class for parsing and serializing Copyright objects.
- * 
+ *
  * This class provides static methods for converting between XML/SimpleXML
  * and Copyright model objects. It is not meant to be instantiated.
- * 
+ *
  * @package phpGPX\Parsers
  */
 final class CopyrightParser

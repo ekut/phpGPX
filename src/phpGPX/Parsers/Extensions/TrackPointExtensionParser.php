@@ -16,17 +16,17 @@ use SimpleXMLElement;
 
 /**
  * Utility class for parsing and serializing TrackPointExtension objects.
- * 
+ *
  * This class provides static methods for converting between XML/SimpleXML
  * and TrackPointExtension model objects. It is not meant to be instantiated.
- * 
+ *
  * @package phpGPX\Parsers\Extensions
  */
 final class TrackPointExtensionParser
 {
 	/**
 	 * Private constructor prevents instantiation of this utility class.
-	 * 
+	 *
 	 * @psalm-suppress UnusedConstructor
 	 */
 	private function __construct()
@@ -79,15 +79,17 @@ final class TrackPointExtensionParser
 			if ($value !== null && ($value instanceof SimpleXMLElement || is_scalar($value))) {
 				// Cast to string first, then to the appropriate type
 				$stringValue = (string) $value;
-				
 				// Type guard: ensure attribute has expected structure
-				if (!isset($attribute['type']) || !isset($attribute['name'])) {
+				if (!isset($attribute['type'])) {
 					continue;
 				}
-				
+				if (!isset($attribute['name'])) {
+					continue;
+				}
+
 				$attributeType = $attribute['type'];
 				$attributeName = $attribute['name'];
-				
+
 				if ($attributeType === 'float') {
 					$extension->{$attributeName} = (float) $stringValue;
 				} elseif ($attributeType === 'int') {
@@ -97,15 +99,15 @@ final class TrackPointExtensionParser
 
 			// Maintain backward compatibility with deprecated properties
 			// These assignments will be removed in v1.0
-			if ($key === 'hr' && isset($extension->hr)) {
+			if ($key === 'hr' && $extension->hr !== null) {
 				$extension->heartRate = $extension->hr;
 			}
 
-			if ($key === 'cad' && isset($extension->cad)) {
+			if ($key === 'cad' && $extension->cad !== null) {
 				$extension->cadence = $extension->cad;
 			}
 
-			if ($key === 'atemp' && isset($extension->aTemp)) {
+			if ($key === 'atemp' && $extension->aTemp !== null) {
 				$extension->avgTemperature = $extension->aTemp;
 			}
 		}

@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace phpGPX\Models;
 
 use DateTime;
+use Override;
 use phpGPX\Helpers\DateTimeHelper;
 use phpGPX\phpGPX;
 
@@ -133,7 +134,7 @@ final class Stats implements Summarizable
 	 * Serialize object to array
 	 * @return array<string, mixed>
 	 */
-	#[\Override]
+	#[Override]
 	public function toArray(): array
 	{
 		return [

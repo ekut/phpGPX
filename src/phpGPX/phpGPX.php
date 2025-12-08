@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace phpGPX;
 
-use phpGPX\Enums\FileFormat;
+use Deprecated;
 use phpGPX\Models\GpxFile;
 use phpGPX\Parsers\MetadataParser;
 use phpGPX\Parsers\RouteParser;
@@ -23,17 +23,14 @@ use RuntimeException;
  */
 final class phpGPX
 {
-	/**
-	 * @deprecated Use FileFormat::JSON instead
-	 */
+	#[Deprecated(message: 'Use FileFormat::JSON instead')]
 	public const string JSON_FORMAT = 'json';
 
-	/**
-	 * @deprecated Use FileFormat::XML instead
-	 */
+	#[Deprecated(message: 'Use FileFormat::XML instead')]
 	public const string XML_FORMAT = 'xml';
 
 	public const string PACKAGE_NAME = 'phpGPX';
+
 	public const string VERSION = '1.3.0';
 
 	/**
@@ -109,7 +106,7 @@ final class phpGPX
 		$xml = file_get_contents($path);
 
 		if ($xml === false) {
-			throw new RuntimeException("Failed to read file: {$path}");
+			throw new RuntimeException('Failed to read file: ' . $path);
 		}
 
 		return self::parse($xml);
@@ -122,16 +119,17 @@ final class phpGPX
 	{
 		// Suppress XML parsing warnings and handle errors internally
 		$previousErrorHandling = libxml_use_internal_errors(true);
-		
+
 		$xmlElement = simplexml_load_string($xml);
 
 		if ($xmlElement === false) {
 			// Clear any XML errors before throwing exception
 			libxml_clear_errors();
 			libxml_use_internal_errors($previousErrorHandling);
+
 			throw new RuntimeException("Failed to parse XML string");
 		}
-		
+
 		// Clear any XML errors and restore error handling
 		libxml_clear_errors();
 		libxml_use_internal_errors($previousErrorHandling);
@@ -142,16 +140,16 @@ final class phpGPX
 		$gpx = new GpxFile($creator);
 
 		// Parse metadata
-		$gpx->metadata = isset($xmlElement->metadata) ? MetadataParser::parse($xmlElement->metadata) : null;
+		$gpx->metadata = property_exists($xmlElement, 'metadata') && $xmlElement->metadata !== null ? MetadataParser::parse($xmlElement->metadata) : null;
 
 		// Parse waypoints
-		$gpx->waypoints = isset($xmlElement->wpt) ? WaypointParser::parse($xmlElement->wpt) : [];
+		$gpx->waypoints = property_exists($xmlElement, 'wpt') && $xmlElement->wpt !== null ? WaypointParser::parse($xmlElement->wpt) : [];
 
 		// Parse tracks
-		$gpx->tracks = isset($xmlElement->trk) ? TrackParser::parse($xmlElement->trk) : [];
+		$gpx->tracks = property_exists($xmlElement, 'trk') && $xmlElement->trk !== null ? TrackParser::parse($xmlElement->trk) : [];
 
 		// Parse routes
-		$gpx->routes = isset($xmlElement->rte) ? RouteParser::parse($xmlElement->rte) : [];
+		$gpx->routes = property_exists($xmlElement, 'rte') && $xmlElement->rte !== null ? RouteParser::parse($xmlElement->rte) : [];
 
 		return $gpx;
 	}

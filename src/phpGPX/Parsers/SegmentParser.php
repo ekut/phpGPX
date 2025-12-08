@@ -16,10 +16,10 @@ use SimpleXMLElement;
 
 /**
  * Utility class for parsing and serializing Segment objects.
- * 
+ *
  * This class provides static methods for converting between XML/SimpleXML
  * and Segment model objects. It is not meant to be instantiated.
- * 
+ *
  * @package phpGPX\Parsers
  */
 final class SegmentParser
@@ -44,21 +44,22 @@ final class SegmentParser
 		foreach ($nodes as $node) {
 			$segment = new Segment();
 
-			if (!$node->count()) {
+			if ($node->count() === 0) {
 				continue;
 			}
 
-			if (isset($node->trkpt)) {
+			if (property_exists($node, 'trkpt') && $node->trkpt !== null) {
 				$segment->points = [];
 
 				foreach ($node->trkpt as $point) {
 					$parsedPoint = PointParser::parse($point);
-					if ($parsedPoint !== null) {
+					if ($parsedPoint instanceof \phpGPX\Models\Point) {
 						$segment->points[] = $parsedPoint;
 					}
 				}
 			}
-			$segment->extensions = isset($node->extensions) ? ExtensionParser::parse($node->extensions) : null;
+
+			$segment->extensions = property_exists($node, 'extensions') && $node->extensions !== null ? ExtensionParser::parse($node->extensions) : null;
 
 			if (phpGPX::$CALCULATE_STATS) {
 				$segment->recalculateStats();

@@ -17,22 +17,23 @@ use SimpleXMLElement;
 
 /**
  * Utility class for parsing and serializing Extensions objects.
- * 
+ *
  * This class provides static methods for converting between XML/SimpleXML
  * and Extensions model objects. It is not meant to be instantiated.
- * 
+ *
  * @package phpGPX\Parsers
  */
 final class ExtensionParser
 {
 	/**
 	 * Private constructor prevents instantiation of this utility class.
-	 * 
+	 *
 	 * @psalm-suppress UnusedConstructor
 	 */
 	private function __construct()
 	{
 	}
+
 	public static string $tagName = 'extensions';
 
 	/** @var array<string, array{namespace: string, xsd: string, name: string, prefix: string}> */
@@ -49,10 +50,11 @@ final class ExtensionParser
 			if (!is_string($key)) {
 				$key = '';
 			}
+
 			if (!is_string($namespace)) {
 				continue;
 			}
-			
+
 			switch ($namespace) {
 				case TrackPointExtension::EXTENSION_NAMESPACE:
 				case TrackPointExtension::EXTENSION_V1_NAMESPACE:
@@ -61,6 +63,7 @@ final class ExtensionParser
 					if ($node !== null && count($node) > 0) {
 						$extensions->trackPointExtension = TrackPointExtensionParser::parse($node);
 					}
+
 					break;
 				default:
 					$childNodes = $nodes->children($namespace);
@@ -68,13 +71,15 @@ final class ExtensionParser
 					if ($childNodes === null) {
 						break;
 					}
+
 					// Iterate over child nodes
 					foreach ($childNodes as $child_key => $value) {
 						// Type guard: ensure child_key is string
 						if (!is_string($child_key)) {
 							continue;
 						}
-						$extensions->unsupported[$key ? "$key:$child_key" : "$child_key"] = (string) $value;
+
+						$extensions->unsupported[$key !== '' && $key !== '0' ? sprintf('%s:%s', $key, $child_key) : $child_key] = (string) $value;
 					}
 			}
 		}
@@ -87,16 +92,14 @@ final class ExtensionParser
 		$tagName = self::$tagName;
 		$node =  $document->createElement($tagName);
 
-		if (null !== $extensions->trackPointExtension) {
+		if ($extensions->trackPointExtension instanceof \phpGPX\Models\Extensions\TrackPointExtension) {
 			$child = TrackPointExtensionParser::toXML($extensions->trackPointExtension, $document);
 			$node->appendChild($child);
 		}
 
-		if (!empty($extensions->unsupported)) {
-			foreach ($extensions->unsupported as $key => $value) {
-				$child = $document->createElement($key, $value);
-				$node->appendChild($child);
-			}
+		foreach ($extensions->unsupported as $key => $value) {
+			$child = $document->createElement($key, $value);
+			$node->appendChild($child);
 		}
 
 		return $node;

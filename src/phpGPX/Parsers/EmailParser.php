@@ -15,17 +15,17 @@ use SimpleXMLElement;
 
 /**
  * Utility class for parsing and serializing Email objects.
- * 
+ *
  * This class provides static methods for converting between XML/SimpleXML
  * and Email model objects. It is not meant to be instantiated.
- * 
+ *
  * @package phpGPX\Parsers
  */
 final class EmailParser
 {
 	/**
 	 * Private constructor prevents instantiation of this utility class.
-	 * 
+	 *
 	 * @psalm-suppress UnusedConstructor
 	 */
 	private function __construct()
@@ -52,11 +52,11 @@ final class EmailParser
 		$tagName = self::$tagName;
 		$node =  $document->createElement($tagName);
 
-		if (!empty($email->id)) {
+		if ($email->id !== '' && $email->id !== '0') {
 			$node->setAttribute('id', $email->id);
 		}
 
-		if (!empty($email->domain)) {
+		if ($email->domain !== '' && $email->domain !== '0') {
 			$node->setAttribute('domain', $email->domain);
 		}
 

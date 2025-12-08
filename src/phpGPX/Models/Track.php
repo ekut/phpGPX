@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace phpGPX\Models;
 
 use DateTime;
+use Override;
 use phpGPX\Helpers\BoundsCalculator;
 use phpGPX\Helpers\SerializationHelper;
 use phpGPX\phpGPX;
@@ -31,7 +32,7 @@ final class Track extends Collection
 	 * Return all points in collection.
 	 * @return Point[]
 	 */
-	#[\Override]
+	#[Override]
 	public function getPoints(): array
 	{
 		/** @var Point[] $points */
@@ -52,7 +53,7 @@ final class Track extends Collection
 	 * Serialize object to array
 	 * @return array<string, mixed>
 	 */
-	#[\Override]
+	#[Override]
 	public function toArray(): array
 	{
 		return [
@@ -72,16 +73,16 @@ final class Track extends Collection
 	/**
   * Recalculate stats objects.
   */
-	#[\Override]
+	#[Override]
 	public function recalculateStats(): void
 	{
-		if (empty($this->stats)) {
+		if (!$this->stats instanceof \phpGPX\Models\Stats) {
 			$this->stats = new Stats();
 		}
 
 		$this->stats->reset();
 
-		if (empty($this->segments)) {
+		if ($this->segments === []) {
 			return;
 		}
 
@@ -108,7 +109,7 @@ final class Track extends Collection
 		if (!$lastSegment instanceof Segment) {
 			return;
 		}
-		
+
 		$lastPoint = end($lastSegment->points);
 		if (!$lastPoint instanceof Point) {
 			return;
@@ -142,10 +143,12 @@ final class Track extends Collection
 				$this->stats->minAltitude = $segmentStats->minAltitude;
 				$this->stats->minAltitudeCoords = $segmentStats->minAltitudeCoords;
 			}
+
 			if ($segmentStats->maxAltitude !== null && ($this->stats->maxAltitude === null || $this->stats->maxAltitude < $segmentStats->maxAltitude)) {
 				$this->stats->maxAltitude = $segmentStats->maxAltitude;
 				$this->stats->maxAltitudeCoords = $segmentStats->maxAltitudeCoords;
 			}
+
 			if ($segmentStats->minAltitude !== null && ($this->stats->minAltitude === null || $this->stats->minAltitude > $segmentStats->minAltitude)) {
 				$this->stats->minAltitude = $segmentStats->minAltitude;
 				$this->stats->minAltitudeCoords = $segmentStats->minAltitudeCoords;

@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace phpGPX\Models;
 
+use Override;
 use phpGPX\Helpers\SerializationHelper;
 
 /**
@@ -39,7 +40,7 @@ final class Person implements Summarizable
 	 * Serialize object to array
 	 * @return array{name: string|null, email: array<int|string, mixed>|null, links: array<int|string, mixed>|null}
 	 */
-	#[\Override]
+	#[Override]
 	public function toArray(): array
 	{
 		return [

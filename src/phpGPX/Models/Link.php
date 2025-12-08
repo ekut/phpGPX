@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace phpGPX\Models;
 
+use Override;
 use phpGPX\Helpers\GpxValidator;
 
 /**
@@ -36,7 +37,7 @@ final class Link implements Summarizable
 	 * Serialize object to array
 	 * @return array{href: string, text: string|null, type: string|null}
 	 */
-	#[\Override]
+	#[Override]
 	public function toArray(): array
 	{
 		return [

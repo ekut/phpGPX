@@ -31,9 +31,11 @@ final class BoundsCalculator
 	public static function calculate(array $points): array
 	{
 		$pointCount = count($points);
-
-		$north = $east = -PHP_FLOAT_MAX; // look for longest lat and lon
-		$south = $west = PHP_FLOAT_MAX; // look for shortest lat and lon
+		$north = -PHP_FLOAT_MAX;
+		$east = -PHP_FLOAT_MAX;
+		// look for longest lat and lon
+		$south = PHP_FLOAT_MAX;
+		$west = PHP_FLOAT_MAX; // look for shortest lat and lon
 
 		for ($p = 0; $p < $pointCount; $p++) {
 			$curPoint = $points[$p];
@@ -45,12 +47,15 @@ final class BoundsCalculator
 			if ($lat > $north) {
 				$north = $lat;
 			}
+
 			if ($lng > $east) {
 				$east = $lng;
 			}
+
 			if ($lat < $south) {
 				$south = $lat;
 			}
+
 			if ($lng < $west) {
 				$west = $lng;
 			}

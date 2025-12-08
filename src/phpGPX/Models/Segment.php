@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace phpGPX\Models;
 
 use DateTime;
+use Override;
 use phpGPX\Helpers\BoundsCalculator;
 use phpGPX\Helpers\DistanceCalculator;
 use phpGPX\Helpers\ElevationGainLossCalculator;
@@ -46,7 +47,7 @@ final class Segment implements Summarizable, StatsCalculator
 	 * Serialize object to array
 	 * @return array{points: array<int|string, mixed>|null, extensions: array<int|string, mixed>|null, stats: array<int|string, mixed>|null}
 	 */
-	#[\Override]
+	#[Override]
 	public function toArray(): array
 	{
 		return [
@@ -60,7 +61,7 @@ final class Segment implements Summarizable, StatsCalculator
 	 * Return all points in collection.
 	 * @return Point[]
 	 */
-	#[\Override]
+	#[Override]
 	public function getPoints(): array
 	{
 		return $this->points;
@@ -69,7 +70,7 @@ final class Segment implements Summarizable, StatsCalculator
 	/**
   * Recalculate stats objects.
   */
-	#[\Override]
+	#[Override]
 	public function recalculateStats(): void
 	{
 		if (empty($this->stats)) {
@@ -79,7 +80,7 @@ final class Segment implements Summarizable, StatsCalculator
 		$count = count($this->points);
 		$this->stats->reset();
 
-		if (empty($this->points)) {
+		if ($this->points === []) {
 			return;
 		}
 
@@ -94,9 +95,9 @@ final class Segment implements Summarizable, StatsCalculator
 		$this->stats->minAltitudeCoords = ["lat" => $firstPoint->latitude, "lng" => $firstPoint->longitude];
 
 		[$this->stats->cumulativeElevationGain, $this->stats->cumulativeElevationLoss] =
-			ElevationGainLossCalculator::calculate($this->getPoints());
+			ElevationGainLossCalculator::calculate($this->points);
 
-		$calculator = new DistanceCalculator($this->getPoints());
+		$calculator = new DistanceCalculator($this->points);
 		$this->stats->distance = $calculator->getRawDistance();
 		$this->stats->realDistance = $calculator->getRealDistance();
 
@@ -127,7 +128,7 @@ final class Segment implements Summarizable, StatsCalculator
 			}
 		}
 
-		[$northWest, $southEast] = BoundsCalculator::calculate($this->getPoints());
+		[$northWest, $southEast] = BoundsCalculator::calculate($this->points);
 		$this->stats->bounds = [$northWest, $southEast];
 	}
 }

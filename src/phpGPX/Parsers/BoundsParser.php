@@ -15,17 +15,17 @@ use SimpleXMLElement;
 
 /**
  * Utility class for parsing and serializing Bounds objects.
- * 
+ *
  * This class provides static methods for converting between XML/SimpleXML
  * and Bounds model objects. It is not meant to be instantiated.
- * 
+ *
  * @package phpGPX\Parsers
  */
 final class BoundsParser
 {
 	/**
 	 * Private constructor prevents instantiation of this utility class.
-	 * 
+	 *
 	 * @psalm-suppress UnusedConstructor
 	 */
 	private function __construct()
