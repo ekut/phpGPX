@@ -16,7 +16,7 @@ namespace phpGPX\Helpers;
 use phpGPX\Models\Point;
 use phpGPX\phpGPX;
 
-class DistanceCalculator
+final class DistanceCalculator
 {
 	/**
 	 * @var Point[]
@@ -77,6 +77,7 @@ class DistanceCalculator
 				$differenceFromLastConsideredPoint = call_user_func($strategy, $curPoint, $lastConsideredPoint);
 
 				if ($differenceFromLastConsideredPoint > phpGPX::$DISTANCE_SMOOTHING_THRESHOLD) {
+					// Explicit cast to handle strict binary operands mode
 					$distance += (float) $differenceFromLastConsideredPoint;
 					$lastConsideredPoint = $curPoint;
 				}
@@ -84,6 +85,7 @@ class DistanceCalculator
 
 			// if smoothing is not applied we consider every point
 			else {
+				// Explicit cast to handle strict binary operands mode
 				$distance += (float) $curPoint->difference;
 				$lastConsideredPoint = $curPoint;
 			}

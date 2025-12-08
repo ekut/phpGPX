@@ -230,11 +230,11 @@ final class ElevationGainLossCalculatorTest extends TestCase
 
 		// Assert - The algorithm processes points in order:
 		// Point 0 (100m): Sets lastConsideredElevation=100, skipped as first point
-		// Point 1 (0m): Should be ignored due to IGNORE_ELEVATION_0, but appears to be processed
-		// Point 2 (150m): Calculates gain from last considered elevation
-		// This results in: loss from 100 to 0 (100m), then gain from 0 to 150 (150m)
-		$this->assertEquals(150.0, $gain);
-		$this->assertEquals(100.0, $loss);
+		// Point 1 (0m): Ignored due to IGNORE_ELEVATION_0 setting
+		// Point 2 (150m): Calculates gain from last considered elevation (100m)
+		// This results in: gain from 100 to 150 = 50m gain, 0m loss
+		$this->assertEquals(50.0, $gain);
+		$this->assertEquals(0.0, $loss);
 	}
 
 	/**

@@ -20,7 +20,7 @@ use phpGPX\phpGPX;
  * @see https://www.topografix.com/GPX/1/1/#type_rteType
  * @package phpGPX\Models
  */
-class Route extends Collection
+final class Route extends Collection
 {
 	/**
 	 * A list of route points.
@@ -33,6 +33,7 @@ class Route extends Collection
 	 * Return all points in collection.
 	 * @return Point[]
 	 */
+	#[\Override]
 	public function getPoints(): array
 	{
 		/** @var Point[] $points */
@@ -51,6 +52,7 @@ class Route extends Collection
 	 * Serialize object to array
 	 * @return array<string, mixed>
 	 */
+	#[\Override]
 	public function toArray(): array
 	{
 		return [
@@ -70,6 +72,7 @@ class Route extends Collection
 	/**
   * Recalculate stats objects.
   */
+	#[\Override]
 	public function recalculateStats(): void
 	{
 		if (empty($this->stats)) {
@@ -84,7 +87,7 @@ class Route extends Collection
 
 		$pointCount = count($this->points);
 
-		$firstPoint = &$this->points[0];
+		$firstPoint = $this->points[0];
 		$lastPoint = end($this->points);
 
 		$this->stats->startedAt = $firstPoint->time;
@@ -121,12 +124,15 @@ class Route extends Collection
 		if (($firstPoint->time instanceof DateTime) && ($lastPoint->time instanceof DateTime)) {
 			$this->stats->duration = $lastPoint->time->getTimestamp() - $firstPoint->time->getTimestamp();
 
-			if ($this->stats->duration !== 0) {
-				$this->stats->averageSpeed = $this->stats->distance / $this->stats->duration;
+			if ($this->stats->duration !== 0 && $this->stats->distance > 0) {
+				$this->stats->averageSpeed = $this->stats->distance / (float) $this->stats->duration;
 			}
 
-			if ($this->stats->distance != 0) {
-				$this->stats->averagePace = $this->stats->duration / ($this->stats->distance / 1000);
+			if ($this->stats->distance > 0 && $this->stats->duration !== 0) {
+				$distanceInKm = $this->stats->distance / 1000.0;
+				if ($distanceInKm > 0) {
+					$this->stats->averagePace = (float) $this->stats->duration / $distanceInKm;
+				}
 			}
 		}
 	}

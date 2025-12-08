@@ -46,8 +46,8 @@ abstract class GeoHelper
 	{
 		$distance = self::getRawDistance($point1, $point2);
 
-		$elevation1 = $point1->elevation !== null ? $point1->elevation : 0;
-		$elevation2 = $point2->elevation !== null ? $point2->elevation : 0;
+		$elevation1 = $point1->elevation ?? 0.0;
+		$elevation2 = $point2->elevation ?? 0.0;
 		$elevDiff = abs($elevation1 - $elevation2);
 
 		return sqrt($distance ** 2 + $elevDiff ** 2);

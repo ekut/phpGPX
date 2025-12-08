@@ -17,6 +17,7 @@ use SimpleXMLElement;
 /**
  * Class RouteParser
  * @package phpGPX\Parsers
+ * @psalm-api
  */
 abstract class RouteParser
 {
@@ -102,7 +103,6 @@ abstract class RouteParser
 								$stringValue = (string) $value;
 								if ($stringValue !== '') {
 									$type = $attribute['type'];
-									assert(is_string($type));
 									settype($stringValue, $type);
 									$route->{$attribute['name']} = $stringValue;
 								}
@@ -171,6 +171,8 @@ abstract class RouteParser
 	/**
 	 * @param Route[] $routes
 	 * @return DOMElement[]
+	 * @internal Used internally for XML serialization
+	 * @psalm-internal phpGPX\Parsers
 	 */
 	public static function toXMLArray(array $routes, DOMDocument &$document): array
 	{

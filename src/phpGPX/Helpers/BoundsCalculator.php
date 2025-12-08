@@ -20,7 +20,7 @@ use phpGPX\Models\Point;
  * This can be useful to display a segment on a map and to zoom the map
  * properly, so it shows all the points.
  */
-class BoundsCalculator
+final class BoundsCalculator
 {
 	/**
 	 * Calculate bounds from an array of points.

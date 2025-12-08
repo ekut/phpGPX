@@ -17,7 +17,7 @@ use phpGPX\Helpers\GpxValidator;
  * @see https://www.topografix.com/GPX/1/1/#type_emailType
  * @package phpGPX\Models
  */
-class Email implements Summarizable
+final class Email implements Summarizable
 {
 	/**
 	 * Id half of email address (jakub.dubec)
@@ -35,6 +35,7 @@ class Email implements Summarizable
 	 * Serialize object to array
 	 * @return array{id: string, domain: string}
 	 */
+	#[\Override]
 	public function toArray(): array
 	{
 		return [

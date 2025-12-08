@@ -16,8 +16,9 @@ use phpGPX\Helpers\SerializationHelper;
  * Extension version: v2
  * Based on namespace: http://www.garmin.com/xmlschemas/TrackPointExtensionv2.xsd
  * @package phpGPX\Models\Extensions
+ * @psalm-api
  */
-class TrackPointExtension extends AbstractExtension
+final class TrackPointExtension extends AbstractExtension
 {
 	public const EXTENSION_V1_NAMESPACE = 'http://www.garmin.com/xmlschemas/TrackPointExtension/v1';
 	public const EXTENSION_V1_NAMESPACE_XSD = 'http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd';
@@ -37,6 +38,8 @@ class TrackPointExtension extends AbstractExtension
 	 * Average temperature value measured in degrees Celsius.
 	 * @deprecated use TrackPointExtension::$aTemp instead. Will be removed in v1.0
 	 * @see TrackPointExtension::$aTemp
+	 * @api
+	 * @psalm-api
 	 */
 	public ?float $avgTemperature = null;
 
@@ -54,6 +57,8 @@ class TrackPointExtension extends AbstractExtension
 	 * Heart rate in beats per minute.
 	 * @deprecated since v1.0RC3, use attribute TrackPointExtension::$hr instead, will be removed in v1.0
 	 * @see TrackPointExtension::$hr
+	 * @api
+	 * @psalm-api
 	 */
 	public ?float $heartRate = null;
 
@@ -67,6 +72,8 @@ class TrackPointExtension extends AbstractExtension
 	 * Cadence in revolutions per minute.
 	 * @deprecated since v1.0RC3, use attribute TrackPointExtension::$cad instead, will be removed in v1.0
 	 * @see TrackPointExtension::$cad
+	 * @api
+	 * @psalm-api
 	 */
 	public ?float $cadence = null;
 
@@ -102,6 +109,7 @@ class TrackPointExtension extends AbstractExtension
 	 * Serialize object to array
 	 * @return array{aTemp: float|null, wTemp: float|null, depth: float|null, hr: float|null, cad: float|null, speed: float|null, course: int|null, bearing: int|null}
 	 */
+	#[\Override]
 	public function toArray(): array
 	{
 		return [

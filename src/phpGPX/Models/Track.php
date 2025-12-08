@@ -19,7 +19,7 @@ use phpGPX\phpGPX;
  * @see https://www.topografix.com/GPX/1/1/#type_trkType
  * @package phpGPX\Models
  */
-class Track extends Collection
+final class Track extends Collection
 {
 	/**
 	 * Array of Track segments
@@ -31,6 +31,7 @@ class Track extends Collection
 	 * Return all points in collection.
 	 * @return Point[]
 	 */
+	#[\Override]
 	public function getPoints(): array
 	{
 		/** @var Point[] $points */
@@ -51,6 +52,7 @@ class Track extends Collection
 	 * Serialize object to array
 	 * @return array<string, mixed>
 	 */
+	#[\Override]
 	public function toArray(): array
 	{
 		return [
@@ -70,6 +72,7 @@ class Track extends Collection
 	/**
   * Recalculate stats objects.
   */
+	#[\Override]
 	public function recalculateStats(): void
 	{
 		if (empty($this->stats)) {
@@ -84,16 +87,14 @@ class Track extends Collection
 
 		$segmentsCount = count($this->segments);
 
-		$firstSegment = null;
 		$firstPoint = null;
 
-		// Identify first Segment/Point
+		// Identify first Point
 		for ($s = 0; $s < $segmentsCount; $s++) {
 			$pointCount = count($this->segments[$s]->points);
 			for ($p = 0; $p < $pointCount; $p++) {
 				if (is_null($firstPoint)) {
-					$firstPoint = &$this->segments[$s]->points[$p];
-					$firstSegment = &$this->segments[$s];
+					$firstPoint = $this->segments[$s]->points[$p];
 					break;
 				}
 			}
@@ -104,12 +105,12 @@ class Track extends Collection
 		}
 
 		$lastSegment = end($this->segments);
-		if ($lastSegment === false) {
+		if (!$lastSegment instanceof Segment) {
 			return;
 		}
 		
 		$lastPoint = end($lastSegment->points);
-		if ($lastPoint === false) {
+		if (!$lastPoint instanceof Point) {
 			return;
 		}
 
@@ -155,13 +156,13 @@ class Track extends Collection
 			$this->stats->duration = abs($lastPoint->time->getTimestamp() - $firstPoint->time->getTimestamp());
 
 			if ($this->stats->duration !== 0 && $this->stats->distance > 0) {
-				$this->stats->averageSpeed = $this->stats->distance / $this->stats->duration;
+				$this->stats->averageSpeed = $this->stats->distance / (float) $this->stats->duration;
 			}
 
 			if ($this->stats->distance > 0 && $this->stats->duration !== 0) {
-				$distanceInKm = $this->stats->distance / 1000;
+				$distanceInKm = $this->stats->distance / 1000.0;
 				if ($distanceInKm > 0) {
-					$this->stats->averagePace = $this->stats->duration / $distanceInKm;
+					$this->stats->averagePace = (float) $this->stats->duration / $distanceInKm;
 				}
 			}
 		}

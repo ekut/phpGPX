@@ -35,17 +35,17 @@ abstract class PersonParser
 		$tagName = self::$tagName;
 		$node =  $document->createElement($tagName);
 
-		if (!empty($person->name)) {
+		if ($person->name !== null && $person->name !== '') {
 			$child = $document->createElement('name', $person->name);
 			$node->appendChild($child);
 		}
 
-		if (!empty($person->email)) {
+		if ($person->email !== null) {
 			$child = EmailParser::toXML($person->email, $document);
 			$node->appendChild($child);
 		}
 
-		if (!empty($person->links)) {
+		if (count($person->links) > 0) {
 			foreach ($person->links as $link) {
 				$child = LinkParser::toXML($link, $document);
 				$node->appendChild($child);

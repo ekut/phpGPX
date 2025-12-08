@@ -14,6 +14,8 @@ namespace phpGPX\Enums;
  * Represents the type of GPS fix according to GPX 1.1 specification.
  * @see http://www.topografix.com/GPX/1/1/#type_fixType
  * @package phpGPX\Enums
+ * @api
+ * @psalm-api
  */
 enum GpsFixType: string
 {

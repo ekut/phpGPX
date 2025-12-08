@@ -56,9 +56,7 @@ abstract class SerializationHelper
 				if ($record instanceof Summarizable) {
 					$result[] = $record->toArray();
 				}
-				$record = null;
 			}
-			$object = null;
 
 			return $result;
 		}

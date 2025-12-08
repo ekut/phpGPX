@@ -94,7 +94,6 @@ abstract class MetadataParser
 							// Cast SimpleXMLElement to string first
 							$stringValue = (string) $value;
 							$type = $attribute['type'];
-							assert(is_string($type));
 							settype($stringValue, $type);
 							$metadata->{$attribute['name']} = $stringValue;
 						} else {

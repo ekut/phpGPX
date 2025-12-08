@@ -19,7 +19,7 @@ use phpGPX\Helpers\SerializationHelper;
  * @see https://www.topografix.com/GPX/1/1/#type_metadataType
  * @package phpGPX\Models
  */
-class Metadata implements Summarizable
+final class Metadata implements Summarizable
 {
 	/**
 	 * The name of the GPX file.
@@ -84,6 +84,7 @@ class Metadata implements Summarizable
 	 * Serialize object to array
 	 * @return array<string, mixed>
 	 */
+	#[\Override]
 	public function toArray(): array
 	{
 		return [

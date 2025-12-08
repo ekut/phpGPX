@@ -17,7 +17,7 @@ use phpGPX\Helpers\GpxValidator;
  * @see https://www.topografix.com/GPX/1/1/#type_linkType
  * @package phpGPX\Models
  */
-class Link implements Summarizable
+final class Link implements Summarizable
 {
 	/**
 	 * URL of hyperlink.
@@ -36,6 +36,7 @@ class Link implements Summarizable
 	 * Serialize object to array
 	 * @return array{href: string, text: string|null, type: string|null}
 	 */
+	#[\Override]
 	public function toArray(): array
 	{
 		return [

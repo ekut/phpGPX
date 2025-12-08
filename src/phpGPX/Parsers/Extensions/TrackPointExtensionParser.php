@@ -14,7 +14,7 @@ use phpGPX\Models\Extensions\TrackPointExtension;
 use phpGPX\Parsers\ExtensionParser;
 use SimpleXMLElement;
 
-class TrackPointExtensionParser
+final class TrackPointExtensionParser
 {
 	/** @var array<string, array{name: string, type: string}> */
 	private static array $attributeMapper = [
@@ -60,27 +60,35 @@ class TrackPointExtensionParser
 			$value = $node->$key ?? null;
 
 			if ($value !== null && ($value instanceof SimpleXMLElement || is_scalar($value))) {
-				// Cast SimpleXMLElement to string first, then to the appropriate type
+				// Cast to string first, then to the appropriate type
 				$stringValue = (string) $value;
-				if ($attribute['type'] === 'float') {
-					$extension->{$attribute['name']} = (float) $stringValue;
-				} elseif ($attribute['type'] === 'int') {
-					$extension->{$attribute['name']} = (int) $stringValue;
+				
+				// Type guard: ensure attribute has expected structure
+				if (!isset($attribute['type']) || !isset($attribute['name'])) {
+					continue;
+				}
+				
+				$attributeType = $attribute['type'];
+				$attributeName = $attribute['name'];
+				
+				if ($attributeType === 'float') {
+					$extension->{$attributeName} = (float) $stringValue;
+				} elseif ($attributeType === 'int') {
+					$extension->{$attributeName} = (int) $stringValue;
 				}
 			}
 
-			// Remove in v1.0
-			if ($key === 'hr') {
+			// Maintain backward compatibility with deprecated properties
+			// These assignments will be removed in v1.0
+			if ($key === 'hr' && isset($extension->hr)) {
 				$extension->heartRate = $extension->hr;
 			}
 
-			// Remove in v1.0
-			if ($key === 'cad') {
+			if ($key === 'cad' && isset($extension->cad)) {
 				$extension->cadence = $extension->cad;
 			}
 
-			// Remove in v1.0
-			if ($key === 'atemp') {
+			if ($key === 'atemp' && isset($extension->aTemp)) {
 				$extension->avgTemperature = $extension->aTemp;
 			}
 		}

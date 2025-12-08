@@ -19,7 +19,7 @@ use phpGPX\Helpers\SerializationHelper;
  * @see https://www.topografix.com/GPX/1/1/#type_copyrightType
  * @package phpGPX\Models
  */
-class Copyright implements Summarizable
+final class Copyright implements Summarizable
 {
 	/**
 	 * Copyright holder (TopoSoft, Inc.)
@@ -38,6 +38,7 @@ class Copyright implements Summarizable
 	 * Serialize object to array
 	 * @return array{author: string, year: string|null, license: string|null}
 	 */
+	#[\Override]
 	public function toArray(): array
 	{
 		return [

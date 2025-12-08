@@ -16,12 +16,15 @@ use phpGPX\Models\Point;
 /**
  * Class DateTimeHelper
  * @package phpGPX\Helpers
+ * @psalm-api
  */
-class DateTimeHelper
+final class DateTimeHelper
 {
 	/**
 	 * Compare two points by their timestamp for sorting.
 	 * Returns negative if point1 < point2, zero if equal, positive if point1 > point2.
+	 * @api
+	 * @psalm-api
 	 */
 	public static function comparePointsByTimestamp(Point $point1, Point $point2): int
 	{
@@ -36,7 +39,8 @@ class DateTimeHelper
 		$formatted 				= null;
 
 		if ($datetime instanceof DateTime) {
-			$datetime->setTimezone(new DateTimeZone($timezone));
+			$timezoneObj = new DateTimeZone($timezone);
+			$datetime->setTimezone($timezoneObj);
 			$formatted 			= $datetime->format($format);
 		}
 
@@ -48,8 +52,8 @@ class DateTimeHelper
 	 */
 	public static function parseDateTime(string $value, string $timezone = 'Europe/London'): DateTime
 	{
-		$timezone = new DateTimeZone($timezone);
-		$datetime = new DateTime($value, $timezone);
+		$timezoneObj = new DateTimeZone($timezone);
+		$datetime = new DateTime($value, $timezoneObj);
 		$datetime->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
 		return $datetime;

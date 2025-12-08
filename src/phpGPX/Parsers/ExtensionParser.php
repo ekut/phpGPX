@@ -33,16 +33,35 @@ abstract class ExtensionParser
 		$nodeNamespaces = $nodes->getNamespaces(true);
 
 		foreach ($nodeNamespaces as $key => $namespace) {
+			// Type guard: ensure key and namespace are strings
+			if (!is_string($key)) {
+				$key = '';
+			}
+			if (!is_string($namespace)) {
+				continue;
+			}
+			
 			switch ($namespace) {
 				case TrackPointExtension::EXTENSION_NAMESPACE:
 				case TrackPointExtension::EXTENSION_V1_NAMESPACE:
-					$node = $nodes->children($namespace)->{TrackPointExtension::EXTENSION_NAME};
-					if (!empty($node)) {
+					$childNodes = $nodes->children($namespace);
+					$node = $childNodes->{TrackPointExtension::EXTENSION_NAME};
+					if ($node !== null && count($node) > 0) {
 						$extensions->trackPointExtension = TrackPointExtensionParser::parse($node);
 					}
 					break;
 				default:
-					foreach ($nodes->children($namespace) as $child_key => $value) {
+					$childNodes = $nodes->children($namespace);
+					// Null check before iterating
+					if ($childNodes === null) {
+						break;
+					}
+					// Iterate over child nodes
+					foreach ($childNodes as $child_key => $value) {
+						// Type guard: ensure child_key is string
+						if (!is_string($child_key)) {
+							continue;
+						}
 						$extensions->unsupported[$key ? "$key:$child_key" : "$child_key"] = (string) $value;
 					}
 			}

@@ -11,15 +11,22 @@ namespace phpGPX\Models\Extensions;
 
 use phpGPX\Models\Summarizable;
 
+/**
+ * @psalm-api
+ */
 abstract class AbstractExtension implements Summarizable
 {
 	/**
 	 * XML namespace of extension
+	 * @api
+	 * @psalm-suppress PossiblyUnusedProperty Used by extension implementations and accessed in tests
 	 */
 	public string $namespace;
 
 	/**
 	 * Node name extension.
+	 * @api
+	 * @psalm-suppress PossiblyUnusedProperty Used by extension implementations and accessed in tests
 	 */
 	public string $extensionName;
 

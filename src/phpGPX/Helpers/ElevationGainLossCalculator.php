@@ -14,7 +14,7 @@ namespace phpGPX\Helpers;
 use phpGPX\Models\Point;
 use phpGPX\phpGPX;
 
-class ElevationGainLossCalculator
+final class ElevationGainLossCalculator
 {
 	/**
 	 * Calculate elevation gain and loss from an array of points.
@@ -28,7 +28,7 @@ class ElevationGainLossCalculator
 
 		$pointCount = count($points);
 
-		$lastConsideredElevation = 0;
+		$lastConsideredElevation = null;
 
 		for ($p = 0; $p < $pointCount; $p++) {
 			$curElevation = $points[$p]->elevation;
@@ -39,12 +39,13 @@ class ElevationGainLossCalculator
 			}
 
 			// skip points with 0 elevation if configuration allows
-			if (phpGPX::$IGNORE_ELEVATION_0 && $curElevation === 0) {
+			// Note: Using loose comparison to handle both int 0 and float 0.0
+			if (phpGPX::$IGNORE_ELEVATION_0 && $curElevation == 0) {
 				continue;
 			}
 
 			// skip the first point
-			if ($p === 0) {
+			if ($lastConsideredElevation === null) {
 				$lastConsideredElevation = $curElevation;
 				continue;
 			}
@@ -63,7 +64,7 @@ class ElevationGainLossCalculator
 			}
 
 			// if smoothing is not applied we consider every point
-			if (!phpGPX::$APPLY_ELEVATION_SMOOTHING) {
+			if (phpGPX::$APPLY_ELEVATION_SMOOTHING === false) {
 				$cumulativeElevationGain += ($elevationDelta > 0) ? $elevationDelta : 0;
 				$cumulativeElevationLoss += ($elevationDelta < 0) ? abs($elevationDelta) : 0;
 

@@ -26,8 +26,9 @@ use phpGPX\phpGPX;
  * GPX documents contain a metadata header, followed by waypoints, routes, and tracks.
  * @see https://www.topografix.com/GPX/1/1/#type_gpxType
  * @package phpGPX\Models
+ * @psalm-api
  */
-class GpxFile implements Summarizable
+final class GpxFile implements Summarizable
 {
 	/**
 	 * A list of waypoints.
@@ -82,6 +83,7 @@ class GpxFile implements Summarizable
 	 * Serialize object to array
 	 * @return array<string, mixed>
 	 */
+	#[\Override]
 	public function toArray(): array
 	{
 		/** @var array<string, mixed> $result */
@@ -148,22 +150,23 @@ class GpxFile implements Summarizable
 
 		if (count(ExtensionParser::$usedNamespaces) > 0) {
 			foreach (ExtensionParser::$usedNamespaces as $usedNamespace) {
-			$prefix = $usedNamespace['prefix'];
-			$namespace = $usedNamespace['namespace'];
-			$xsd = $usedNamespace['xsd'];
-			
-			assert(is_string($prefix));
-			assert(is_string($namespace));
-			assert(is_string($xsd));
-			
-			$gpx->setAttributeNS(
-				"http://www.w3.org/2000/xmlns/",
-				sprintf("xmlns:%s", $prefix),
-				$namespace,
-			);
+				$prefix = $usedNamespace['prefix'];
+				$namespace = $usedNamespace['namespace'];
+				$xsd = $usedNamespace['xsd'];
+				
+				// Type assertions to satisfy PHPStan
+				assert(is_string($prefix));
+				assert(is_string($namespace));
+				assert(is_string($xsd));
+				
+				$gpx->setAttributeNS(
+					"http://www.w3.org/2000/xmlns/",
+					sprintf("xmlns:%s", $prefix),
+					$namespace,
+				);
 
-			$schemaLocationArray[] = $namespace;
-			$schemaLocationArray[] = $xsd;
+				$schemaLocationArray[] = $namespace;
+				$schemaLocationArray[] = $xsd;
 			}
 		}
 
@@ -187,6 +190,8 @@ class GpxFile implements Summarizable
 	 * Save data to file according to selected format.
 	 * @param string $path
 	 * @param FileFormat $format
+	 * @api
+	 * @psalm-api
 	 */
 	public function save(string $path, FileFormat $format): void
 	{

@@ -17,6 +17,7 @@ use SimpleXMLElement;
 /**
  * Class TrackParser
  * @package phpGPX\Parsers
+ * @psalm-api
  */
 abstract class TrackParser
 {
@@ -92,7 +93,6 @@ abstract class TrackParser
 								$stringValue = (string) $value;
 								if ($stringValue !== '') {
 									$type = $attribute['type'];
-									assert(is_string($type));
 									settype($stringValue, $type);
 									$track->{$attribute['name']} = $stringValue;
 								}
@@ -161,6 +161,8 @@ abstract class TrackParser
 	/**
 	 * @param Track[] $tracks
 	 * @return DOMElement[]
+	 * @internal Used internally for XML serialization
+	 * @psalm-internal phpGPX\Parsers
 	 */
 	public static function toXMLArray(array $tracks, DOMDocument &$document): array
 	{

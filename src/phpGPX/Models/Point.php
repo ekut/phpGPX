@@ -22,8 +22,9 @@ use phpGPX\phpGPX;
  * GPX point representation according to GPX 1.1 specification.
  * @see https://www.topografix.com/GPX/1/1/#type_wptType
  * @package phpGPX\Models
+ * @psalm-api
  */
-class Point implements Summarizable
+final class Point implements Summarizable
 {
 	// Legacy constants for backward compatibility - use PointType enum instead
 	public const WAYPOINT = 'waypoint';
@@ -214,6 +215,8 @@ class Point implements Summarizable
 	 *
 	 * @param float|null $magVar Magnetic variation in degrees, must be between 0.0 (inclusive) and 360.0 (exclusive)
 	 * @throws InvalidArgumentException If magnetic variation is outside valid range
+	 * @api
+	 * @psalm-api
 	 */
 	public function setMagVar(?float $magVar): void
 	{
@@ -228,6 +231,8 @@ class Point implements Summarizable
 	 *
 	 * @param int|null $dgpsId DGPS station ID, must be between 0 and 1023 (inclusive)
 	 * @throws InvalidArgumentException If DGPS station ID is outside valid range
+	 * @api
+	 * @psalm-api
 	 */
 	public function setDgpsId(?int $dgpsId): void
 	{
@@ -242,6 +247,8 @@ class Point implements Summarizable
 	 *
 	 * @param int|null $sat Number of satellites, must be non-negative
 	 * @throws InvalidArgumentException If satellite count is negative
+	 * @api
+	 * @psalm-api
 	 */
 	public function setSat(?int $sat): void
 	{
@@ -255,11 +262,12 @@ class Point implements Summarizable
 	 * Serialize object to array
 	 * @return array<string, mixed>
 	 */
+	#[\Override]
 	public function toArray(): array
 	{
 		return [
-			'lat' => (float) $this->latitude,
-			'lon' => (float) $this->longitude,
+			'lat' => $this->latitude,
+			'lon' => $this->longitude,
 			'ele' => SerializationHelper::floatOrNull($this->elevation),
 			'time' => DateTimeHelper::formatDateTime($this->time, phpGPX::$DATETIME_FORMAT, phpGPX::$DATETIME_TIMEZONE_OUTPUT),
 			'magvar' => SerializationHelper::floatOrNull($this->magVar),

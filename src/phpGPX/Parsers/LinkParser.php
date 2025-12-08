@@ -64,12 +64,12 @@ abstract class LinkParser
 
 		$node->setAttribute('href', $link->href);
 
-		if (!empty($link->text)) {
+		if ($link->text !== null && $link->text !== '') {
 			$child = $document->createElement('text', $link->text);
 			$node->appendChild($child);
 		}
 
-		if (!empty($link->type)) {
+		if ($link->type !== null && $link->type !== '') {
 			$child = $document->createElement('type', $link->type);
 			$node->appendChild($child);
 		}

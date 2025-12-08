@@ -18,7 +18,7 @@ use phpGPX\Helpers\GpxValidator;
  * @see https://www.topografix.com/GPX/1/1/#type_boundsType
  * @package phpGPX\Models
  */
-class Bounds implements Summarizable
+final class Bounds implements Summarizable
 {
 	/**
 	 * Create a new Bounds object with required coordinates.
@@ -73,6 +73,7 @@ class Bounds implements Summarizable
 	 * Serialize object to array
 	 * @return array{minlat: float, minlon: float, maxlat: float, maxlon: float}
 	 */
+	#[\Override]
 	public function toArray(): array
 	{
 		return [

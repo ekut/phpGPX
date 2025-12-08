@@ -19,8 +19,9 @@ use RuntimeException;
 /**
  * Class phpGPX
  * @package phpGPX
+ * @psalm-api
  */
-class phpGPX
+final class phpGPX
 {
 	/**
 	 * @deprecated Use FileFormat::JSON instead
@@ -100,6 +101,8 @@ class phpGPX
 
 	/**
 	 * Load GPX file.
+	 * @api
+	 * @psalm-api
 	 */
 	public static function load(string $path): GpxFile
 	{
@@ -117,24 +120,38 @@ class phpGPX
 	 */
 	public static function parse(string $xml): GpxFile
 	{
-		$xml = simplexml_load_string($xml);
+		// Suppress XML parsing warnings and handle errors internally
+		$previousErrorHandling = libxml_use_internal_errors(true);
+		
+		$xmlElement = simplexml_load_string($xml);
+
+		if ($xmlElement === false) {
+			// Clear any XML errors before throwing exception
+			libxml_clear_errors();
+			libxml_use_internal_errors($previousErrorHandling);
+			throw new RuntimeException("Failed to parse XML string");
+		}
+		
+		// Clear any XML errors and restore error handling
+		libxml_clear_errors();
+		libxml_use_internal_errors($previousErrorHandling);
 
 		// Parse creator (required by GPX 1.1 schema)
-		$creator = isset($xml['creator']) ? (string)$xml['creator'] : self::getSignature();
+		$creator = isset($xmlElement['creator']) ? (string)$xmlElement['creator'] : self::getSignature();
 
 		$gpx = new GpxFile($creator);
 
 		// Parse metadata
-		$gpx->metadata = isset($xml->metadata) ? MetadataParser::parse($xml->metadata) : null;
+		$gpx->metadata = isset($xmlElement->metadata) ? MetadataParser::parse($xmlElement->metadata) : null;
 
 		// Parse waypoints
-		$gpx->waypoints = isset($xml->wpt) ? WaypointParser::parse($xml->wpt) : [];
+		$gpx->waypoints = isset($xmlElement->wpt) ? WaypointParser::parse($xmlElement->wpt) : [];
 
 		// Parse tracks
-		$gpx->tracks = isset($xml->trk) ? TrackParser::parse($xml->trk) : [];
+		$gpx->tracks = isset($xmlElement->trk) ? TrackParser::parse($xmlElement->trk) : [];
 
 		// Parse routes
-		$gpx->routes = isset($xml->rte) ? RouteParser::parse($xml->rte) : [];
+		$gpx->routes = isset($xmlElement->rte) ? RouteParser::parse($xmlElement->rte) : [];
 
 		return $gpx;
 	}

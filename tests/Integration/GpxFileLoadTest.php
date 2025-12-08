@@ -184,21 +184,11 @@ final class GpxFileLoadTest extends TestCase
 		$filePath = $this->getFixturePath('invalid-gpx.xml');
 
 		// Act & Assert
-		// The simplexml_load_string will generate a warning for malformed XML
-		// We suppress the warning and check that parsing fails
-		$previousErrorHandling = libxml_use_internal_errors(true);
+		// The simplexml_load_string will fail for malformed XML and throw RuntimeException
+		$this->expectException(\RuntimeException::class);
+		$this->expectExceptionMessage('Failed to parse XML string');
 
-		try {
-			$file = $gpx->load($filePath);
-
-			// If we get here, check that the file is not properly parsed
-			// The malformed XML should result in an incomplete or invalid structure
-			$errors = libxml_get_errors();
-			$this->assertNotEmpty($errors, 'Loading invalid GPX should generate XML errors');
-		} finally {
-			libxml_clear_errors();
-			libxml_use_internal_errors($previousErrorHandling);
-		}
+		$file = $gpx->load($filePath);
 	}
 
 	/**

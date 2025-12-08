@@ -19,7 +19,7 @@ use phpGPX\Models\Extensions\TrackPointExtension;
  * @package phpGPX\Models
  * @todo http://www.garmin.com/xmlschemas/GpxExtensions/v3
  */
-class Extensions implements Summarizable
+final class Extensions implements Summarizable
 {
 	/**
 	 * GPX Garmin TrackPointExtension v1
@@ -36,6 +36,7 @@ class Extensions implements Summarizable
 	 * Serialize object to array
 	 * @return array{trackpoint: array<int|string, mixed>|null, unsupported: array<string, mixed>}
 	 */
+	#[\Override]
 	public function toArray(): array
 	{
 		return [

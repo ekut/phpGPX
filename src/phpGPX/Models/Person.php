@@ -17,7 +17,7 @@ use phpGPX\Helpers\SerializationHelper;
  * @see https://www.topografix.com/GPX/1/1/#type_personType
  * @package phpGPX\Models
  */
-class Person implements Summarizable
+final class Person implements Summarizable
 {
 	/**
 	 * Name of person or organization.
@@ -39,10 +39,11 @@ class Person implements Summarizable
 	 * Serialize object to array
 	 * @return array{name: string|null, email: array<int|string, mixed>|null, links: array<int|string, mixed>|null}
 	 */
+	#[\Override]
 	public function toArray(): array
 	{
 		return [
-			'name' => $this->name !== null ? (string) $this->name : null,
+			'name' => $this->name,
 			'email' => SerializationHelper::serialize($this->email),
 			'links' => SerializationHelper::serialize($this->links),
 		];

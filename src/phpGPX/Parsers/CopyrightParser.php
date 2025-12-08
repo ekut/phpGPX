@@ -47,12 +47,12 @@ abstract class CopyrightParser
 
 		$node->setAttribute('author', $copyright->author);
 
-		if (!empty($copyright->year)) {
+		if ($copyright->year !== null && $copyright->year !== '') {
 			$child = $document->createElement('year', $copyright->year);
 			$node->appendChild($child);
 		}
 
-		if (!empty($copyright->license)) {
+		if ($copyright->license !== null && $copyright->license !== '') {
 			$child = $document->createElement('license', $copyright->license);
 			$node->appendChild($child);
 		}

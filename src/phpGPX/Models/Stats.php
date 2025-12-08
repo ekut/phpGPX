@@ -17,7 +17,7 @@ use phpGPX\phpGPX;
  * Class Stats
  * @package phpGPX\Models
  */
-class Stats implements Summarizable
+final class Stats implements Summarizable
 {
 	/**
 	 * Distance in meters (m)
@@ -133,11 +133,12 @@ class Stats implements Summarizable
 	 * Serialize object to array
 	 * @return array<string, mixed>
 	 */
+	#[\Override]
 	public function toArray(): array
 	{
 		return [
-			'distance' => (float)$this->distance,
-			'realDistance' => (float)$this->realDistance,
+			'distance' => $this->distance,
+			'realDistance' => $this->realDistance,
 			'avgSpeed' => (float)$this->averageSpeed,
 			'avgPace' => (float)$this->averagePace,
 			'minAltitude' => (float)$this->minAltitude,

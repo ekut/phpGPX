@@ -23,7 +23,7 @@ use phpGPX\phpGPX;
  * @see https://www.topografix.com/GPX/1/1/#type_trksegType
  * @package phpGPX\Models
  */
-class Segment implements Summarizable, StatsCalculator
+final class Segment implements Summarizable, StatsCalculator
 {
 	/**
 	 * Array of segment points
@@ -46,6 +46,7 @@ class Segment implements Summarizable, StatsCalculator
 	 * Serialize object to array
 	 * @return array{points: array<int|string, mixed>|null, extensions: array<int|string, mixed>|null, stats: array<int|string, mixed>|null}
 	 */
+	#[\Override]
 	public function toArray(): array
 	{
 		return [
@@ -56,9 +57,11 @@ class Segment implements Summarizable, StatsCalculator
 	}
 
 	/**
-	 * @return array|Point[]
+	 * Return all points in collection.
+	 * @return Point[]
 	 */
-	public function getPoints()
+	#[\Override]
+	public function getPoints(): array
 	{
 		return $this->points;
 	}
@@ -66,6 +69,7 @@ class Segment implements Summarizable, StatsCalculator
 	/**
   * Recalculate stats objects.
   */
+	#[\Override]
 	public function recalculateStats(): void
 	{
 		if (empty($this->stats)) {
@@ -79,7 +83,7 @@ class Segment implements Summarizable, StatsCalculator
 			return;
 		}
 
-		$firstPoint = &$this->points[0];
+		$firstPoint = $this->points[0];
 		$lastPoint = end($this->points);
 
 		$this->stats->startedAt = $firstPoint->time;
@@ -108,17 +112,17 @@ class Segment implements Summarizable, StatsCalculator
 			}
 		}
 
-		if ($firstPoint->time !== null && $lastPoint->time !== null && $firstPoint->time instanceof DateTime && $lastPoint->time instanceof DateTime) {
+		if ($firstPoint->time instanceof DateTime && $lastPoint->time instanceof DateTime) {
 			$this->stats->duration = $lastPoint->time->getTimestamp() - $firstPoint->time->getTimestamp();
 
 			if ($this->stats->duration !== 0 && $this->stats->distance > 0) {
-				$this->stats->averageSpeed = $this->stats->distance / $this->stats->duration;
+				$this->stats->averageSpeed = $this->stats->distance / (float) $this->stats->duration;
 			}
 
 			if ($this->stats->distance > 0 && $this->stats->duration !== 0) {
-				$distanceInKm = $this->stats->distance / 1000;
+				$distanceInKm = $this->stats->distance / 1000.0;
 				if ($distanceInKm > 0) {
-					$this->stats->averagePace = $this->stats->duration / $distanceInKm;
+					$this->stats->averagePace = (float) $this->stats->duration / $distanceInKm;
 				}
 			}
 		}
