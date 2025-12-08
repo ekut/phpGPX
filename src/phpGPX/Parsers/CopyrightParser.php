@@ -14,11 +14,22 @@ use phpGPX\Models\Copyright;
 use SimpleXMLElement;
 
 /**
- * Class CopyrightParser
+ * Utility class for parsing and serializing Copyright objects.
+ * 
+ * This class provides static methods for converting between XML/SimpleXML
+ * and Copyright model objects. It is not meant to be instantiated.
+ * 
  * @package phpGPX\Parsers
  */
-abstract class CopyrightParser
+final class CopyrightParser
 {
+	/**
+	 * Private constructor prevents instantiation of this utility class.
+	 */
+	private function __construct()
+	{
+	}
+
 	public static string $tagName = 'copyright';
 
 	public static function parse(SimpleXMLElement $node): ?Copyright

@@ -12,11 +12,22 @@ use phpGPX\Models\Point;
 use SimpleXMLElement;
 
 /**
- * Class WaypointParser
+ * Utility class for parsing and serializing Waypoint objects.
+ * 
+ * This class provides static methods for converting between XML/SimpleXML
+ * and Waypoint model objects. It is not meant to be instantiated.
+ * 
  * @package phpGPX\Parsers
  */
-abstract class WaypointParser
+final class WaypointParser
 {
+	/**
+	 * Private constructor prevents instantiation of this utility class.
+	 */
+	private function __construct()
+	{
+	}
+
 	/**
 	 * @param SimpleXMLElement $nodes - a non empty list of wpt elements
 	 * @return Point[]

@@ -15,12 +15,23 @@ use phpGPX\phpGPX;
 use SimpleXMLElement;
 
 /**
- * Class RouteParser
+ * Utility class for parsing and serializing Route objects.
+ * 
+ * This class provides static methods for converting between XML/SimpleXML
+ * and Route model objects. It is not meant to be instantiated.
+ * 
  * @package phpGPX\Parsers
  * @psalm-api
  */
-abstract class RouteParser
+final class RouteParser
 {
+	/**
+	 * Private constructor prevents instantiation of this utility class.
+	 */
+	private function __construct()
+	{
+	}
+
 	public static string $tagName = 'rte';
 
 	/** @var array<string, array{name: string, type: string}> */

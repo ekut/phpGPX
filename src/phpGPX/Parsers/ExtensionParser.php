@@ -16,11 +16,23 @@ use phpGPX\Parsers\Extensions\TrackPointExtensionParser;
 use SimpleXMLElement;
 
 /**
- * Class ExtensionParser
+ * Utility class for parsing and serializing Extensions objects.
+ * 
+ * This class provides static methods for converting between XML/SimpleXML
+ * and Extensions model objects. It is not meant to be instantiated.
+ * 
  * @package phpGPX\Parsers
  */
-abstract class ExtensionParser
+final class ExtensionParser
 {
+	/**
+	 * Private constructor prevents instantiation of this utility class.
+	 * 
+	 * @psalm-suppress UnusedConstructor
+	 */
+	private function __construct()
+	{
+	}
 	public static string $tagName = 'extensions';
 
 	/** @var array<string, array{namespace: string, xsd: string, name: string, prefix: string}> */

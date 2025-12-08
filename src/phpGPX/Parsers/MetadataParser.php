@@ -15,11 +15,22 @@ use phpGPX\Models\Metadata;
 use SimpleXMLElement;
 
 /**
- * Class MetadataParser
+ * Utility class for parsing and serializing Metadata objects.
+ * 
+ * This class provides static methods for converting between XML/SimpleXML
+ * and Metadata model objects. It is not meant to be instantiated.
+ * 
  * @package phpGPX\Parsers
  */
-abstract class MetadataParser
+final class MetadataParser
 {
+	/**
+	 * Private constructor prevents instantiation of this utility class.
+	 */
+	private function __construct()
+	{
+	}
+
 	private static string $tagName = 'metadata';
 
 	/** @var array<string, array{name: string, type: string}> */

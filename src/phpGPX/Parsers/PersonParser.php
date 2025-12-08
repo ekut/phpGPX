@@ -14,11 +14,22 @@ use phpGPX\Models\Person;
 use SimpleXMLElement;
 
 /**
- * Class PersonParser
+ * Utility class for parsing and serializing Person objects.
+ * 
+ * This class provides static methods for converting between XML/SimpleXML
+ * and Person model objects. It is not meant to be instantiated.
+ * 
  * @package phpGPX\Parsers
  */
-abstract class PersonParser
+final class PersonParser
 {
+	/**
+	 * Private constructor prevents instantiation of this utility class.
+	 */
+	private function __construct()
+	{
+	}
+
 	public static string $tagName = 'author';
 
 	public static function parse(SimpleXMLElement $node): Person

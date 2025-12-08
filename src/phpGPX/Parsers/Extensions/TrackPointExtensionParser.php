@@ -14,8 +14,25 @@ use phpGPX\Models\Extensions\TrackPointExtension;
 use phpGPX\Parsers\ExtensionParser;
 use SimpleXMLElement;
 
+/**
+ * Utility class for parsing and serializing TrackPointExtension objects.
+ * 
+ * This class provides static methods for converting between XML/SimpleXML
+ * and TrackPointExtension model objects. It is not meant to be instantiated.
+ * 
+ * @package phpGPX\Parsers\Extensions
+ */
 final class TrackPointExtensionParser
 {
+	/**
+	 * Private constructor prevents instantiation of this utility class.
+	 * 
+	 * @psalm-suppress UnusedConstructor
+	 */
+	private function __construct()
+	{
+	}
+
 	/** @var array<string, array{name: string, type: string}> */
 	private static array $attributeMapper = [
 		'atemp' => [

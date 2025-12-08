@@ -15,11 +15,22 @@ use phpGPX\phpGPX;
 use SimpleXMLElement;
 
 /**
- * Class SegmentParser
+ * Utility class for parsing and serializing Segment objects.
+ * 
+ * This class provides static methods for converting between XML/SimpleXML
+ * and Segment model objects. It is not meant to be instantiated.
+ * 
  * @package phpGPX\Parsers
  */
-abstract class SegmentParser
+final class SegmentParser
 {
+	/**
+	 * Private constructor prevents instantiation of this utility class.
+	 */
+	private function __construct()
+	{
+	}
+
 	public static string $tagName = 'trkseg';
 
 	/**

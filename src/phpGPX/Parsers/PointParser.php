@@ -15,8 +15,23 @@ use phpGPX\Helpers\DateTimeHelper;
 use phpGPX\Models\Point;
 use SimpleXMLElement;
 
-abstract class PointParser
+/**
+ * Utility class for parsing and serializing Point objects.
+ * 
+ * This class provides static methods for converting between XML/SimpleXML
+ * and Point model objects. It is not meant to be instantiated.
+ * 
+ * @package phpGPX\Parsers
+ */
+final class PointParser
 {
+	/**
+	 * Private constructor prevents instantiation of this utility class.
+	 */
+	private function __construct()
+	{
+	}
+
 	/** @var array<string, array{name: string, type: string}> */
 	private static array $attributeMapper = [
 		'ele' => [

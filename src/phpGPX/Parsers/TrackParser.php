@@ -15,12 +15,23 @@ use phpGPX\phpGPX;
 use SimpleXMLElement;
 
 /**
- * Class TrackParser
+ * Utility class for parsing and serializing Track objects.
+ * 
+ * This class provides static methods for converting between XML/SimpleXML
+ * and Track model objects. It is not meant to be instantiated.
+ * 
  * @package phpGPX\Parsers
  * @psalm-api
  */
-abstract class TrackParser
+final class TrackParser
 {
+	/**
+	 * Private constructor prevents instantiation of this utility class.
+	 */
+	private function __construct()
+	{
+	}
+
 	public static string $tagName = 'trk';
 
 	/** @var array<string, array{name: string, type: string}> */

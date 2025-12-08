@@ -14,11 +14,24 @@ use phpGPX\Models\Email;
 use SimpleXMLElement;
 
 /**
- * Class EmailParser
+ * Utility class for parsing and serializing Email objects.
+ * 
+ * This class provides static methods for converting between XML/SimpleXML
+ * and Email model objects. It is not meant to be instantiated.
+ * 
  * @package phpGPX\Parsers
  */
-abstract class EmailParser
+final class EmailParser
 {
+	/**
+	 * Private constructor prevents instantiation of this utility class.
+	 * 
+	 * @psalm-suppress UnusedConstructor
+	 */
+	private function __construct()
+	{
+	}
+
 	private static string $tagName = 'email';
 
 	public static function parse(SimpleXMLElement $node): ?Email
